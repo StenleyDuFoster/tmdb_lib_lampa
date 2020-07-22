@@ -1,23 +1,28 @@
 package lampa.test.tmdblib.fragments
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.api.Results
 
-class Fragment_grid : Fragment() {
+class Fragment(type:Int) : Fragment() {
 
-    lateinit var recycler:RecyclerView
+    lateinit var recycler: RecyclerView
+    var type:Int = type
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
 
         }
+    }
+
+    fun setContentToLinear(res: List<Results>?){
+
     }
 
     fun setContentToGrid(res: List<Results>?){
@@ -29,7 +34,7 @@ class Fragment_grid : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val v: View = inflater.inflate(R.layout.fragment_grid, null)
+        val v: View = inflater.inflate(R.layout.fragment_linear, null)
         recycler = v.findViewById(R.id.recycler)
 
         return v

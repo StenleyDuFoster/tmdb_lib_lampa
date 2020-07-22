@@ -8,20 +8,17 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import lampa.test.tmdblib.api.JsonPlaceHolderApi
 import lampa.test.tmdblib.api.Movie
-import lampa.test.tmdblib.fragments.Fragment_grid
-import lampa.test.tmdblib.fragments.Fragment_linear
+import lampa.test.tmdblib.fragments.Fragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
-
 class MainActivity : AppCompatActivity() {
 
-    val linearFragment = Fragment_linear()
-    val gridFragment = Fragment_grid()
+    val linearFragment = Fragment(1)
+    val gridFragment = Fragment(2)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

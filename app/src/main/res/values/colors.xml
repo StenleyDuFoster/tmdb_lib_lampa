@@ -5,6 +5,6 @@
     <color name="colorAccent">#03DAC5</color>
 
     <color name="appColor">#F6F6F6</color>
-    <color name="appText">#356C30</color>
+    <color name="appText">#000000</color>
     <color name="appBack">#BBE6A3</color>
 </resources>
