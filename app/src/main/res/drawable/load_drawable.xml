@@ -1,0 +1,14 @@
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+
+    <item android:drawable="@android:color/white"/>
+
+    <item
+        android:gravity="center">
+
+        <bitmap
+            android:src="@drawable/tmdb_ico"
+            android:gravity="center"/>
+    </item>
+</layer-list>
