@@ -1,26 +1,70 @@
 package lampa.test.tmdblib
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.util.Log
-import android.widget.TextView
-import android.widget.Toolbar
+import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.appbar.AppBarLayout
-import kotlinx.android.synthetic.main.activity_main.*
 import lampa.test.tmdblib.api.JsonPlaceHolderApi
 import lampa.test.tmdblib.api.Movie
+import lampa.test.tmdblib.fragments.Fragment_grid
+import lampa.test.tmdblib.fragments.Fragment_linear
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+
+
 class MainActivity : AppCompatActivity() {
+
+    val linearFragment = Fragment_linear()
+    val gridFragment = Fragment_grid()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+        Init()
         initRetrofit()
+    }
+
+    fun Init(){
+
+        val b_linear = findViewById<Button>(R.id.b_linear)
+        val b_grid = findViewById<Button>(R.id.b_grid)
+        var fTrans = supportFragmentManager.beginTransaction()
+        fTrans.add(R.id.fragment_cont_constrain, linearFragment)
+        fTrans.add(R.id.fragment_cont_constrain, gridFragment)
+        fTrans.hide(gridFragment)
+//        fTrans.hide(linearFragment)
+        fTrans.commit()
+
+        val clickListener = View.OnClickListener{v ->
+            fTrans = supportFragmentManager.beginTransaction()
+            when(v.id){
+                R.id.b_linear ->
+                {
+                    scaleAnimate(b_linear,1.0f)
+                    scaleAnimate(b_grid,0.8f)
+                    fTrans.hide(gridFragment)
+                    fTrans.show(linearFragment)
+                }
+                R.id.b_grid ->
+                {
+                    scaleAnimate(b_grid,1.0f)
+                    scaleAnimate(b_linear,0.8f)
+                    fTrans.hide(linearFragment)
+                    fTrans.show(gridFragment)
+                }
+            }
+            fTrans.commit()
+        }
+        b_linear.setOnClickListener(clickListener)
+        b_grid.setOnClickListener(clickListener)
     }
 
     fun initRetrofit() {
@@ -40,8 +84,8 @@ class MainActivity : AppCompatActivity() {
                 if (!response.isSuccessful()) {
                 }
                 val postMovie: Movie? = response.body()
-                val text:TextView = findViewById(R.id.text_main)
-                text.setText(postMovie.toString())
+                gridFragment.setContentToGrid(postMovie?.results)
+                linearFragment.setContentToLinear(postMovie?.results)
             }
 
             override fun onFailure(
@@ -50,5 +94,14 @@ class MainActivity : AppCompatActivity() {
             ) {
             }
         })
+    }
+
+    fun scaleAnimate(v:View,final:Float){
+        var animX = ObjectAnimator.ofFloat(v,View.SCALE_X,v.scaleX,final)
+        var animY = ObjectAnimator.ofFloat(v,View.SCALE_Y,v.scaleY,final)
+        var anim = AnimatorSet()
+        anim.setDuration(300)
+        anim.play(animX).with(animY)
+        anim.start()
     }
 }
