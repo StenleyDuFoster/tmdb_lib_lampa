@@ -20,17 +20,17 @@ class MainActivity : AppCompatActivity() {
 
     val linearFragment = Fragment(1)
     val gridFragment = Fragment(2)
+    var page:Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         Init()
-        retrofitDownload(2)
+        retrofitDownload(page)
     }
 
-    fun Init(){
+    private fun Init(){
 
         val b_linear = findViewById<Button>(R.id.b_linear)
         val b_grid = findViewById<Button>(R.id.b_grid)
@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
                     scaleAnimate(b_grid,0.8f)
                     fTrans.hide(gridFragment)
                     fTrans.show(linearFragment)
+                    fTrans.addToBackStack("1")
                 }
                 R.id.b_grid ->
                 {
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity() {
                     scaleAnimate(b_linear,0.8f)
                     fTrans.hide(linearFragment)
                     fTrans.show(gridFragment)
+                    fTrans.addToBackStack("2")
                 }
             }
             fTrans.commit()
@@ -65,14 +67,14 @@ class MainActivity : AppCompatActivity() {
         b_grid.setOnClickListener(clickListener)
     }
 
-    fun retrofitDownload(page:Int) {
+    private fun retrofitDownload(page_r:Int) {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.themoviedb.org/3/movie/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
 
-        val call: Call<Movie>? = jsonPlaceHolderApi.getPostsMovie("ru",page)
+        val call: Call<Movie>? = jsonPlaceHolderApi.getPostsMovie("ru",page_r)
 
         call?.enqueue(object : Callback<Movie?> {
             override fun onResponse(
