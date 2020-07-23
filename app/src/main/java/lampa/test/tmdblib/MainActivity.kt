@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
 
         Init()
-        initRetrofit()
+        retrofitDownload(2)
     }
 
     fun Init(){
@@ -65,14 +65,14 @@ class MainActivity : AppCompatActivity() {
         b_grid.setOnClickListener(clickListener)
     }
 
-    fun initRetrofit() {
+    fun retrofitDownload(page:Int) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/trending/all/")
+            .baseUrl("https://api.themoviedb.org/3/movie/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
 
-        val call: Call<Movie>? = jsonPlaceHolderApi.getPostsMovie()
+        val call: Call<Movie>? = jsonPlaceHolderApi.getPostsMovie("ru",page)
 
         call?.enqueue(object : Callback<Movie?> {
             override fun onResponse(

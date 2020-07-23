@@ -1,7 +1,6 @@
 package lampa.test.tmdblib.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -30,7 +29,6 @@ class Fragment(type:Int) : Fragment() {
     }
 
     fun setContent(res: List<Results>?){
-        Log.v("200","poluchil")
         val result_array = ArrayList(res)
         adapter = RecyclerAdapter(result_array, type)
         recycler.adapter = adapter

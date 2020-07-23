@@ -15,5 +15,5 @@ package lampa.test.tmdblib.api
         val vote_average: Float,
         val backdrop_path: String,
         val poster_path: String,
-        val first_air_date: String
+        val release_date: String
     )

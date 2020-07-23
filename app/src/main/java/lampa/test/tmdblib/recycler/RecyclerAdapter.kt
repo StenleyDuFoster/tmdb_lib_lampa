@@ -1,6 +1,5 @@
 package lampa.test.tmdblib.recycler
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import com.bumptech.glide.Glide
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.api.Results
 
+
 class RecyclerAdapter(exampleList: ArrayList<Results>, type:Int) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
@@ -18,10 +18,6 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type:Int) :
     private var mListener: OnItemClickListener? = null
 
     val type = type
-
-    override fun getItemViewType(position: Int): Int {
-        return super.getItemViewType(position)
-    }
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
@@ -87,11 +83,13 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type:Int) :
         else if(currentItem.original_name!=null)
             holder.textMain.setText(currentItem.original_name)
 
-        holder.textSlave.setText(currentItem.first_air_date)
+        holder.textSlave.setText(currentItem.release_date)
 
         Glide.with(holder.imageView.context)
-            .load("https://image.tmdb.org/t/p/w500"+currentItem.poster_path)
+            .asBitmap()
+            .load("https://image.tmdb.org/t/p/w500" + currentItem.poster_path)
             .into(holder.imageView)
+
 
         when(type){
             1 -> {
