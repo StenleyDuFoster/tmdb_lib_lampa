@@ -62,7 +62,6 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type:Int) :
         viewType: Int
     ): ViewHolder {
         val lay: Int
-        Log.v("200","sozdal")
         when (type) {
             1 -> {
                 lay = R.layout.card_linear
@@ -81,7 +80,13 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type:Int) :
     ) {
         val currentItem: Results = mExampleList[position]
 
-        holder.textMain.setText(currentItem.name)
+        if (currentItem.title!=null)
+            holder.textMain.setText(currentItem.title)
+        else if(currentItem.name!=null)
+            holder.textMain.setText(currentItem.name)
+        else if(currentItem.original_name!=null)
+            holder.textMain.setText(currentItem.original_name)
+
         holder.textSlave.setText(currentItem.first_air_date)
 
         Glide.with(holder.imageView.context)
