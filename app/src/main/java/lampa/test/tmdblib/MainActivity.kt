@@ -3,6 +3,7 @@ package lampa.test.tmdblib
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -81,8 +82,9 @@ class MainActivity : AppCompatActivity() {
                 if (!response.isSuccessful()) {
                 }
                 val postMovie: Movie? = response.body()
-                gridFragment.setContentToGrid(postMovie?.results)
-                linearFragment.setContentToLinear(postMovie?.results)
+                gridFragment.setContent(postMovie?.results)
+                linearFragment.setContent(postMovie?.results)
+                Log.v("200",postMovie.toString())
             }
 
             override fun onFailure(
@@ -93,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun scaleAnimate(v:View,final:Float){
+    fun scaleAnimate(v:View, final:Float){
         var animX = ObjectAnimator.ofFloat(v,View.SCALE_X,v.scaleX,final)
         var animY = ObjectAnimator.ofFloat(v,View.SCALE_Y,v.scaleY,final)
         var anim = AnimatorSet()

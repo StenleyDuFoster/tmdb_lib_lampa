@@ -30,14 +30,14 @@
                 android:textSize="20dp" />
 
             <Button
-                android:scaleX="0.8"
-                android:scaleY="0.8"
                 android:id="@+id/b_grid"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/shape_button"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
                 android:text="grid"
                 android:textSize="20dp" />
 
@@ -47,25 +47,14 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/appColor">
+        android:background="@color/appColor"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:orientation="vertical"
             android:id="@+id/fragment_cont_constrain"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/text_main"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@string/font_main"
-                android:gravity="center"
-                android:text="Hello World!"
-                android:textColor="@color/appText"
-                android:textSize="30dp" />
-
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
 
     </androidx.core.widget.NestedScrollView>
 
