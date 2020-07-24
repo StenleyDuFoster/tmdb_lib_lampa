@@ -67,7 +67,7 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type:Int) :
             }
         }
         val v: View = LayoutInflater.from(parent.context).inflate(lay, parent, false)
-        return ViewHolder(v, mListener,type)
+        return ViewHolder(v, mListener, type)
     }
 
     override fun onBindViewHolder(
@@ -93,7 +93,11 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type:Int) :
 
         when(type){
             1 -> {
-                holder.textContent.setText(currentItem.overview)
+                val overview = currentItem.overview
+                if(overview.length>200)
+                    holder.textContent.setText(overview.substring(0,200) + " ...")
+                else
+                    holder.textContent.setText(overview)
             }
         }
     }

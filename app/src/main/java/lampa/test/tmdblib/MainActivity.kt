@@ -9,17 +9,26 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import lampa.test.tmdblib.api.JsonPlaceHolderApi
 import lampa.test.tmdblib.api.Movie
-import lampa.test.tmdblib.fragments.Fragment
+import lampa.test.tmdblib.fragments.FragmentDetails
+import lampa.test.tmdblib.fragments.FragmentMain
+import lampa.test.tmdblib.fragments.callback.CallBackListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MainActivity : AppCompatActivity() {
 
-    val linearFragment = Fragment(1)
-    val gridFragment = Fragment(2)
+class MainActivity : AppCompatActivity(), CallBackListener{
+
+    val linearFragment = FragmentMain(1)
+    val gridFragment = FragmentMain(2)
+    val detailsFragment = FragmentDetails()
+
+    var fTrans = supportFragmentManager.beginTransaction()
+
+    lateinit var postMovie: Movie
+
     var page:Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,11 +43,11 @@ class MainActivity : AppCompatActivity() {
 
         val b_linear = findViewById<Button>(R.id.b_linear)
         val b_grid = findViewById<Button>(R.id.b_grid)
-        var fTrans = supportFragmentManager.beginTransaction()
         fTrans.add(R.id.fragment_cont_constrain, linearFragment)
         fTrans.add(R.id.fragment_cont_constrain, gridFragment)
+        fTrans.add(R.id.fragment_details_constrain, detailsFragment)
         fTrans.hide(gridFragment)
-//        fTrans.hide(linearFragment)
+        fTrans.hide(detailsFragment)
         fTrans.commit()
 
         val clickListener = View.OnClickListener{v ->
@@ -50,7 +59,6 @@ class MainActivity : AppCompatActivity() {
                     scaleAnimate(b_grid,0.8f)
                     fTrans.hide(gridFragment)
                     fTrans.show(linearFragment)
-                    fTrans.addToBackStack("1")
                 }
                 R.id.b_grid ->
                 {
@@ -58,7 +66,6 @@ class MainActivity : AppCompatActivity() {
                     scaleAnimate(b_linear,0.8f)
                     fTrans.hide(linearFragment)
                     fTrans.show(gridFragment)
-                    fTrans.addToBackStack("2")
                 }
             }
             fTrans.commit()
@@ -83,7 +90,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 if (!response.isSuccessful()) {
                 }
-                val postMovie: Movie? = response.body()
+                postMovie = response.body()!!
                 gridFragment.setContent(postMovie?.results)
                 linearFragment.setContent(postMovie?.results)
                 Log.v("200",postMovie.toString())
@@ -104,5 +111,15 @@ class MainActivity : AppCompatActivity() {
         anim.setDuration(300)
         anim.play(animX).with(animY)
         anim.start()
+    }
+
+    override fun clickMovie(position: Int) {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+
+        detailsFragment.setContent(postMovie.results.get(position))
+
+        fragmentTransaction.show(detailsFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 }
