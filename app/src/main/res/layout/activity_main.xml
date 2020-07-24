@@ -1,71 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/appColor"
     tools:context=".MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBar"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            app:layout_collapseMode="pin"
-            app:layout_scrollFlags="scroll|snap|enterAlways">
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/b_linear"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_button"
-                android:text="linear"
-                android:textSize="20dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/b_grid"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_button"
-                android:scaleX="0.8"
-                android:scaleY="0.8"
-                android:text="grid"
-                android:textSize="20dp" />
+                <Button
+                    android:id="@+id/b_linear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_button"
+                    android:text="linear"
+                    android:textSize="20dp" />
 
-        </LinearLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+                <Button
+                    android:id="@+id/b_grid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_button"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
+                    android:text="grid"
+                    android:textSize="20dp" />
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/appColor"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/fragment_cont_constrain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:orientation="horizontal" />
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/fragment_details_constrain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

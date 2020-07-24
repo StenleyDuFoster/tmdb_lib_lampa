@@ -1,33 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.google.android.material.card.MaterialCardView
+    app:rippleColor="@color/colorPrimary"
     android:layout_margin="15dp"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:cardBackgroundColor="@color/appColor"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:layout_margin="5dp"
-        android:id="@+id/card_image"
-        android:layout_width="100dp"
-        android:layout_height="150dp"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/card_main_text"
-        android:gravity="center"
-        android:textColor="@color/appText"
-        android:text="22"
-        android:textSize="18dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/card_slave_text"
-        android:gravity="center"
-        android:textColor="@color/appText"
-        android:text="22"
-        android:textSize="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+            <ImageView
+                android:id="@+id/card_image"
+                android:layout_width="100dp"
+                android:layout_height="150dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+            <ImageButton
+                android:alpha="0.6"
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:background="@drawable/ic_favorite"
+                app:layout_constraintBottom_toBottomOf="@+id/card_image"
+                app:layout_constraintEnd_toEndOf="@+id/card_image"
+                app:layout_constraintHorizontal_bias="0.96"
+                app:layout_constraintStart_toStartOf="@+id/card_image"
+                app:layout_constraintTop_toTopOf="@+id/card_image"
+                app:layout_constraintVertical_bias="0.98" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <TextView
+            android:id="@+id/card_main_text"
+            android:gravity="center"
+            android:textColor="@color/appText"
+            android:textSize="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/card_slave_text"
+            android:gravity="center"
+            android:textColor="@color/appText"
+            android:textSize="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

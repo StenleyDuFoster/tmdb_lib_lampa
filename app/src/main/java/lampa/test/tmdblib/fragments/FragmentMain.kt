@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.api.Results
-import lampa.test.tmdblib.fragments.callback.CallBackListener
+import lampa.test.tmdblib.fragments.callback.CallBackFromFragmentToActivity
 import lampa.test.tmdblib.recycler.RecyclerAdapter
 
 
@@ -22,7 +23,7 @@ class FragmentMain(type:Int) : Fragment() {
     lateinit var gridLayoutManager: GridLayoutManager
     lateinit var adapter: RecyclerAdapter
 
-    lateinit var callBackListener: CallBackListener
+    lateinit var callBackFromFragmentToActivity: CallBackFromFragmentToActivity
 
     var type:Int = type
 
@@ -40,8 +41,12 @@ class FragmentMain(type:Int) : Fragment() {
 
         adapter.setOnItemClickListener(object : RecyclerAdapter.OnItemClickListener {
 
-            override fun onItemClick(position: Int) {
-                callBackListener.clickMovie(position)
+            override fun onMovieClick(position: Int) {
+                callBackFromFragmentToActivity.openMovie(position)
+            }
+
+            override fun onFavoriteClick(position: Int) {
+
             }
         })
     }
@@ -71,6 +76,6 @@ class FragmentMain(type:Int) : Fragment() {
     override fun onActivityCreated(@Nullable savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (activity is CallBackListener) callBackListener = (activity as CallBackListener?)!!
+        if (activity is CallBackFromFragmentToActivity) callBackFromFragmentToActivity = (activity as CallBackFromFragmentToActivity?)!!
     }
 }

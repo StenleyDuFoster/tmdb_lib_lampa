@@ -20,14 +20,15 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type:Int) :
     val type = type
 
     interface OnItemClickListener {
-        fun onItemClick(position: Int)
+        fun onMovieClick(position: Int)
+        fun onFavoriteClick(position: Int)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener?) {
         mListener = listener
     }
 
-    class ViewHolder(itemView: View, listener: OnItemClickListener?, type:Int) :
+    inner class ViewHolder(itemView: View, listener: OnItemClickListener?, type:Int) :
         RecyclerView.ViewHolder(itemView) {
         var textMain: TextView
         var textSlave: TextView
@@ -46,7 +47,7 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type:Int) :
                 if (listener != null) {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(position)
+                        listener.onMovieClick(position)
                     }
                 }
             })
@@ -66,6 +67,7 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type:Int) :
                 lay = R.layout.card_grid
             }
         }
+
         val v: View = LayoutInflater.from(parent.context).inflate(lay, parent, false)
         return ViewHolder(v, mListener, type)
     }
@@ -76,12 +78,10 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type:Int) :
     ) {
         val currentItem: Results = mExampleList[position]
 
-        if (currentItem.title!=null)
+        if (currentItem.title.length > 35)
+            holder.textMain.setText(currentItem.title.substring(0,35) + " ...")
+        else
             holder.textMain.setText(currentItem.title)
-        else if(currentItem.name!=null)
-            holder.textMain.setText(currentItem.name)
-        else if(currentItem.original_name!=null)
-            holder.textMain.setText(currentItem.original_name)
 
         holder.textSlave.setText(currentItem.release_date)
 
@@ -94,8 +94,8 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type:Int) :
         when(type){
             1 -> {
                 val overview = currentItem.overview
-                if(overview.length>200)
-                    holder.textContent.setText(overview.substring(0,200) + " ...")
+                if(overview.length>150)
+                    holder.textContent.setText(overview.substring(0,150) + " ...")
                 else
                     holder.textContent.setText(overview)
             }

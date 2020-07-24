@@ -7,11 +7,12 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.AppBarLayout
 import lampa.test.tmdblib.api.JsonPlaceHolderApi
 import lampa.test.tmdblib.api.Movie
 import lampa.test.tmdblib.fragments.FragmentDetails
 import lampa.test.tmdblib.fragments.FragmentMain
-import lampa.test.tmdblib.fragments.callback.CallBackListener
+import lampa.test.tmdblib.fragments.callback.CallBackFromFragmentToActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,7 +20,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class MainActivity : AppCompatActivity(), CallBackListener{
+class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
 
     val linearFragment = FragmentMain(1)
     val gridFragment = FragmentMain(2)
@@ -113,7 +114,7 @@ class MainActivity : AppCompatActivity(), CallBackListener{
         anim.start()
     }
 
-    override fun clickMovie(position: Int) {
+    override fun openMovie(position: Int) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
 
         detailsFragment.setContent(postMovie.results.get(position))

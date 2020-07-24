@@ -7,6 +7,8 @@ import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.RatingBar
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import lampa.test.tmdblib.R
@@ -17,6 +19,8 @@ class FragmentDetails : Fragment() {
     lateinit var tv_title:TextView
     lateinit var tv_genre:TextView
     lateinit var tv_content:TextView
+
+    lateinit var rate_view:RatingBar
 
     lateinit var iv_details:ImageView
 
@@ -36,6 +40,8 @@ class FragmentDetails : Fragment() {
         tv_genre = v.findViewById(R.id.genre_text)
         tv_content = v.findViewById(R.id.content_text)
 
+        rate_view = v.findViewById(R.id.ratingBar)
+
         iv_details = v.findViewById(R.id.image_details)
 
         return v
@@ -44,9 +50,11 @@ class FragmentDetails : Fragment() {
     fun setContent(res: Results){
 
         tv_title.setText(res.title)
-        tv_genre.setText(res.genre_ids.toString() + res.release_date)
-        tv_content.setText(res.overview + " " + res.original_name +
+        tv_genre.setText(res.release_date)
+        tv_content.setText("  " + res.overview + " " + res.original_name +
         " " + res.release_date)
+
+        rate_view.rating = res.vote_average
 
         Glide.with(tv_title.context)
             .asBitmap()
