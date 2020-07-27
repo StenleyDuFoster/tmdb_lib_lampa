@@ -3,11 +3,9 @@ package lampa.test.tmdblib.fragments
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.RatingBar
 import android.widget.TextView
 import com.bumptech.glide.Glide
@@ -23,12 +21,6 @@ class FragmentDetails : Fragment() {
     lateinit var rate_view:RatingBar
 
     lateinit var iv_details:ImageView
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,5 +52,9 @@ class FragmentDetails : Fragment() {
             .asBitmap()
             .load("https://image.tmdb.org/t/p/w500" + res.poster_path)
             .into(iv_details)
+
+        activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
+        activity?.actionBar?.setDisplayShowHomeEnabled(true)
+        activity?.actionBar?.setTitle(res.title)
     }
 }
