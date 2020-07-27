@@ -53,37 +53,13 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
         recycler.layoutManager = linearLayoutManager
         nestedScroll = activity!!.findViewById(R.id.nestedScrollView)
 
-        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                Log.w("200",((recycler.layoutManager as LinearLayoutManager).height / 2).toString()
-                        +" " + (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition().toString())
-                if (((recycler.layoutManager as LinearLayoutManager).height / 2 <
-                            (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()) &&
-                    !isDownload) {
-                    isDownload = true
-                    val runnableCode = object: Runnable {
-                        override fun run() {
-                            callBackFromFragmentToActivity.addMovieToList()
-                        }
-                    }
-                    runnableCode.run()
-                }
-                Log.w("200",((recycler.layoutManager as LinearLayoutManager).height / 2).toString()
-                        +" " + (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition().toString())
-
-            }
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                Log.w("200","onScrollStateChanged")
-            }
-        })
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//
-//            onScrollChangeListene = View.OnScrollChangeListener { view, i, i2, i3, i4 ->
-//                if (((recycler.layoutManager as LinearLayoutManager).height / 2 < i4) &&
+//        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                Log.w("200",((recycler.layoutManager as LinearLayoutManager).height / 2).toString()
+//                        +" " + (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition().toString())
+//                if (((recycler.layoutManager as LinearLayoutManager).height / 2 <
+//                            (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()) &&
 //                    !isDownload) {
 //                    isDownload = true
 //                    val runnableCode = object: Runnable {
@@ -94,10 +70,34 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 //                    runnableCode.run()
 //                }
 //                Log.w("200",((recycler.layoutManager as LinearLayoutManager).height / 2).toString()
-//                +" " + i4.toString())
+//                        +" " + (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition().toString())
+//
 //            }
-//            nestedScroll.setOnScrollChangeListener(onScrollChangeListene)
-//        }
+//
+//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+//                Log.w("200","onScrollStateChanged")
+//            }
+//        })
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            onScrollChangeListene = View.OnScrollChangeListener { view, i, i2, i3, i4 ->
+                if (((recycler.layoutManager as LinearLayoutManager).height / 2 < i4) &&
+                    !isDownload) {
+                    isDownload = true
+                    val runnableCode = object: Runnable {
+                        override fun run() {
+                            callBackFromFragmentToActivity.addMovieToList()
+                        }
+                    }
+                    runnableCode.run()
+                }
+                Log.w("200",((recycler.layoutManager as LinearLayoutManager).height / 2).toString()
+                +" " + i4.toString())
+            }
+            nestedScroll.setOnScrollChangeListener(onScrollChangeListene)
+        }
 
         return v
     }

@@ -98,6 +98,7 @@
         android:id="@+id/fragment_details_constrain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="600dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

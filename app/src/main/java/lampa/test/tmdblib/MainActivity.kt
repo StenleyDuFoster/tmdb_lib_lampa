@@ -2,6 +2,7 @@ package lampa.test.tmdblib
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -105,6 +106,13 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
         }
         b_next_page.setOnClickListener(clickListenerPageManager)
         b_back_page.setOnClickListener(clickListenerPageManager)
+    }
+
+    class retrofitDownload: AsyncTask<Void, Void, Void>() {
+        override fun doInBackground(vararg p0: Void?): Void {
+
+        }
+
     }
 
     private fun retrofitDownload(page_r:Int, downloadTo:Int){
