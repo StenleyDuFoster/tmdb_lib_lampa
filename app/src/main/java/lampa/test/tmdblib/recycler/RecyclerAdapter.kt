@@ -97,7 +97,7 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type: Int, listener: Call
         when(holder.itemViewType){
             1 -> {
                 val overview = currentItem.overview
-                if(overview.length>100)
+                if(overview.length > 100)
                     holder.textContent.setText(overview.substring(0,100) + " ...")
                 else
                     holder.textContent.setText(overview)
