@@ -48,7 +48,7 @@ class FragmentDetails : Fragment() {
 
         rate_view.rating = res.vote_average
 
-        Glide.with(tv_title.context)
+        Glide.with(activity?.applicationContext!!)
             .asBitmap()
             .load("https://image.tmdb.org/t/p/w500" + res.poster_path)
             .into(iv_details)

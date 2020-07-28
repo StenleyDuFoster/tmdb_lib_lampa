@@ -28,7 +28,6 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
     lateinit var linearLayoutManager: LinearLayoutManager
     lateinit var gridLayoutManager: GridLayoutManager
     lateinit var adapter: RecyclerAdapter
-    lateinit var nestedScroll:NestedScrollView
 
     lateinit var allContent: ArrayList<Results>
 
@@ -102,7 +101,8 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
         override fun onPostExecute(result: Void?) {
 
-            recycler.adapter?.notifyItemRangeInserted(recycler.adapter!!.itemCount,recycler.adapter!!.itemCount+20)
+            recycler.adapter?.notifyItemRangeInserted(recycler.adapter!!.itemCount,
+                                            recycler.adapter!!.itemCount+20)
             isDownload = false
             super.onPostExecute(result)
         }
@@ -110,7 +110,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     fun setLayoutManager(type: Int){
 
-        var oldScrollPos = (recycler.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+        var oldScrollPos = (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
         when (type){
             1 -> recycler.layoutManager = linearLayoutManager
             2 -> recycler.layoutManager = gridLayoutManager
@@ -140,6 +140,6 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
     }
 
     override fun onFavoriteClick(position: Int) {
-        Toast.makeText(context,position.toString(),Toast.LENGTH_LONG).show()
+        Toast.makeText(context,position.toString(), Toast.LENGTH_LONG).show()
     }
 }
