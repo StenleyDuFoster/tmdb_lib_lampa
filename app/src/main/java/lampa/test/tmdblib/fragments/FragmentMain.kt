@@ -1,25 +1,20 @@
 package lampa.test.tmdblib.fragments
 
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
 import android.widget.Toast
 import androidx.annotation.Nullable
-import androidx.annotation.RequiresApi
-import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
-import kotlinx.android.synthetic.main.fragment_main.view.*
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.api.Results
 import lampa.test.tmdblib.fragments.callback.CallBackFromFragmentToActivity
@@ -51,59 +46,39 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
         linearLayoutManager = LinearLayoutManager(v.context,LinearLayoutManager.VERTICAL,false)
         gridLayoutManager = GridLayoutManager(context,3)
         recycler.layoutManager = linearLayoutManager
-        nestedScroll = activity!!.findViewById(R.id.nestedScrollView)
-
-//        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                Log.w("200",((recycler.layoutManager as LinearLayoutManager).height / 2).toString()
-//                        +" " + (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition().toString())
-//                if (((recycler.layoutManager as LinearLayoutManager).height / 2 <
-//                            (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()) &&
-//                    !isDownload) {
-//                    isDownload = true
-//                    val runnableCode = object: Runnable {
-//                        override fun run() {
-//                            callBackFromFragmentToActivity.addMovieToList()
-//                        }
-//                    }
-//                    runnableCode.run()
-//                }
-//                Log.w("200",((recycler.layoutManager as LinearLayoutManager).height / 2).toString()
-//                        +" " + (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition().toString())
-//
-//            }
-//
-//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                super.onScrollStateChanged(recyclerView, newState)
-//                Log.w("200","onScrollStateChanged")
-//            }
-//        })
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             onScrollChangeListene = View.OnScrollChangeListener { view, i, i2, i3, i4 ->
-                if (((recycler.layoutManager as LinearLayoutManager).height / 2 < i4) &&
-                    !isDownload) {
-                    isDownload = true
-                    val runnableCode = object: Runnable {
-                        override fun run() {
-                            callBackFromFragmentToActivity.addMovieToList()
-                        }
-                    }
-                    runnableCode.run()
-                }
+
                 Log.w("200",((recycler.layoutManager as LinearLayoutManager).height / 2).toString()
-                +" " + i4.toString())
+                +" " + i.toString()+" " + i2.toString()+" " + i3.toString()+" " + i4.toString())
             }
-            nestedScroll.setOnScrollChangeListener(onScrollChangeListene)
+
+            recycler.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    if (((recycler.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() > recycler.adapter?.itemCount!!/2) &&
+                        !isDownload) {
+                        isDownload = true
+                        val runnableCode = object: Runnable {
+                            override fun run() {
+                                callBackFromFragmentToActivity.addMovieToList()
+                            }
+                        }
+                        runnableCode.run()
+                    }
+                }
+            })
         }
+
 
         return v
     }
 
     fun setContent(res: List<Results>?){
-        nestedScroll.smoothScrollTo(0,0)
+
         val result_array = ArrayList(res)
         allContent = result_array
         adapter = RecyclerAdapter(result_array, 1, this as CallBackFromRecyclerToFragment)
@@ -111,14 +86,31 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
         AnimateRecycler()
     }
 
-    fun addContent(res: List<Results>?){
-        val result_array = ArrayList(res)
-        allContent.addAll(result_array)
-        recycler.adapter = adapter
+    inner class AddContent(res: List<Results>?): AsyncTask<Void, Void, Void>() {
+
+        val res: List<Results>?
+
+        init {
+            this.res = res
+        }
+
+        override fun doInBackground(vararg p0: Void?): Void? {
+            val result_array = ArrayList(res)
+            allContent.addAll(result_array)
+            return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+
+            recycler.adapter?.notifyItemRangeInserted(recycler.adapter!!.itemCount,recycler.adapter!!.itemCount+20)
+            isDownload = false
+            super.onPostExecute(result)
+        }
     }
 
     fun setLayoutManager(type: Int){
 
+        var oldScrollPos = (recycler.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
         when (type){
             1 -> recycler.layoutManager = linearLayoutManager
             2 -> recycler.layoutManager = gridLayoutManager
@@ -126,14 +118,14 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
         adapter.type = type
         recycler.adapter = adapter
         AnimateRecycler()
+        recycler.scrollToPosition(oldScrollPos)
     }
 
     fun AnimateRecycler(){
 
         val controller = AnimationUtils.loadLayoutAnimation(context, R.anim.rec_in)
         recycler.setLayoutAnimation(controller)
-        recycler.getAdapter()?.notifyDataSetChanged()
-        recycler.scheduleLayoutAnimation()
+        recycler.startLayoutAnimation()
     }
 
     override fun onActivityCreated(@Nullable savedInstanceState: Bundle?) {

@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
         setContentView(R.layout.activity_main)
 
         Init()
-        retrofitDownload(page, R.integer.ALL_PAGE)
+        RetrofitDownload(page, R.integer.ALL_PAGE).execute()
     }
 
     private fun Init(){
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
                 {
                     if(page < totalPage!!) {
                         page ++
-                        retrofitDownload(page, R.integer.ALL_PAGE)
+                        RetrofitDownload(page, R.integer.ALL_PAGE).execute()
                         b_back_page.alpha = 1.0f
                     }
                     if(page == totalPage){
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
                 {
                     if(page > 1) {
                         page --
-                        retrofitDownload(page, R.integer.ALL_PAGE)
+                        RetrofitDownload(page, R.integer.ALL_PAGE).execute()
                         b_next_page.alpha = 1.0f
                     }
                     if(page == 1){
@@ -108,51 +108,54 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
         b_back_page.setOnClickListener(clickListenerPageManager)
     }
 
-    class retrofitDownload: AsyncTask<Void, Void, Void>() {
-        override fun doInBackground(vararg p0: Void?): Void {
+    inner class RetrofitDownload (page_r:Int, downloadTo:Int): AsyncTask<Void, Void, Void>() {
 
+        val page_r:Int
+        val downloadTo:Int
+
+        init {
+            this.page_r = page_r
+            this.downloadTo = downloadTo
         }
 
-    }
+        override fun doInBackground(vararg p0: Void?): Void? {
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://api.themoviedb.org/3/movie/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            val jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
 
-    private fun retrofitDownload(page_r:Int, downloadTo:Int){
+            val call: Call<Movie>? = jsonPlaceHolderApi.getPostsMovie("ru", page_r)
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/movie/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
+            call?.enqueue(object : Callback<Movie?> {
+                override fun onResponse(
+                    call: Call<Movie?>,
+                    response: Response<Movie?>
+                ) {
+                    postMovie = response.body()!!
 
-        val call: Call<Movie>? = jsonPlaceHolderApi.getPostsMovie("ru", page_r)
+                    when(downloadTo){
+                        R.integer.ALL_PAGE -> {
+                            mainFragment.setContent(postMovie?.results)
+                        }
+                        R.integer.ADD_TO_PAGE -> {
+                            mainFragment.AddContent(postMovie?.results).execute()
+                        }
 
-        call?.enqueue(object : Callback<Movie?> {
-            override fun onResponse(
-                call: Call<Movie?>,
-                response: Response<Movie?>
-            ) {
-                postMovie = response.body()!!
-
-                when(downloadTo){
-                    R.integer.ALL_PAGE -> {
-                        mainFragment.setContent(postMovie?.results)
-                    }
-                    R.integer.ADD_TO_PAGE -> {
-                        mainFragment.addContent(postMovie?.results)
-                        mainFragment.isDownload = false
                     }
 
+                    if(totalPage == null)
+                        totalPage = postMovie?.total_pages
                 }
 
-                if(totalPage == null)
-                    totalPage = postMovie?.total_pages
-            }
-
-            override fun onFailure(
-                call: Call<Movie?>,
-                t: Throwable?
-            ) {
-            }
-        })
+                override fun onFailure(
+                    call: Call<Movie?>,
+                    t: Throwable?
+                ) {
+                }
+            })
+            return null
+        }
     }
 
     fun scaleAnimate(v:View, final:Float){
@@ -175,8 +178,11 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
     }
 
     override fun addMovieToList() {
-        page ++
-        retrofitDownload(page, R.integer.ADD_TO_PAGE)
+
+        if(page < this!!.totalPage!!)
+            page ++
+
+        RetrofitDownload(page, R.integer.ADD_TO_PAGE).execute()
     }
 
     override fun onBackPressed() {

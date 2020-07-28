@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,6 +8,9 @@
     tools:context=".MainActivity"
     android:background="@color/appColor">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <Toolbar
         android:background="@color/colorPrimary"
         android:id="@+id/materialToolbar"
@@ -17,24 +20,28 @@
         app:layout_constraintStart_toStartOf="@+id/fragment_details_constrain"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+
+</com.google.android.material.appbar.AppBarLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/fragment_details_constrain"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar"
-        android:paddingBottom="?android:attr/actionBarSize">>
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ScrollView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            app:layout_scrollFlags="enterAlways">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:background="@color/appColor"
+                android:orientation="horizontal"
+                app:layout_scrollFlags="enterAlways">
 
                 <Button
                     android:id="@+id/b_linear"
@@ -55,54 +62,55 @@
                     android:textSize="20dp" />
 
             </LinearLayout>
+        </ScrollView>
 
-            <LinearLayout
-                android:minHeight="600dp"
-                android:id="@+id/fragment_cont_constrain"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        <LinearLayout
+            android:id="@+id/fragment_cont_constrain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="600dp"
+            android:orientation="horizontal"/>
 
-            <LinearLayout
+        <LinearLayout
 
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-                <Button
-                    android:alpha="0.5"
-                    android:rotation="180"
-                    android:id="@+id/b_back_page"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/ic_next_foreground" />
+            <Button
+                android:id="@+id/b_back_page"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:alpha="0.5"
+                android:background="@drawable/ic_next_foreground"
+                android:rotation="180" />
 
-                <Button
-                    android:id="@+id/b_next_page"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/ic_next_foreground" />
+            <Button
+                android:id="@+id/b_next_page"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/ic_next_foreground" />
 
-            </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/fragment_details_constrain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:minHeight="600dp"
         android:orientation="horizontal"
+        app:layout_anchor="@+id/linearLayout"
+        app:layout_anchorGravity="center"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar"
-        android:paddingBottom="?android:attr/actionBarSize"/>
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbar" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
