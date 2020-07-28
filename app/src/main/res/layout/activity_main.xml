@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainActivity"
+    tools:context=".activity.MainActivity"
     android:background="@color/appColor">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -47,7 +47,7 @@
                     android:id="@+id/b_linear"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_margin="10dp"
+                    android:layout_margin="5dp"
                     android:background="@drawable/ic_linear_foreground"
                     android:textSize="20dp" />
 
@@ -55,11 +55,19 @@
                     android:id="@+id/b_grid"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_margin="10dp"
+                    android:layout_margin="5dp"
                     android:background="@drawable/ic_grid_foreground"
                     android:scaleX="0.6"
                     android:scaleY="0.6"
                     android:textSize="20dp" />
+
+                <Spinner
+                    android:layout_margin="5dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/spinner"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content">
+                </Spinner>
 
             </LinearLayout>
         </ScrollView>

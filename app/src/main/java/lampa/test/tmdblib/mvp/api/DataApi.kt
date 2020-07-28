@@ -1,4 +1,4 @@
-package lampa.test.tmdblib.api
+package lampa.test.tmdblib.mvp.api
 
     data class Movie (
         val page: Int,

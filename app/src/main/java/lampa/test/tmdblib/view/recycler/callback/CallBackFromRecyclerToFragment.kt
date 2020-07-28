@@ -1,4 +1,4 @@
-package lampa.test.tmdblib.recycler.callback
+package lampa.test.tmdblib.view.recycler.callback
 
 interface CallBackFromRecyclerToFragment {
 
