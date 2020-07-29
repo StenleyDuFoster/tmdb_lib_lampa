@@ -1,39 +1,41 @@
 package lampa.test.tmdblib.presenter
 
+import lampa.test.tmdblib.R
 import lampa.test.tmdblib.contract_interface.CallBackFromRepositoryToMainContract
 import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.model.MainRepository
-
+import lampa.test.tmdblib.model.data.Movie
 
 class MainPresenter(mView: MainContract.View?): MainContract.Presenter, CallBackFromRepositoryToMainContract {
 
     var mView: MainContract.View? = null
-    var mRepository: MainContract.Repository? = null
-
+    var Model: MainContract.Repository? = null
+    var showAllOrAddToShow = R.integer.ALL_PAGE
 
     init {
         this.mView = mView
-        mRepository = MainRepository(this)
+        Model = MainRepository(this)
     }
 
-
     override fun getPage() {
-        TODO("Not yet implemented")
+        showAllOrAddToShow = R.integer.ALL_PAGE
+        Model?.loadMovie()
     }
 
     override fun addPage() {
-        TODO("Not yet implemented")
+        showAllOrAddToShow = R.integer.ADD_TO_PAGE
+        Model?.loadMovie()
     }
 
-    override fun changeMarkup(markup: Int) {
-        TODO("Not yet implemented")
+    override fun changeMovieType(movieType: String) {
+       Model?.setMovieType(movieType)
     }
 
-    override fun changeMovieType(movieType: Int) {
-        TODO("Not yet implemented")
-    }
+    override fun onMovieLoad(movie: Movie) {
 
-    override fun onMovieLoad() {
-        TODO("Not yet implemented")
+        if(showAllOrAddToShow == R.integer.ALL_PAGE)
+            mView?.showPage(movie.results)
+        else if(showAllOrAddToShow == R.integer.ADD_TO_PAGE)
+            mView?.addToShow(movie.results)
     }
 }

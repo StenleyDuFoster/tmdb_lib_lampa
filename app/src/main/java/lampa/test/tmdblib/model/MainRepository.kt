@@ -1,6 +1,5 @@
 package lampa.test.tmdblib.model
 
-import lampa.test.tmdblib.R
 import lampa.test.tmdblib.api.JsonPlaceHolderApi
 import lampa.test.tmdblib.contract_interface.CallBackFromRepositoryToMainContract
 import lampa.test.tmdblib.model.data.Movie
@@ -24,6 +23,10 @@ class MainRepository(callBackFromRepositoryToMainContract: CallBackFromRepositor
         this.callBackFromRepositoryToMainContract = callBackFromRepositoryToMainContract
     }
 
+    override fun setMovieType(movieType: String){
+        searchTypeMovie = movieType
+    }
+
     override fun loadMovie() {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.themoviedb.org/3/movie/")
@@ -44,7 +47,7 @@ class MainRepository(callBackFromRepositoryToMainContract: CallBackFromRepositor
             ) {
                 postMovie = response.body()!!
 
-
+                callBackFromRepositoryToMainContract.onMovieLoad(postMovie)
 
                 if(totalPage == null)
                     totalPage = postMovie?.total_pages

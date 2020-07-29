@@ -15,12 +15,12 @@ interface MainContract {
 
         fun getPage()
         fun addPage()
-        fun changeMarkup(markup: Int)
-        fun changeMovieType(movieType: Int)
+        fun changeMovieType(movieType: String)
     }
 
     interface Repository {
 
         fun loadMovie()
+        fun setMovieType(movieType: String)
     }
 }

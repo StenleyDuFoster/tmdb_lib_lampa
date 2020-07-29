@@ -46,7 +46,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment, MainContract.Vi
         gridLayoutManager = GridLayoutManager(context,3)
         recycler.layoutManager = linearLayoutManager
 
-        getPage()
+        mPresenter.getPage()
 
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -69,6 +69,11 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment, MainContract.Vi
     }
 
     fun getPage(){
+        mPresenter.getPage()
+    }
+
+    fun changeMovieTypeFromFragment(movieType: String){
+        mPresenter.changeMovieType(movieType)
         mPresenter.getPage()
     }
 

@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity(),CallBackFromFragmentToActivity{
             ) {
                 searchTypeMovie = spinner_items[position]
                 page = 1
-                mainFragment.getPage()
+                mainFragment.changeMovieTypeFromFragment(spinner_items[position])
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -152,6 +152,7 @@ class MainActivity : AppCompatActivity(),CallBackFromFragmentToActivity{
 
         fragmentTransaction.show(detailsFragment)
         fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
         fragmentTransaction.commit()
     }
 }
