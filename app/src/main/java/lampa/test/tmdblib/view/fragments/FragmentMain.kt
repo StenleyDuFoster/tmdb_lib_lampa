@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.model.data.Results
 import lampa.test.tmdblib.contract_interface.MainContract
@@ -115,7 +117,6 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment, MainContract.Vi
 
         val result_array = ArrayList(res)
         allContent.addAll(result_array)
-
 
         recycler.adapter?.notifyItemRangeInserted(recycler.adapter!!.itemCount,
             recycler.adapter!!.itemCount+20)

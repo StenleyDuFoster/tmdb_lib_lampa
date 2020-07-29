@@ -8,7 +8,6 @@ interface MainContract {
 
         fun showPage(res: List<Results>)
         fun addToShow(res: List<Results>)
-
     }
 
     interface Presenter {

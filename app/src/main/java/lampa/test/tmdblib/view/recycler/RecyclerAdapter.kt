@@ -5,12 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+
 import androidx.recyclerview.widget.RecyclerView
+
 import com.bumptech.glide.Glide
+
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.model.data.Results
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
-
 
 class RecyclerAdapter(exampleList: ArrayList<Results>, type: Int, listener: CallBackFromRecyclerToFragment?) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
@@ -19,6 +21,10 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type: Int, listener: Call
     private var mListener: CallBackFromRecyclerToFragment? = listener
 
     var type = type
+
+    init {
+        mExampleList = exampleList
+    }
 
     inner class ViewHolder(itemView: View, listener: CallBackFromRecyclerToFragment?) :
         RecyclerView.ViewHolder(itemView) {
@@ -107,10 +113,6 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type: Int, listener: Call
 
     override fun getItemCount(): Int {
         return mExampleList.size
-    }
-
-    init {
-        mExampleList = exampleList
     }
 
     override fun getItemViewType(position: Int): Int {

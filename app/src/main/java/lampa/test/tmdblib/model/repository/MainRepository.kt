@@ -1,9 +1,14 @@
-package lampa.test.tmdblib.model
+package lampa.test.tmdblib.model.repository
 
-import lampa.test.tmdblib.api.JsonPlaceHolderApi
+import lampa.test.tmdblib.BuildConfig
 import lampa.test.tmdblib.contract_interface.CallBackFromRepositoryToMainContract
-import lampa.test.tmdblib.model.data.Movie
 import lampa.test.tmdblib.contract_interface.MainContract
+import lampa.test.tmdblib.model.api.JsonPlaceHolderApi
+import lampa.test.tmdblib.model.data.Movie
+
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,18 +21,37 @@ class MainRepository(callBackFromRepositoryToMainContract: CallBackFromRepositor
     lateinit var postMovie: Movie
     var page: Int = 1
     var totalPage: Int = 1
-    var searchTypeMovie: String = "top_rated"
+    var searchTypeMovie: String = "popular"
     val callBackFromRepositoryToMainContract:CallBackFromRepositoryToMainContract
 
-    val retrofit = Retrofit.Builder()
-        .baseUrl("https://api.themoviedb.org/3/movie/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    val jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
+    val interceptor:HttpLoggingInterceptor
 
+    val client:OkHttpClient
+
+    val retrofit:Retrofit
+    val jsonPlaceHolderApi:JsonPlaceHolderApi
 
     init{
         this.callBackFromRepositoryToMainContract = callBackFromRepositoryToMainContract
+
+        interceptor = HttpLoggingInterceptor()
+        interceptor.level =
+            if (BuildConfig.DEBUG)
+                HttpLoggingInterceptor.Level.BODY
+            else
+                HttpLoggingInterceptor.Level.NONE
+
+        client = OkHttpClient.Builder()
+            .addInterceptor(interceptor)
+            .build()
+
+        retrofit = Retrofit.Builder()
+            .baseUrl("https://api.themoviedb.org/3/movie/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build()
+
+        jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
     }
 
     override fun setMovieType(movieType: String){

@@ -3,7 +3,7 @@ package lampa.test.tmdblib.presenter
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.contract_interface.CallBackFromRepositoryToMainContract
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.model.MainRepository
+import lampa.test.tmdblib.model.repository.MainRepository
 import lampa.test.tmdblib.model.data.Movie
 
 class MainPresenter(mView: MainContract.View?): MainContract.Presenter, CallBackFromRepositoryToMainContract {

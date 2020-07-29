@@ -4,20 +4,18 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
+
 import androidx.appcompat.app.AppCompatActivity
+
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.fragments.FragmentDetails
 import lampa.test.tmdblib.fragments.FragmentMain
-import lampa.test.tmdblib.contract_interface.MainContract.Presenter
 import lampa.test.tmdblib.fragments.callback.CallBackFromFragmentToActivity
 import lampa.test.tmdblib.model.data.Results
 import lampa.test.tmdblib.view.anim.Animate
 
 
-class MainActivity : AppCompatActivity(),CallBackFromFragmentToActivity{
-
-
-    var mPresenter: Presenter? = null
+class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
 
     val mainFragment = FragmentMain()
     val detailsFragment = FragmentDetails()

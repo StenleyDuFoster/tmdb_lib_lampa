@@ -1,14 +1,17 @@
 package lampa.test.tmdblib.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+
+import androidx.fragment.app.Fragment
+
 import com.bumptech.glide.Glide
+
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.model.data.Results
 
