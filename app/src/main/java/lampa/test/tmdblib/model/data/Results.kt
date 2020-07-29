@@ -1,10 +1,4 @@
-package lampa.test.tmdblib.mvp.api
-
-    data class Movie (
-        val page: Int,
-        val total_pages: Int,
-        val results: List<Results>
-    )
+package lampa.test.tmdblib.model.data
 
     data class Results (
         val original_name: String,

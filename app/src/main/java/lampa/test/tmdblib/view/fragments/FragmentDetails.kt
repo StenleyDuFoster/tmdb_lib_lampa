@@ -10,7 +10,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.mvp.api.Results
+import lampa.test.tmdblib.model.data.Results
 
 class FragmentDetails : Fragment() {
 

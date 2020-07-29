@@ -1,5 +1,6 @@
-package lampa.test.tmdblib.mvp.api
+package lampa.test.tmdblib.api
 
+import lampa.test.tmdblib.model.data.Movie
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
