@@ -19,6 +19,13 @@ class MainRepository(callBackFromRepositoryToMainContract: CallBackFromRepositor
     var searchTypeMovie: String = "top_rated"
     val callBackFromRepositoryToMainContract:CallBackFromRepositoryToMainContract
 
+    val retrofit = Retrofit.Builder()
+        .baseUrl("https://api.themoviedb.org/3/movie/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    val jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
+
+
     init{
         this.callBackFromRepositoryToMainContract = callBackFromRepositoryToMainContract
     }
@@ -28,11 +35,6 @@ class MainRepository(callBackFromRepositoryToMainContract: CallBackFromRepositor
     }
 
     override fun loadMovie() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/movie/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
 
         val call: Call<Movie>? = jsonPlaceHolderApi
             .getTopRatedMovie(searchTypeMovie,

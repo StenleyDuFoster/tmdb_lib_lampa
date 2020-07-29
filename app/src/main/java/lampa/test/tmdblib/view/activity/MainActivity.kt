@@ -153,6 +153,5 @@ class MainActivity : AppCompatActivity(),CallBackFromFragmentToActivity{
         fragmentTransaction.show(detailsFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
-        fragmentTransaction.commit()
     }
 }
