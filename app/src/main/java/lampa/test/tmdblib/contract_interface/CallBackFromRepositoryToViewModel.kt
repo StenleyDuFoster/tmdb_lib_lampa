@@ -2,7 +2,7 @@ package lampa.test.tmdblib.contract_interface
 
 import lampa.test.tmdblib.model.data.Movie
 
-interface CallBackFromRepositoryToMainContract {
+interface CallBackFromRepositoryToViewModel {
 
     fun onMovieLoad(movie: Movie)
 }

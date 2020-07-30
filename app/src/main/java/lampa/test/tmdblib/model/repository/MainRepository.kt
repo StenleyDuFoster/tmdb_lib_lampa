@@ -1,7 +1,7 @@
 package lampa.test.tmdblib.model.repository
 
 import lampa.test.tmdblib.BuildConfig
-import lampa.test.tmdblib.contract_interface.CallBackFromRepositoryToMainContract
+import lampa.test.tmdblib.contract_interface.CallBackFromRepositoryToViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.model.api.JsonPlaceHolderApi
 import lampa.test.tmdblib.model.data.Movie
@@ -15,14 +15,14 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MainRepository(callBackFromRepositoryToMainContract: CallBackFromRepositoryToMainContract)
+class MainRepository(callBackFromRepositoryToMainContract: CallBackFromRepositoryToViewModel)
     : MainContract.Repository {
 
     lateinit var postMovie: Movie
     var page: Int = 1
     var totalPage: Int = 1
     var searchTypeMovie: String = "popular"
-    val callBackFromRepositoryToMainContract:CallBackFromRepositoryToMainContract
+    val callBackFromRepositoryToMainContract:CallBackFromRepositoryToViewModel
 
     val interceptor:HttpLoggingInterceptor
 
