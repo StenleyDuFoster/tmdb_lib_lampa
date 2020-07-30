@@ -11,6 +11,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
     <Toolbar
         android:background="@color/colorPrimary"
         android:id="@+id/materialToolbar"
@@ -20,9 +21,7 @@
         app:layout_constraintStart_toStartOf="@+id/fragment_details_constrain"
         app:layout_constraintTop_toTopOf="parent" />
 
-
 </com.google.android.material.appbar.AppBarLayout>
-
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -120,5 +119,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialToolbar" />
+
+    <ProgressBar
+        android:scaleX="0"
+        android:scaleY="0"
+        android:id="@+id/progress_bar"
+        android:layout_gravity="center"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

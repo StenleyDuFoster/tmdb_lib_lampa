@@ -1,5 +1,6 @@
 package lampa.test.tmdblib.model.repository
 
+import android.os.AsyncTask
 import lampa.test.tmdblib.BuildConfig
 import lampa.test.tmdblib.contract_interface.CallBackFromRepositoryToViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
@@ -56,34 +57,44 @@ class MainRepository(callBackFromRepositoryToMainContract: CallBackFromRepositor
 
     override fun setMovieType(movieType: String){
         searchTypeMovie = movieType
+        loadMovie()
+    }
+
+    private inner class LoadMovie: AsyncTask<Void,Void,Void>(){
+        override fun doInBackground(vararg p0: Void?): Void? {
+
+            val call: Call<Movie>? = jsonPlaceHolderApi
+                .getTopRatedMovie(searchTypeMovie,
+                    "9bb79091064ef827e213e1b974a3b718",
+                    "ru",
+                    page)
+
+            call?.enqueue(object : Callback<Movie?> {
+                override fun onResponse(
+                    call: Call<Movie?>,
+                    response: Response<Movie?>
+                ) {
+                    postMovie = response.body()!!
+
+                    callBackFromRepositoryToMainContract.onMovieLoad(postMovie)
+
+                    if(totalPage == null)
+                        totalPage = postMovie?.total_pages
+                }
+
+                override fun onFailure(
+                    call: Call<Movie?>,
+                    t: Throwable?
+                ) {
+                    callBackFromRepositoryToMainContract.onFailure(t.toString())
+                }
+            })
+            return null
+        }
     }
 
     override fun loadMovie() {
 
-        val call: Call<Movie>? = jsonPlaceHolderApi
-            .getTopRatedMovie(searchTypeMovie,
-                "9bb79091064ef827e213e1b974a3b718",
-                "ru",
-                page)
-
-        call?.enqueue(object : Callback<Movie?> {
-            override fun onResponse(
-                call: Call<Movie?>,
-                response: Response<Movie?>
-            ) {
-                postMovie = response.body()!!
-
-                callBackFromRepositoryToMainContract.onMovieLoad(postMovie)
-
-                if(totalPage == null)
-                    totalPage = postMovie?.total_pages
-            }
-
-            override fun onFailure(
-                call: Call<Movie?>,
-                t: Throwable?
-            ) {
-            }
-        })
+        LoadMovie().execute()
     }
 }

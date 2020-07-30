@@ -1,6 +1,7 @@
 package lampa.test.tmdblib.model.data
 
     data class Results (
+
         val original_name: String,
         val name: String,
         val id: Int,

@@ -12,8 +12,7 @@ import lampa.test.tmdblib.fragments.FragmentDetails
 import lampa.test.tmdblib.fragments.FragmentMain
 import lampa.test.tmdblib.fragments.callback.CallBackFromFragmentToActivity
 import lampa.test.tmdblib.model.data.Results
-import lampa.test.tmdblib.view.anim.Animate
-
+import lampa.test.tmdblib.utils.anim.Animate
 
 class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
 
@@ -35,11 +34,6 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
 
     private fun Init(){
 
-        val b_linear = findViewById<Button>(R.id.b_linear)
-        val b_grid = findViewById<Button>(R.id.b_grid)
-        val b_next_page = findViewById<Button>(R.id.b_next_page)
-        val b_back_page = findViewById<Button>(R.id.b_back_page)
-
         val toolbar = findViewById<Toolbar>(R.id.materialToolbar)
         setActionBar(toolbar)
         actionBar?.setTitle("Фильмы")
@@ -49,6 +43,16 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
         fTrans.add(R.id.fragment_details_constrain, detailsFragment)
         fTrans.hide(detailsFragment)
         fTrans.commit()
+
+        initButtonLayoutManager()
+        initButtonNextBack()
+        initSpinner()
+    }
+
+    private fun initButtonLayoutManager() {
+
+        val b_linear = findViewById<Button>(R.id.b_linear)
+        val b_grid = findViewById<Button>(R.id.b_grid)
 
         val clickListenerLayoutManager = View.OnClickListener{v ->
             fTrans = supportFragmentManager.beginTransaction()
@@ -69,6 +73,12 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
         }
         b_linear.setOnClickListener(clickListenerLayoutManager)
         b_grid.setOnClickListener(clickListenerLayoutManager)
+    }
+
+    private fun initButtonNextBack(){
+
+        val b_next_page = findViewById<Button>(R.id.b_next_page)
+        val b_back_page = findViewById<Button>(R.id.b_back_page)
 
         val clickListenerPageManager = View.OnClickListener{v ->
             fTrans = supportFragmentManager.beginTransaction()
@@ -99,41 +109,42 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
         }
         b_next_page.setOnClickListener(clickListenerPageManager)
         b_back_page.setOnClickListener(clickListenerPageManager)
+    }
 
-        val spinner_items:Array<String> = arrayOf(
+    private fun initSpinner(){
+
+        var spinner_items:Array<String> = arrayOf(
             getString(R.string.search_now_playing),
             getString(R.string.search_popular),
             getString(R.string.search_top_rated),
             getString(R.string.search_upcoming)
         )
-        val spinner_user_visible:Array<String> = arrayOf(
+        var spinner_user_visible:Array<String> = arrayOf(
             "сейчас в прокате",
             "популярные",
             "лучшие оценки",
             "скоро выйдут"
         )
 
-        val spinner = findViewById<Spinner>(R.id.spinner)
-        val adapter: ArrayAdapter<String> =
+        var spinner = findViewById<Spinner>(R.id.spinner)
+        var adapter: ArrayAdapter<String> =
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spinner_user_visible)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
-        val itemSelectedListener: OnItemSelectedListener = object : OnItemSelectedListener {
+        var itemSelectedListener: OnItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
-                view: View,
+                view: View?,
                 position: Int,
                 id: Long
             ) {
-                searchTypeMovie = spinner_items[position]
-                page = 1
-                mainFragment.changeMovieTypeFromFragment(spinner_items[position])
-            }
-
+                  searchTypeMovie = spinner_items[position]
+                  page = 1
+                  mainFragment.changeMovieTypeFromFragment(spinner_items[position])
+              }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         spinner.onItemSelectedListener = itemSelectedListener
-        spinner.setSelection(1)
     }
 
     override fun onBackPressed() {
