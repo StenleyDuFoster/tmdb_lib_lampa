@@ -19,18 +19,18 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MainRepository(callBackFromRepositoryToMainContract: CallBackFromRepositoryToViewModel)
     : MainContract.Repository {
 
-    lateinit var postMovie: Movie
-    var page: Int = 1
-    var totalPage: Int = 1
-    var searchTypeMovie: String = "popular"
-    val callBackFromRepositoryToMainContract:CallBackFromRepositoryToViewModel
+    private lateinit var postMovie: Movie
+    private var page: Int = 1
+    private var totalPage: Int = 1
+    private var searchTypeMovie: String = "popular"
+    private val callBackFromRepositoryToMainContract:CallBackFromRepositoryToViewModel
 
-    val interceptor:HttpLoggingInterceptor
+    private val interceptor:HttpLoggingInterceptor
 
-    val client:OkHttpClient
+    private val client:OkHttpClient
 
-    val retrofit:Retrofit
-    val jsonPlaceHolderApi:JsonPlaceHolderApi
+    private val retrofit:Retrofit
+    private val jsonPlaceHolderApi:JsonPlaceHolderApi
 
     init{
         this.callBackFromRepositoryToMainContract = callBackFromRepositoryToMainContract

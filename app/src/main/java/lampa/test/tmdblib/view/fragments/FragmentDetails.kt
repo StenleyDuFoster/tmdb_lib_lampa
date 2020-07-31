@@ -17,13 +17,13 @@ import lampa.test.tmdblib.model.data.Results
 
 class FragmentDetails : Fragment() {
 
-    lateinit var tv_title:TextView
-    lateinit var tv_genre:TextView
-    lateinit var tv_content:TextView
+    private lateinit var tv_title:TextView
+    private lateinit var tv_genre:TextView
+    private lateinit var tv_content:TextView
 
-    lateinit var rate_view:RatingBar
+    private lateinit var rate_view:RatingBar
 
-    lateinit var iv_details:ImageView
+    private lateinit var iv_details:ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

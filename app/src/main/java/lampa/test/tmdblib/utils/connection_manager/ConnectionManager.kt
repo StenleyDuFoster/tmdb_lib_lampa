@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Handler
 import android.widget.Toast
-import java.util.function.Consumer
 
 class ConnectionManager (var context: Context, lambda: Runnable) {
 
@@ -27,7 +26,7 @@ class ConnectionManager (var context: Context, lambda: Runnable) {
         return connection
     }
 
-    fun waitConnection() {
+    private fun waitConnection() {
         checkLoopHandler = Handler().postDelayed({
             if (!hasConnection()) {
                 waitConnection()
@@ -41,7 +40,7 @@ class ConnectionManager (var context: Context, lambda: Runnable) {
         }, 5000)
     }
 
-    fun stateConnection(){
+    private fun stateConnection(){
         stateLoopHandler = Handler().postDelayed({
             if (!hasConnection()) {
                 waitConnection()
@@ -54,7 +53,7 @@ class ConnectionManager (var context: Context, lambda: Runnable) {
         }, 5000)
     }
 
-    fun hasConnection(): Boolean {
+    private fun hasConnection(): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         var wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
         if (wifiInfo != null && wifiInfo.isConnected) {

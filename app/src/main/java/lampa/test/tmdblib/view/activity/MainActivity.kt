@@ -16,15 +16,15 @@ import lampa.test.tmdblib.utils.anim.Animate
 
 class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
 
-    val mainFragment = FragmentMain()
-    val detailsFragment = FragmentDetails()
+    private val mainFragment = FragmentMain()
+    private val detailsFragment = FragmentDetails()
 
-    var fTrans = supportFragmentManager.beginTransaction()
+    private var fTrans = supportFragmentManager.beginTransaction()
 
-    var page:Int = 1
-    var totalPage:Int? = null
+    private var page:Int = 1
+    private var totalPage:Int? = null
 
-    lateinit var searchTypeMovie: String
+    private lateinit var searchTypeMovie: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

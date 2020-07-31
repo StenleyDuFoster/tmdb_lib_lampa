@@ -46,7 +46,6 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
     override fun onCreateView (inflater: LayoutInflater, container: ViewGroup?,
                                savedInstanceState: Bundle?): View? {
 
-
         val v: View = inflater.inflate(R.layout.fragment_main, null)
         recycler = v.findViewById(R.id.recycler)
 
@@ -90,7 +89,6 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
             Toast.makeText(context, failure, Toast.LENGTH_LONG).show()
             animateClass.scale(progressBar, 0.0f)
-
         })
     }
 
@@ -116,7 +114,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
         })
     }
 
-    fun initConnectionManager() {
+    private fun initConnectionManager() {
 
         val get_page = Runnable { getPage() }
         val connectionManager = ConnectionManager(context!!, get_page)
@@ -124,6 +122,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
     }
 
     fun getPage() {
+
         userViewModel.getPage()
         allContent = ArrayList()
         allContent.clear()
