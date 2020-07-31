@@ -98,8 +98,7 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type: Int, listener: Call
             .asBitmap()
             .load("https://image.tmdb.org/t/p/w500" + currentItem.poster_path)
             .into(holder.imageView)
-
-
+        
         when(holder.itemViewType){
             1 -> {
                 val overview = currentItem.overview

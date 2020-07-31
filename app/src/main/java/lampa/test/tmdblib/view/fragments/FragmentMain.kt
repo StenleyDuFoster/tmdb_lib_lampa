@@ -26,22 +26,22 @@ import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
 class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
-    lateinit var userViewModel: ViewModel
+    private lateinit var userViewModel: ViewModel
 
-    lateinit var recycler: RecyclerView
-    lateinit var linearLayoutManager: LinearLayoutManager
-    lateinit var gridLayoutManager: GridLayoutManager
-    lateinit var adapter: RecyclerAdapter
+    private lateinit var recycler: RecyclerView
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var gridLayoutManager: GridLayoutManager
+    private lateinit var adapter: RecyclerAdapter
 
-    val animateClass = Animate()
+    private val animateClass = Animate()
 
-    lateinit var callBackFromFragmentToActivity: CallBackFromFragmentToActivity
+    private lateinit var callBackFromFragmentToActivity: CallBackFromFragmentToActivity
 
-    var allContent: ArrayList<Results> = ArrayList()
+    private var allContent: ArrayList<Results> = ArrayList()
 
-    lateinit var progressBar: ProgressBar
+    private lateinit var progressBar: ProgressBar
 
-    var isDownload:Boolean = false
+    private var isDownload:Boolean = false
 
     override fun onCreateView (inflater: LayoutInflater, container: ViewGroup?,
                                savedInstanceState: Bundle?): View? {
@@ -69,8 +69,11 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
             val result_array = ArrayList(wrapperMovie.movie.results)
 
             if(wrapperMovie.showAllOrAddToShow == R.integer.ALL_PAGE) {
+
                 allContent = result_array
-                adapter = RecyclerAdapter(result_array, 1, this as CallBackFromRecyclerToFragment)
+                adapter = RecyclerAdapter(allContent,
+                                                   defineType(recycler.layoutManager),
+                                                   this as CallBackFromRecyclerToFragment)
                 recycler.adapter = adapter
                 animateClass.recycler(recycler)
                 animateClass.scale(progressBar, 0.0f)
@@ -150,6 +153,14 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
         recycler.adapter = adapter
         animateClass.recycler(recycler)
         recycler.scrollToPosition(oldScrollPos)
+    }
+
+    fun defineType(layoutManager: RecyclerView.LayoutManager?): Int{
+
+        when (layoutManager) {
+            linearLayoutManager -> return 1
+            else -> return 2
+        }
     }
 
     override fun onAttach(activity: Activity) {
