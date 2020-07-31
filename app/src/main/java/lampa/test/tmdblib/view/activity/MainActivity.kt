@@ -1,12 +1,11 @@
-package lampa.test.tmdblib.activity
+package lampa.test.tmdblib.view.activity
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-
 import androidx.appcompat.app.AppCompatActivity
-
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.fragments.FragmentDetails
 import lampa.test.tmdblib.fragments.FragmentMain
@@ -38,7 +37,7 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
 
         val toolbar = findViewById<Toolbar>(R.id.materialToolbar)
         setActionBar(toolbar)
-        actionBar?.setTitle("Фильмы")
+        actionBar?.title = "Фильмы"
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
         fTrans.add(R.id.fragment_cont_constrain, mainFragment)
@@ -115,25 +114,25 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
 
     private fun initSpinner(){
 
-        var spinner_items:Array<String> = arrayOf(
+        val spinner_items:Array<String> = arrayOf(
             getString(R.string.search_now_playing),
             getString(R.string.search_popular),
             getString(R.string.search_top_rated),
             getString(R.string.search_upcoming)
         )
-        var spinner_user_visible:Array<String> = arrayOf(
+        val spinner_user_visible:Array<String> = arrayOf(
             "сейчас в прокате",
             "популярные",
             "лучшие оценки",
             "скоро выйдут"
         )
 
-        var spinner = findViewById<Spinner>(R.id.spinner)
-        var adapter: ArrayAdapter<String> =
+        val spinner = findViewById<Spinner>(R.id.spinner)
+        val adapter: ArrayAdapter<String> =
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spinner_user_visible)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
-        var itemSelectedListener: OnItemSelectedListener = object : OnItemSelectedListener {
+        val itemSelectedListener: OnItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View?,
@@ -151,9 +150,12 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
 
     override fun onBackPressed() {
         actionBar?.setDisplayHomeAsUpEnabled(false)
-        actionBar?.setDisplayShowHomeEnabled(false)
-        actionBar?.setTitle("Фильмы")
+        actionBar?.title = "Фильмы"
         super.onBackPressed()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return false
     }
 
     override fun openMovie(movie: Results) {

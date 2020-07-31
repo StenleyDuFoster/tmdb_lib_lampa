@@ -7,13 +7,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
-
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.fragment.app.Fragment
-
 import com.bumptech.glide.Glide
-
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.model.data.Results
+
 
 class FragmentDetails : Fragment() {
 
@@ -57,7 +56,8 @@ class FragmentDetails : Fragment() {
             .into(iv_details)
 
         activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
-        activity?.actionBar?.setDisplayShowHomeEnabled(true)
+        val drawerArrow = DrawerArrowDrawable(context)
+        activity?.actionBar?.setIcon(drawerArrow)
         activity?.actionBar?.setTitle(res.title)
     }
 }
