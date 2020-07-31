@@ -82,7 +82,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
                 allContent.addAll(result_array)
                 recycler.adapter?.notifyItemRangeInserted(recycler.adapter!!.itemCount,
-                    recycler.adapter!!.itemCount+20)
+                    recycler.adapter!!.itemCount + 20)
                 isDownload = false
                 animateClass.scale(progressBar, 0.0f)
             }

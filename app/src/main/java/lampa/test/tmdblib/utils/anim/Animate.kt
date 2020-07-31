@@ -4,6 +4,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View
 import android.view.animation.AnimationUtils
+import androidx.fragment.app.Fragment
 
 import androidx.recyclerview.widget.RecyclerView
 

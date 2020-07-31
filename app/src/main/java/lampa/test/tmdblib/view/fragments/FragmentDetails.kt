@@ -29,6 +29,7 @@ class FragmentDetails : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         val v = inflater.inflate(R.layout.fragment_details, container, false)
 
         tv_title = v.findViewById(R.id.title_text)

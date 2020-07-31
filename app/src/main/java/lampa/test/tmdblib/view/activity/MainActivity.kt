@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
     private var page:Int = 1
     private var totalPage:Int? = null
 
+    private val animateClass = Animate()
+
     private lateinit var searchTypeMovie: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,14 +61,14 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
             when(v.id){
                 R.id.b_linear ->
                 {
-                    Animate().scale(b_linear,1.0f)
-                    Animate().scale(b_grid,0.6f)
+                    animateClass.scale(b_linear,1.0f)
+                    animateClass.scale(b_grid,0.6f)
                     mainFragment.setLayoutManager(1)
                 }
                 R.id.b_grid ->
                 {
-                    Animate().scale(b_grid,1.0f)
-                    Animate().scale(b_linear,0.6f)
+                    animateClass.scale(b_grid,1.0f)
+                    animateClass.scale(b_linear,0.6f)
                     mainFragment.setLayoutManager(2)
                 }
             }
@@ -158,6 +160,8 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
         val fragmentTransaction = supportFragmentManager.beginTransaction()
 
         detailsFragment.setContent(movie)
+        fragmentTransaction.setCustomAnimations(R.anim.in_leaft_to_right, R.anim.out_leaft_to_right,
+                                                R.anim.in_leaft_to_right, R.anim.out_leaft_to_right)
 
         fragmentTransaction.show(detailsFragment)
         fragmentTransaction.addToBackStack(null)
