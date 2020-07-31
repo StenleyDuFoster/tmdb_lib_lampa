@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.fragments.callback.CallBackFromFragmentToActivity
-import lampa.test.tmdblib.model.data.Results
-import lampa.test.tmdblib.model.data.WrapperMovie
-import lampa.test.tmdblib.presenter.ViewModel
+import lampa.test.tmdblib.model.repository.data.Results
+import lampa.test.tmdblib.model.repository.data.WrapperMovie
+import lampa.test.tmdblib.model.viewmodel.MovieViewModel
 import lampa.test.tmdblib.utils.anim.Animate
 import lampa.test.tmdblib.utils.connection_manager.ConnectionManager
 import lampa.test.tmdblib.view.recycler.RecyclerAdapter
@@ -26,7 +26,7 @@ import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
 class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
-    private lateinit var userViewModel: ViewModel
+    private lateinit var userViewModel: MovieViewModel
 
     private lateinit var recycler: RecyclerView
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -62,7 +62,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     private fun initViewModel(){
 
-        userViewModel = ViewModelProvider.NewInstanceFactory().create(ViewModel::class.java)
+        userViewModel = ViewModelProvider.NewInstanceFactory().create(MovieViewModel::class.java)
 
         userViewModel.getMovie().observe(viewLifecycleOwner, Observer { wrapperMovie: WrapperMovie ->
 

@@ -1,19 +1,26 @@
 package lampa.test.tmdblib.view.activity
 
 import android.os.Bundle
-import android.view.MenuItem
+import android.os.Handler
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
+import androidx.room.Room
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.fragments.FragmentDetails
 import lampa.test.tmdblib.fragments.FragmentMain
 import lampa.test.tmdblib.fragments.callback.CallBackFromFragmentToActivity
-import lampa.test.tmdblib.model.data.Results
+import lampa.test.tmdblib.model.repository.data.Results
+import lampa.test.tmdblib.model.repository.local.DBContainer
+import lampa.test.tmdblib.model.repository.local.database.AppDatabase
+import lampa.test.tmdblib.model.repository.local.enity.LoggedInUser
 import lampa.test.tmdblib.utils.anim.Animate
 
+
 class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
+
+    lateinit var db: AppDatabase
 
     private val mainFragment = FragmentMain()
     private val detailsFragment = FragmentDetails()
@@ -30,10 +37,19 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Init()
+        initMain()
     }
 
-    private fun Init(){
+    private fun initMain(){
+
+//        db = Room.databaseBuilder(this, AppDatabase::class.java, "database")
+//            .build()
+//
+//        Handler().post(Runnable {
+//            db.loggedInUserDao().insert(LoggedInUser("123","321"))
+//        })
+//
+//        Toast.makeText(applicationContext,db.loggedInUserDao().toString(),Toast.LENGTH_LONG).show()
 
         val toolbar = findViewById<Toolbar>(R.id.materialToolbar)
         setActionBar(toolbar)
@@ -152,10 +168,6 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
         actionBar?.setDisplayHomeAsUpEnabled(false)
         actionBar?.title = "Фильмы"
         super.onBackPressed()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return false
     }
 
     override fun openMovie(movie: Results) {

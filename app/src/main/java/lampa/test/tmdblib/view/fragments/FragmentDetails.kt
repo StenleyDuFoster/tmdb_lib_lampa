@@ -11,7 +11,7 @@ import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.model.data.Results
+import lampa.test.tmdblib.model.repository.data.Results
 
 
 class FragmentDetails : Fragment() {

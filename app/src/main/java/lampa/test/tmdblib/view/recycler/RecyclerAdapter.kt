@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.model.data.Results
+import lampa.test.tmdblib.model.repository.data.Results
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
 class RecyclerAdapter(exampleList: ArrayList<Results>, type: Int, listener: CallBackFromRecyclerToFragment?) :

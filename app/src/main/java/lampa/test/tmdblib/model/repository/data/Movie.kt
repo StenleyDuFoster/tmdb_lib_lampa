@@ -1,4 +1,4 @@
-package lampa.test.tmdblib.model.data
+package lampa.test.tmdblib.model.repository.data
 
     data class Movie (
 

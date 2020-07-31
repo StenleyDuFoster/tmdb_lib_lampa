@@ -1,15 +1,15 @@
-package lampa.test.tmdblib.presenter
+package lampa.test.tmdblib.model.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.contract_interface.CallBackFromRepositoryToViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.model.data.Movie
-import lampa.test.tmdblib.model.data.WrapperMovie
-import lampa.test.tmdblib.model.repository.MainRepository
+import lampa.test.tmdblib.model.repository.data.Movie
+import lampa.test.tmdblib.model.repository.data.WrapperMovie
+import lampa.test.tmdblib.model.repository.internet.InternetRepository
 
-class ViewModel: ViewModel(), MainContract.Presenter, CallBackFromRepositoryToViewModel {
+class MovieViewModel: ViewModel(), MainContract.Presenter, CallBackFromRepositoryToViewModel {
 
     var Model: MainContract.Repository? = null
     var showAllOrAddToShow = R.integer.ALL_PAGE
@@ -17,7 +17,8 @@ class ViewModel: ViewModel(), MainContract.Presenter, CallBackFromRepositoryToVi
     val liveProgress: MutableLiveData<String> = MutableLiveData()
 
     init {
-        Model = MainRepository(this)
+        Model =
+            InternetRepository(this)
     }
 
     fun getMovie() = liveMovie

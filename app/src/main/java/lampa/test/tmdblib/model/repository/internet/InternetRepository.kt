@@ -1,11 +1,15 @@
-package lampa.test.tmdblib.model.repository
+package lampa.test.tmdblib.model.repository.internet
 
 import android.os.AsyncTask
+import android.os.Handler
+import androidx.room.Room
 import lampa.test.tmdblib.BuildConfig
 import lampa.test.tmdblib.contract_interface.CallBackFromRepositoryToViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.model.api.JsonPlaceHolderApi
-import lampa.test.tmdblib.model.data.Movie
+import lampa.test.tmdblib.model.repository.internet.api.JsonPlaceHolderApi
+import lampa.test.tmdblib.model.repository.data.Movie
+import lampa.test.tmdblib.model.repository.local.database.AppDatabase
+import lampa.test.tmdblib.model.repository.local.enity.LoggedInUser
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,8 +19,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.coroutines.coroutineContext
 
-class MainRepository(callBackFromRepositoryToMainContract: CallBackFromRepositoryToViewModel)
+class InternetRepository(callBackFromRepositoryToMainContract: CallBackFromRepositoryToViewModel)
     : MainContract.Repository {
 
     private lateinit var postMovie: Movie
