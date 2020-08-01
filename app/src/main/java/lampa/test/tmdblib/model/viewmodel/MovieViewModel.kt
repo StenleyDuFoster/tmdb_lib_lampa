@@ -11,13 +11,13 @@ import lampa.test.tmdblib.model.repository.internet.InternetRepository
 
 class MovieViewModel: ViewModel(), MainContract.Presenter, CallBackFromRepositoryToViewModel {
 
-    var Model: MainContract.Repository? = null
+    var InternetRepository: MainContract.Repository? = null
     var showAllOrAddToShow = R.integer.ALL_PAGE
     val liveMovie: MutableLiveData<WrapperMovie> = MutableLiveData()
     val liveProgress: MutableLiveData<String> = MutableLiveData()
 
     init {
-        Model =
+        InternetRepository =
             InternetRepository(this)
     }
 
@@ -27,16 +27,16 @@ class MovieViewModel: ViewModel(), MainContract.Presenter, CallBackFromRepositor
 
     override fun getPage() {
         showAllOrAddToShow = R.integer.ALL_PAGE
-        Model?.loadMovie()
+        InternetRepository?.loadPageMovie()
     }
 
     override fun addPage() {
         showAllOrAddToShow = R.integer.ADD_TO_PAGE
-        Model?.loadMovie()
+        InternetRepository?.loadAddPageMovie()
     }
 
     override fun changeMovieType(movieType: String) {
-       Model?.setMovieType(movieType)
+       InternetRepository?.setMovieType(movieType)
     }
 
     override fun onMovieLoad(movie: Movie) {

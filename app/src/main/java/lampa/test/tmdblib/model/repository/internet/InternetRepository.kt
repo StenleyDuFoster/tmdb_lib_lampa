@@ -1,15 +1,11 @@
 package lampa.test.tmdblib.model.repository.internet
 
 import android.os.AsyncTask
-import android.os.Handler
-import androidx.room.Room
 import lampa.test.tmdblib.BuildConfig
 import lampa.test.tmdblib.contract_interface.CallBackFromRepositoryToViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.model.repository.internet.api.JsonPlaceHolderApi
 import lampa.test.tmdblib.model.repository.data.Movie
-import lampa.test.tmdblib.model.repository.local.database.AppDatabase
-import lampa.test.tmdblib.model.repository.local.enity.LoggedInUser
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -19,13 +15,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.coroutines.coroutineContext
 
 class InternetRepository(callBackFromRepositoryToMainContract: CallBackFromRepositoryToViewModel)
     : MainContract.Repository {
 
     private lateinit var postMovie: Movie
     private var page: Int = 1
+    private var addPage: Int = 0
     private var totalPage: Int = 1
     private var searchTypeMovie: String = "popular"
     private val callBackFromRepositoryToMainContract:CallBackFromRepositoryToViewModel
@@ -62,7 +58,7 @@ class InternetRepository(callBackFromRepositoryToMainContract: CallBackFromRepos
 
     override fun setMovieType(movieType: String){
         searchTypeMovie = movieType
-        loadMovie()
+        loadPageMovie()
     }
 
     private inner class LoadMovie: AsyncTask<Void,Void,Void>(){
@@ -83,6 +79,8 @@ class InternetRepository(callBackFromRepositoryToMainContract: CallBackFromRepos
 
                     callBackFromRepositoryToMainContract.onMovieLoad(postMovie)
 
+                    page += addPage
+
                     if(totalPage == null)
                         totalPage = postMovie?.total_pages
                 }
@@ -98,8 +96,15 @@ class InternetRepository(callBackFromRepositoryToMainContract: CallBackFromRepos
         }
     }
 
-    override fun loadMovie() {
+    override fun loadPageMovie() {
 
+        page = 1
+        LoadMovie().execute()
+    }
+
+    override fun loadAddPageMovie() {
+
+        page += 1
         LoadMovie().execute()
     }
 }

@@ -3,7 +3,7 @@ package lampa.test.tmdblib.model.repository.local.enity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-    @Entity(tableName = "word_table")
+    @Entity(tableName = "login_user_table")
     class LoggedInUser(
 
         @PrimaryKey

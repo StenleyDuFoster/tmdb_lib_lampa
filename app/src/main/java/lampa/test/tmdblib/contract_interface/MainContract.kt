@@ -11,7 +11,8 @@ interface MainContract {
 
     interface Repository {
 
-        fun loadMovie()
+        fun loadPageMovie()
+        fun loadAddPageMovie()
         fun setMovieType(movieType: String)
     }
 }

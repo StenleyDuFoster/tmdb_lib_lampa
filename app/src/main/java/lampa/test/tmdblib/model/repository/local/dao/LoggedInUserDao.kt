@@ -5,8 +5,8 @@ import lampa.test.tmdblib.model.repository.local.enity.LoggedInUser
 
     @Dao
     open interface LoggedInUserDao {
-//        @Query("SELECT * FROM loggedInUser")
-//        fun getAll(): List<LoggedInUser?>?
+        @Query("SELECT * FROM login_user_table")
+        fun getAll(): List<LoggedInUser?>?
 
         @Insert
         fun insert(loggedInUser: LoggedInUser?)

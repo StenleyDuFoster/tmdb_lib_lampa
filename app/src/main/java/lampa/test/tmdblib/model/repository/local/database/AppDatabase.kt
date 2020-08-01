@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import lampa.test.tmdblib.model.repository.local.dao.LoggedInUserDao
 import lampa.test.tmdblib.model.repository.local.enity.LoggedInUser
 
-@Database(entities = (arrayOf(LoggedInUser::class)), version = 1)
+@Database(entities = (arrayOf(LoggedInUser::class)), version = 2, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
         abstract fun loggedInUserDao(): LoggedInUserDao
     }
