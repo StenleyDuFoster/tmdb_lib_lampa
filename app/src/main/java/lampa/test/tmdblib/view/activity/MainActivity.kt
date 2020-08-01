@@ -1,28 +1,23 @@
 package lampa.test.tmdblib.view.activity
 
 import android.os.Bundle
-import android.util.Log
+import android.provider.MediaStore
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
-import androidx.room.migration.Migration
-import io.reactivex.Observer
-import io.reactivex.disposables.Disposable
+import androidx.core.view.drawToBitmap
+import kotlinx.android.synthetic.main.card_grid.view.*
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.fragments.FragmentDetails
 import lampa.test.tmdblib.fragments.FragmentMain
 import lampa.test.tmdblib.fragments.callback.CallBackFromFragmentToActivity
 import lampa.test.tmdblib.model.repository.data.Results
-import lampa.test.tmdblib.model.repository.local.database.AppDatabase
-import lampa.test.tmdblib.model.repository.local.enity.LoggedInUser
 import lampa.test.tmdblib.utils.anim.Animate
+import lampa.test.tmdblib.utils.sava_image.SaveImage
 
 
 class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
-
-    lateinit var db: AppDatabase
 
     private val mainFragment = FragmentMain()
     private val detailsFragment = FragmentDetails()
@@ -44,18 +39,6 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
 
     private fun initMain(){
 
-        db = Room.databaseBuilder(this, AppDatabase::class.java, "database")
-            .build()
-
-
-
-
-         Thread(Runnable {
-             //Thread.sleep(5000)
-             //db.loggedInUserDao().insert(LoggedInUser("1812","321"))
-             Log.v("32131", db.loggedInUserDao().getAll()?.get(0)?.login.toString())
-          }).start()
-
         val toolbar = findViewById<Toolbar>(R.id.materialToolbar)
         setActionBar(toolbar)
         actionBar?.title = "Фильмы"
@@ -69,6 +52,13 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
         initButtonLayoutManager()
         initButtonNextBack()
         initSpinner()
+
+//        Thread(Runnable {
+//            Thread.sleep(5000)
+//
+//            MediaStore.Images.Media.insertImage(getContentResolver(),
+//                mainFragment.recycler.card_image.drawToBitmap(), "yourTitle" , "yourDescription")
+//        })
     }
 
     private fun initButtonLayoutManager() {

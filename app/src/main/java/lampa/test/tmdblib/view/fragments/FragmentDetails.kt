@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.model.repository.data.Results
 
-
 class FragmentDetails : Fragment() {
 
     private lateinit var tv_title:TextView
@@ -56,8 +55,6 @@ class FragmentDetails : Fragment() {
             .into(iv_details)
 
         activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
-        val drawerArrow = DrawerArrowDrawable(context)
-        activity?.actionBar?.setIcon(drawerArrow)
         activity?.actionBar?.setTitle(res.title)
     }
 }

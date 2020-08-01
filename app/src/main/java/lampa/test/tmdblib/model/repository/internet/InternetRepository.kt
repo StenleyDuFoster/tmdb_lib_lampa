@@ -21,7 +21,6 @@ class InternetRepository(callBackFromRepositoryToMainContract: CallBackFromRepos
 
     private lateinit var postMovie: Movie
     private var page: Int = 1
-    private var addPage: Int = 0
     private var totalPage: Int = 1
     private var searchTypeMovie: String = "popular"
     private val callBackFromRepositoryToMainContract:CallBackFromRepositoryToViewModel
@@ -78,8 +77,6 @@ class InternetRepository(callBackFromRepositoryToMainContract: CallBackFromRepos
                     postMovie = response.body()!!
 
                     callBackFromRepositoryToMainContract.onMovieLoad(postMovie)
-
-                    page += addPage
 
                     if(totalPage == null)
                         totalPage = postMovie?.total_pages

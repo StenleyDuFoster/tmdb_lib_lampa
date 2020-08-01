@@ -28,7 +28,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     private lateinit var userViewModel: MovieViewModel
 
-    private lateinit var recycler: RecyclerView
+    lateinit var recycler: RecyclerView
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var gridLayoutManager: GridLayoutManager
     private lateinit var adapter: RecyclerAdapter
@@ -50,7 +50,14 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
         recycler = v.findViewById(R.id.recycler)
 
         linearLayoutManager = LinearLayoutManager(v.context,LinearLayoutManager.VERTICAL,false)
-        gridLayoutManager = GridLayoutManager(context,3)
+        var orientation = 3
+
+        if(resources.configuration.orientation == 2)
+            orientation = 5
+
+        gridLayoutManager = GridLayoutManager(v.context,orientation,GridLayoutManager.VERTICAL,false)
+        gridLayoutManager.spanSizeLookup
+
         progressBar = activity?.findViewById(R.id.progress_bar)!!
 
         initRecycler()
@@ -62,7 +69,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     private fun initViewModel(){
 
-        userViewModel = ViewModelProvider.NewInstanceFactory().create(MovieViewModel::class.java)
+        userViewModel = ViewModelProvider.NewInstanceFactory().create(MovieViewModel(activity?.application!!)::class.java)
 
         userViewModel.getMovie().observe(viewLifecycleOwner, Observer { wrapperMovie: WrapperMovie ->
 

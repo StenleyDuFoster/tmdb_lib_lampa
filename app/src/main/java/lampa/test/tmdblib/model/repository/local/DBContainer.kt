@@ -8,15 +8,15 @@ import lampa.test.tmdblib.model.repository.local.database.AppDatabase
 class DBContainer: Application() {
 
     var instances: DBContainer = this
-    lateinit private var database: AppDatabase
+    private lateinit var database: AppDatabase
 
     override fun onCreate() {
         super.onCreate()
-        database = Room.databaseBuilder(this, AppDatabase::class.java, "database")
+        database = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database")
             .build()
     }
 
-    fun getInstance(): DBContainer? {
+    open fun getInstance(): DBContainer? {
         return instances
     }
 
