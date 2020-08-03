@@ -69,7 +69,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     private fun initViewModel(){
 
-        userViewModel = ViewModelProvider.NewInstanceFactory().create(MovieViewModel(activity?.application!!)::class.java)
+        userViewModel = ViewModelProvider(activity!!).get(MovieViewModel::class.java)
 
         userViewModel.getMovie().observe(viewLifecycleOwner, Observer { wrapperMovie: WrapperMovie ->
 
