@@ -42,6 +42,7 @@ class InternetAuthentication (callBackFromInternetAuthToLoginViewModel: CallBack
             .build()
 
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
+        createSession()
     }
 
     private inner class LoadSession: AsyncTask<Void, Void, Void>(){

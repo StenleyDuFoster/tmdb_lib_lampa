@@ -8,7 +8,7 @@ data class User (
     val pass: String,
     val token: String,
     val signIn: Boolean,
-    val session: String
+    var session: String
 ){
     fun toDatabaseFormat(): LoggedInUser{
 

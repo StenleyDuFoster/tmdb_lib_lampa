@@ -25,7 +25,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     val liveUser: MutableLiveData<User> = MutableLiveData()
     val liveStatus: MutableLiveData<Boolean> = MutableLiveData()
 
-    lateinit var auntificateUser: String
+    var auntificateUser: String? = null
+    var session: String? = null
 
     init {
 
@@ -63,6 +64,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
             .addOnSuccessListener {
 
                 userFirebase = auth.currentUser!!
+                auntificateUser = user.name
+                user.session = session.toString()
 
                 userFirebase.sendEmailVerification()
                     .addOnCompleteListener {
@@ -76,6 +79,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
                auth.signInWithEmailAndPassword(user.name, user.pass)
                    .addOnSuccessListener {
+                       auntificateUser = user.name
                        liveUser.postValue(user)
                        db.clearAllTables()
                        db.loggedInUserDao().insert(user.toDatabaseFormat())
@@ -102,10 +106,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
     override fun onAuthenticationTmdbSuccess(session: String) {
 
-        Thread(
-            Runnable {
-                db.loggedInUserDao().getAll()?.get(0)
-            }
-        ).start()
+        this.session = session
     }
 }
