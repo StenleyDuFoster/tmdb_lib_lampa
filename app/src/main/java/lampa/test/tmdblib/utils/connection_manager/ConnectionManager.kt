@@ -5,14 +5,14 @@ import android.net.ConnectivityManager
 import android.os.Handler
 import android.widget.Toast
 
-class ConnectionManager (var context: Context, lambda: Runnable) {
+class ConnectionManager (var context: Context, runnable: Runnable) {
 
     var checkLoopHandler: Boolean? = null
     var stateLoopHandler: Boolean? = null
-    var lambda: Runnable
+    var runnable: Runnable
 
     init {
-        this.lambda = lambda
+        this.runnable = runnable
     }
 
     fun checkInternet(): Boolean {
@@ -34,7 +34,7 @@ class ConnectionManager (var context: Context, lambda: Runnable) {
                 Toast.makeText(context, "Соединение установлено", Toast.LENGTH_SHORT).show()
                 checkLoopHandler = null
                 stateConnection()
-                lambda.run()
+                runnable.run()
 
             }
         }, 5000)
@@ -48,7 +48,7 @@ class ConnectionManager (var context: Context, lambda: Runnable) {
                 stateLoopHandler = null
             } else {
                 stateConnection()
-                lambda
+                runnable
             }
         }, 5000)
     }

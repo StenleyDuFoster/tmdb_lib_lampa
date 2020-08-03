@@ -55,7 +55,7 @@ class InternetAuthentication (callBackFromInternetAuthToLoginViewModel: CallBack
                     call: Call<Session?>,
                     response: Response<Session?>
                 ) {
-                    callBackFromInternetAuthToLoginViewModel.onAuthenticationSuccess(response.body()?.guest_session_id!!)
+                    callBackFromInternetAuthToLoginViewModel.onAuthenticationTmdbSuccess(response.body()?.guest_session_id!!)
                 }
 
                 override fun onFailure(

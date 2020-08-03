@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetAuthToLoginViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.model.repository.data.User
@@ -13,23 +15,24 @@ import lampa.test.tmdblib.model.repository.local.database.LoggedDatabase
 class LoginViewModel(application: Application) : AndroidViewModel(application),
     CallBackFromInternetAuthToLoginViewModel {
 
-    lateinit var internetAuntificate: MainContract.InternetAuth
+    var internetAuthentication: MainContract.InternetAuth
+    var auth = FirebaseAuth.getInstance()
+    lateinit var userFirebase:FirebaseUser
 
     var db: LoggedDatabase
     val context = application.applicationContext
 
     val liveUser: MutableLiveData<User> = MutableLiveData()
-    val liveStatus: MutableLiveData<String> = MutableLiveData()
+    val liveStatus: MutableLiveData<Boolean> = MutableLiveData()
 
-    lateinit var log: String
-    lateinit var pass: String
+    lateinit var auntificateUser: String
 
     init {
 
         db = Room.databaseBuilder(context, LoggedDatabase::class.java, "database_login")
             .build()
 
-        internetAuntificate = InternetAuthentication(this)
+        internetAuthentication = InternetAuthentication(this)
 
         Thread(
             Runnable {
@@ -43,41 +46,65 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                         true,
                         dbVal?.session_id!!
                     )
-                    liveUser.postValue(user)
+
+                    signUpFirebase(user)
                 }
             }
         ).start()
     }
 
     fun getUser() = liveUser
+    fun getStatus() = liveStatus
 
-    fun createUser(log:String, pass: String){
+    fun signUpFirebase(user: User){
 
-        this.log = log
-        this.pass = pass
+        liveStatus.postValue(false)
+        auth.createUserWithEmailAndPassword(user.name, user.pass)
+            .addOnSuccessListener {
 
-        internetAuntificate.createSession()
+                userFirebase = auth.currentUser!!
 
+                userFirebase.sendEmailVerification()
+                    .addOnCompleteListener {
+                    Thread(
+                        Runnable {
+                            waitEmailVerification(user, userFirebase)
+                        }
+                    ).start()
+                }
+            }.addOnFailureListener { f ->
+
+               auth.signInWithEmailAndPassword(user.name, user.pass)
+                   .addOnSuccessListener {
+                       liveUser.postValue(user)
+                       db.clearAllTables()
+                       db.loggedInUserDao().insert(user.toDatabaseFormat())
+                   }.addOnFailureListener {
+                       liveStatus.postValue(true)
+                   }
+            }
     }
 
-    override fun onAuthenticationSuccess(session: String) {
+    fun waitEmailVerification(user: User, userFirebase: FirebaseUser?){
+
+        userFirebase?.reload()
+        if(userFirebase?.isEmailVerified!!)
+        {
+            liveUser.postValue(user)
+            db.clearAllTables()
+            db.loggedInUserDao().insert(user.toDatabaseFormat())
+        }
+        else{
+            Thread.sleep(5000)
+            waitEmailVerification(user, userFirebase)
+        }
+    }
+
+    override fun onAuthenticationTmdbSuccess(session: String) {
 
         Thread(
             Runnable {
-
-                val user =  User(
-                    log,
-                    pass,
-                    "",
-                    true,
-                    session
-                )
-
-                db.loggedInUserDao().insert(
-                    user.toDatabaseFormat()
-                )
-
-                liveUser.postValue(user)
+                db.loggedInUserDao().getAll()?.get(0)
             }
         ).start()
     }
