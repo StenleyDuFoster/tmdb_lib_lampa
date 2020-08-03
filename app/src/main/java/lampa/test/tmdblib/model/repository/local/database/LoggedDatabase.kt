@@ -6,6 +6,6 @@ import lampa.test.tmdblib.model.repository.local.dao.LoggedInUserDao
 import lampa.test.tmdblib.model.repository.local.enity.LoggedInUser
 
 @Database(entities = (arrayOf(LoggedInUser::class)), version = 2, exportSchema = false)
-abstract class AppDatabase: RoomDatabase() {
+abstract class LoggedDatabase: RoomDatabase() {
         abstract fun loggedInUserDao(): LoggedInUserDao
     }

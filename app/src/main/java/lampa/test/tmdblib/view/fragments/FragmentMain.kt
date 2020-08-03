@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.fragments.callback.CallBackFromFragmentToActivity
+import lampa.test.tmdblib.fragments.callback.CallBackFromMainFToActivity
 import lampa.test.tmdblib.model.repository.data.Results
 import lampa.test.tmdblib.model.repository.data.WrapperMovie
 import lampa.test.tmdblib.model.viewmodel.MovieViewModel
@@ -26,7 +26,7 @@ import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
 class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
-    private lateinit var userViewModel: MovieViewModel
+    lateinit var userViewModel: MovieViewModel
 
     lateinit var recycler: RecyclerView
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -35,7 +35,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     private val animateClass = Animate()
 
-    private lateinit var callBackFromFragmentToActivity: CallBackFromFragmentToActivity
+    private lateinit var callBackFromMainFToActivity: CallBackFromMainFToActivity
 
     private var allContent: ArrayList<Results> = ArrayList()
 
@@ -45,6 +45,8 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     override fun onCreateView (inflater: LayoutInflater, container: ViewGroup?,
                                savedInstanceState: Bundle?): View? {
+
+        userViewModel = ViewModelProvider(activity!!).get(MovieViewModel::class.java)
 
         val v: View = inflater.inflate(R.layout.fragment_main, null)
         recycler = v.findViewById(R.id.recycler)
@@ -68,8 +70,6 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
     }
 
     private fun initViewModel(){
-
-        userViewModel = ViewModelProvider(activity!!).get(MovieViewModel::class.java)
 
         userViewModel.getMovie().observe(viewLifecycleOwner, Observer { wrapperMovie: WrapperMovie ->
 
@@ -126,7 +126,10 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     private fun initConnectionManager() {
 
-        val get_page = Runnable { getPage() }
+        val get_page = Runnable {
+            if(allContent.size < 10)
+                getPage()
+        }
         val connectionManager = ConnectionManager(context!!, get_page)
         connectionManager.checkInternet()
     }
@@ -171,12 +174,12 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
     }
 
     override fun onAttach(activity: Activity) {
-        callBackFromFragmentToActivity = activity as CallBackFromFragmentToActivity
+        callBackFromMainFToActivity = activity as CallBackFromMainFToActivity
         super.onAttach(activity)
     }
 
     override fun onMovieClick(position: Int) {
-        callBackFromFragmentToActivity.openMovie(allContent.get(position))
+        callBackFromMainFToActivity.openMovie(allContent.get(position))
     }
 
     override fun onFavoriteClick(position: Int) {

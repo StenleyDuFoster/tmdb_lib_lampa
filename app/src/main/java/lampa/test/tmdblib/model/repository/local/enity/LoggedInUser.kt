@@ -9,5 +9,7 @@ import androidx.room.PrimaryKey
         @PrimaryKey
         val login: String,
         val password: String,
-        val token: String
+        val token: String,
+        val signIn: Boolean,
+        val session_id: String
     )

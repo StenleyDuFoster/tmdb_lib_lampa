@@ -1,26 +1,27 @@
 package lampa.test.tmdblib.view.activity
 
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.drawToBitmap
-import kotlinx.android.synthetic.main.card_grid.view.*
+
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.fragments.FragmentDetails
 import lampa.test.tmdblib.fragments.FragmentMain
-import lampa.test.tmdblib.fragments.callback.CallBackFromFragmentToActivity
+import lampa.test.tmdblib.fragments.callback.CallBackFromLoginFToActivity
+import lampa.test.tmdblib.fragments.callback.CallBackFromMainFToActivity
 import lampa.test.tmdblib.model.repository.data.Results
+import lampa.test.tmdblib.model.repository.data.User
 import lampa.test.tmdblib.utils.anim.Animate
-import lampa.test.tmdblib.utils.sava_image.SaveImage
+import lampa.test.tmdblib.view.fragments.FragmentLogin
 
 
-class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
+class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackFromLoginFToActivity {
 
-    private val mainFragment = FragmentMain()
+    private  var mainFragment: FragmentMain? = null
     private val detailsFragment = FragmentDetails()
+    private val loginFragment = FragmentLogin()
 
     private var fTrans = supportFragmentManager.beginTransaction()
 
@@ -44,14 +45,17 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
         actionBar?.title = "Фильмы"
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
-        fTrans.add(R.id.fragment_cont_constrain, mainFragment)
+        fTrans = supportFragmentManager.beginTransaction()
+        //fTrans.add(R.id.fragment_cont_constrain, mainFragment)
         fTrans.add(R.id.fragment_details_constrain, detailsFragment)
+        fTrans.add(R.id.fragment_details_constrain, loginFragment)
         fTrans.hide(detailsFragment)
+        //fTrans.hide(mainFragment)
+
         fTrans.commit()
 
         initButtonLayoutManager()
         initButtonNextBack()
-        initSpinner()
 
 //        Thread(Runnable {
 //            Thread.sleep(5000)
@@ -73,13 +77,13 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
                 {
                     animateClass.scale(b_linear,1.0f)
                     animateClass.scale(b_grid,0.6f)
-                    mainFragment.setLayoutManager(1)
+                    mainFragment?.setLayoutManager(1)
                 }
                 R.id.b_grid ->
                 {
                     animateClass.scale(b_grid,1.0f)
                     animateClass.scale(b_linear,0.6f)
-                    mainFragment.setLayoutManager(2)
+                    mainFragment?.setLayoutManager(2)
                 }
             }
         }
@@ -99,7 +103,7 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
                 {
                     if(page < totalPage!!) {
                         page ++
-                        mainFragment.getPage()
+                        mainFragment?.getPage()
                         b_back_page.alpha = 1.0f
                     }
                     if(page == totalPage){
@@ -110,7 +114,7 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
                 {
                     if(page > 1) {
                         page --
-                        mainFragment.getPage()
+                        mainFragment?.getPage()
                         b_next_page.alpha = 1.0f
                     }
                     if(page == 1){
@@ -152,7 +156,9 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
             ) {
                   searchTypeMovie = spinner_items[position]
                   page = 1
-                  mainFragment.changeMovieTypeFromFragment(spinner_items[position])
+
+                  if(mainFragment != null)
+                    mainFragment?.changeMovieTypeFromFragment(spinner_items[position])
               }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
@@ -165,15 +171,33 @@ class MainActivity : AppCompatActivity(), CallBackFromFragmentToActivity{
         super.onBackPressed()
     }
 
+    fun initFTrans(){
+
+        fTrans = supportFragmentManager.beginTransaction()
+
+        fTrans.setCustomAnimations(R.anim.in_leaft_to_right, R.anim.out_leaft_to_right,
+            R.anim.in_leaft_to_right, R.anim.out_leaft_to_right)
+    }
+
     override fun openMovie(movie: Results) {
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
 
+        initFTrans()
         detailsFragment.setContent(movie)
-        fragmentTransaction.setCustomAnimations(R.anim.in_leaft_to_right, R.anim.out_leaft_to_right,
-                                                R.anim.in_leaft_to_right, R.anim.out_leaft_to_right)
 
-        fragmentTransaction.show(detailsFragment)
-        fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()
+        fTrans.show(detailsFragment)
+        fTrans.addToBackStack(null)
+        fTrans.commit()
+    }
+
+    override fun userLogin(user: User) {
+
+        fTrans = supportFragmentManager.beginTransaction()
+        mainFragment = FragmentMain()
+        //mainFragment.userViewModel
+        fTrans.add(R.id.fragment_cont_constrain, mainFragment!!)
+        fTrans.hide(loginFragment)
+
+        fTrans.commit()
+        initSpinner()
     }
 }

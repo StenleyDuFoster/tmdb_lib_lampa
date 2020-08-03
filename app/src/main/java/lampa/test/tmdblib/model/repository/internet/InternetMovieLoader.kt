@@ -2,7 +2,7 @@ package lampa.test.tmdblib.model.repository.internet
 
 import android.os.AsyncTask
 import lampa.test.tmdblib.BuildConfig
-import lampa.test.tmdblib.contract_interface.CallBackFromRepositoryToViewModel
+import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.model.repository.internet.api.JsonPlaceHolderApi
 import lampa.test.tmdblib.model.repository.data.Movie
@@ -16,24 +16,23 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class InternetRepository(callBackFromRepositoryToMainContract: CallBackFromRepositoryToViewModel)
-    : MainContract.Repository {
+class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFromInternetMovieToMovieViewModel)
+    : MainContract.InternetLoadMovie {
 
     private lateinit var postMovie: Movie
     private var page: Int = 1
     private var totalPage: Int = 1
     private var searchTypeMovie: String = "popular"
-    private val callBackFromRepositoryToMainContract:CallBackFromRepositoryToViewModel
+    private val callBackFromInternetMovieToMovieMainContract:CallBackFromInternetMovieToMovieViewModel
 
     private val interceptor:HttpLoggingInterceptor
-
     private val client:OkHttpClient
 
     private val retrofit:Retrofit
     private val jsonPlaceHolderApi:JsonPlaceHolderApi
 
     init{
-        this.callBackFromRepositoryToMainContract = callBackFromRepositoryToMainContract
+        this.callBackFromInternetMovieToMovieMainContract = callBackFromInternetMovieToMovieViewModel
 
         interceptor = HttpLoggingInterceptor()
         interceptor.level =
@@ -76,7 +75,7 @@ class InternetRepository(callBackFromRepositoryToMainContract: CallBackFromRepos
                 ) {
                     postMovie = response.body()!!
 
-                    callBackFromRepositoryToMainContract.onMovieLoad(postMovie)
+                    callBackFromInternetMovieToMovieMainContract.onMovieLoad(postMovie)
 
                     if(totalPage == null)
                         totalPage = postMovie?.total_pages
@@ -86,7 +85,7 @@ class InternetRepository(callBackFromRepositoryToMainContract: CallBackFromRepos
                     call: Call<Movie?>,
                     t: Throwable?
                 ) {
-                    callBackFromRepositoryToMainContract.onFailure(t.toString())
+                    callBackFromInternetMovieToMovieMainContract.onFailure(t.toString())
                 }
             })
             return null
