@@ -7,6 +7,7 @@ interface MainContract {
         fun getPage()
         fun addPage()
         fun changeMovieType(movieType: String)
+        fun postLikeMovie(movie_id: Int)
     }
 
     interface InternetLoadMovie {
@@ -19,5 +20,10 @@ interface MainContract {
     interface InternetAuth {
 
         fun createSession()
+    }
+
+    interface InternetPostLikeMovie {
+
+        fun post(session_id:String, movie_id: Int)
     }
 }

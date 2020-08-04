@@ -100,6 +100,10 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
             Toast.makeText(context, failure, Toast.LENGTH_LONG).show()
             animateClass.scale(progressBar, 0.0f)
         })
+
+        userViewModel.getPostStatus().observe(viewLifecycleOwner, Observer { msg: String ->
+            Toast.makeText(context,msg,Toast.LENGTH_LONG).show()
+        })
     }
 
     private fun initRecycler(){
@@ -183,6 +187,6 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
     }
 
     override fun onFavoriteClick(position: Int) {
-        Toast.makeText(context,position.toString(), Toast.LENGTH_LONG).show()
+        userViewModel.postLikeMovie(allContent[position].id)
     }
 }

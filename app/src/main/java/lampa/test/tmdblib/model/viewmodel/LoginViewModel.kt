@@ -25,7 +25,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     val liveUser: MutableLiveData<User> = MutableLiveData()
     val liveStatus: MutableLiveData<Boolean> = MutableLiveData()
 
-    var auntificateUser: String? = null
+    var authenticationUser: String? = null
     var session: String? = null
 
     init {
@@ -64,7 +64,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
             .addOnSuccessListener {
 
                 userFirebase = auth.currentUser!!
-                auntificateUser = user.name
+                authenticationUser = user.name
                 user.session = session.toString()
 
                 userFirebase.sendEmailVerification()
@@ -79,10 +79,14 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
                auth.signInWithEmailAndPassword(user.name, user.pass)
                    .addOnSuccessListener {
-                       auntificateUser = user.name
+                       authenticationUser = user.name
                        liveUser.postValue(user)
-                       db.clearAllTables()
-                       db.loggedInUserDao().insert(user.toDatabaseFormat())
+                       Thread(
+                           Runnable {
+                               db.clearAllTables()
+                               db.loggedInUserDao().insert(user.toDatabaseFormat())
+                           }
+                       ).start()
                    }.addOnFailureListener {
                        liveStatus.postValue(true)
                    }
