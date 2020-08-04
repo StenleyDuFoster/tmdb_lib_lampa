@@ -1,6 +1,6 @@
 package lampa.test.tmdblib.model.repository.data
 
-    data class Results (
+    data class MovieResultsTmdbData (
 
         val original_name: String,
         val name: String,

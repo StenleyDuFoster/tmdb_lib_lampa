@@ -5,20 +5,21 @@ import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
 
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.fragments.FragmentDetails
-import lampa.test.tmdblib.fragments.FragmentMain
+import lampa.test.tmdblib.view.fragments.FragmentDetails
+import lampa.test.tmdblib.view.fragments.FragmentMain
 import lampa.test.tmdblib.fragments.callback.CallBackFromLoginFToActivity
 import lampa.test.tmdblib.fragments.callback.CallBackFromMainFToActivity
-import lampa.test.tmdblib.model.repository.data.Results
-import lampa.test.tmdblib.model.repository.data.User
+import lampa.test.tmdblib.model.repository.data.MovieResultsTmdbData
+import lampa.test.tmdblib.model.repository.data.UserData
 import lampa.test.tmdblib.utils.anim.Animate
 import lampa.test.tmdblib.view.fragments.FragmentLogin
 
 class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackFromLoginFToActivity {
 
-    private  var mainFragment: FragmentMain? = null
+    private var mainFragment: FragmentMain? = null
     private val detailsFragment = FragmentDetails()
     private val loginFragment = FragmentLogin()
 
@@ -39,10 +40,9 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackF
 
     private fun initMain(){
 
-        val toolbar = findViewById<Toolbar>(R.id.materialToolbar)
-        setActionBar(toolbar)
+        setActionBar(materialToolbar)
         actionBar?.title = "Фильмы"
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+        materialToolbar.setNavigationOnClickListener { onBackPressed() }
 
         fTrans = supportFragmentManager.beginTransaction()
 
@@ -55,71 +55,63 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackF
 
     private fun initButtonLayoutManager() {
 
-        val b_linear = findViewById<Button>(R.id.b_linear)
-        val b_grid = findViewById<Button>(R.id.b_grid)
-
         val clickListenerLayoutManager = View.OnClickListener{v ->
             fTrans = supportFragmentManager.beginTransaction()
             when(v.id){
-                R.id.b_linear ->
+                R.id.buttonLinear ->
                 {
-                    animateClass.scale(b_linear,1.0f)
-                    animateClass.scale(b_grid,0.6f)
+                    animateClass.scale(buttonLinear,1.0f)
+                    animateClass.scale(buttonGrid,0.6f)
                     mainFragment?.setLayoutManager(1)
                 }
-                R.id.b_grid ->
+                R.id.buttonGrid ->
                 {
-                    animateClass.scale(b_grid,1.0f)
-                    animateClass.scale(b_linear,0.6f)
+                    animateClass.scale(buttonGrid,1.0f)
+                    animateClass.scale(buttonLinear,0.6f)
                     mainFragment?.setLayoutManager(2)
                 }
             }
         }
-        b_linear.setOnClickListener(clickListenerLayoutManager)
-        b_grid.setOnClickListener(clickListenerLayoutManager)
+        buttonLinear.setOnClickListener(clickListenerLayoutManager)
+        buttonGrid.setOnClickListener(clickListenerLayoutManager)
     }
 
     private fun initButtonNextBack(){
 
-        val b_next_page = findViewById<Button>(R.id.b_next_page)
-        val b_back_page = findViewById<Button>(R.id.b_back_page)
-
         val clickListenerPageManager = View.OnClickListener{v ->
             fTrans = supportFragmentManager.beginTransaction()
             when(v.id){
-                R.id.b_next_page ->
+                R.id.buttonNextPage ->
                 {
                     if(page < totalPage!!) {
                         page ++
                         mainFragment?.getPage()
-                        b_back_page.alpha = 1.0f
+                        buttonBackPage.alpha = 1.0f
                     }
                     if(page == totalPage){
-                        b_next_page.alpha = 0.5f
+                        buttonNextPage.alpha = 0.5f
                     }
                 }
-                R.id.b_back_page ->
+                R.id.buttonBackPage ->
                 {
                     if(page > 1) {
                         page --
                         mainFragment?.getPage()
-                        b_next_page.alpha = 1.0f
+                        buttonNextPage.alpha = 1.0f
                     }
                     if(page == 1){
-                        b_back_page.alpha = 0.5f
+                        buttonBackPage.alpha = 0.5f
                     }
                 }
             }
         }
-        b_next_page.setOnClickListener(clickListenerPageManager)
-        b_back_page.setOnClickListener(clickListenerPageManager)
+        buttonNextPage.setOnClickListener(clickListenerPageManager)
+        buttonBackPage.setOnClickListener(clickListenerPageManager)
     }
 
     private fun initButtonMyLikeList(){
 
-        val b_my_like_list = findViewById<Button>(R.id.b_my_like_list)
-
-        b_my_like_list.setOnClickListener {
+        buttonMyLikeList.setOnClickListener {
 
             mainFragment?.getMyLikeList()
         }
@@ -139,8 +131,6 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackF
             "лучшие оценки",
             "скоро выйдут"
         )
-
-        val spinner = findViewById<Spinner>(R.id.spinner)
         val adapter: ArrayAdapter<String> =
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spinner_user_visible)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -172,12 +162,11 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackF
     fun initFTrans(){
 
         fTrans = supportFragmentManager.beginTransaction()
-
         fTrans.setCustomAnimations(R.anim.in_leaft_to_right, R.anim.out_leaft_to_right,
             R.anim.in_leaft_to_right, R.anim.out_leaft_to_right)
     }
 
-    override fun openMovie(movie: Results) {
+    override fun openMovie(movie: MovieResultsTmdbData) {
 
         initFTrans()
         detailsFragment.setContent(movie)
@@ -187,7 +176,7 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackF
         fTrans.commit()
     }
 
-    override fun userLogin(user: User) {
+    override fun userLogin(userData: UserData) {
 
         fTrans = supportFragmentManager.beginTransaction()
         mainFragment = FragmentMain()

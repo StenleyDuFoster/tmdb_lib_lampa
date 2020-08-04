@@ -8,8 +8,7 @@ import lampa.test.tmdblib.R
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetPostMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.model.repository.data.Movie
-import lampa.test.tmdblib.model.repository.data.WrapperMovie
+import lampa.test.tmdblib.model.repository.data.WrapperMovieData
 import lampa.test.tmdblib.model.repository.internet.InternetMovieLoader
 import lampa.test.tmdblib.model.repository.internet.InternetPostRateMovie
 
@@ -21,7 +20,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application), 
 
     var showAllOrAddToShow = R.integer.ALL_PAGE
 
-    val liveMovie: MutableLiveData<WrapperMovie> = MutableLiveData()
+    val liveMovieData: MutableLiveData<WrapperMovieData> = MutableLiveData()
     val liveProgress: MutableLiveData<String> = MutableLiveData()
 
     val livePostStatus: MutableLiveData<String> = MutableLiveData()
@@ -37,7 +36,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application), 
             InternetPostRateMovie(this)
     }
 
-    fun getMovie() = liveMovie
+    fun getMovie() = liveMovieData
     fun getProgress() = liveProgress
     fun getPostStatus() = livePostStatus
 
@@ -58,11 +57,11 @@ class MovieViewModel(application: Application) : AndroidViewModel(application), 
         internetInternetLoadMovie?.setMovieType(movieType)
     }
 
-    override fun onMovieLoad(wrapperMovie: WrapperMovie) {
+    override fun onMovieLoad(wrapperMovieData: WrapperMovieData) {
 
-        val wm = wrapperMovie
+        val wm = wrapperMovieData
         wm.showAllOrAddToShow = showAllOrAddToShow
-        liveMovie.postValue(wm)
+        liveMovieData.postValue(wm)
     }
 
     override fun onFailure(failure: String) {

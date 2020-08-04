@@ -1,6 +1,6 @@
 package lampa.test.tmdblib.model.repository.data
 
-data class PostMovieRating (
+data class PostMovieRatingData (
 
     val value:Float
 )

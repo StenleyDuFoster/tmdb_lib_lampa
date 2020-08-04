@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetAuthToLoginViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.model.repository.data.User
+import lampa.test.tmdblib.model.repository.data.UserData
 import lampa.test.tmdblib.model.repository.internet.InternetAuthentication
 import lampa.test.tmdblib.model.repository.local.database.LoggedDatabase
 
@@ -22,7 +22,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     var db: LoggedDatabase
     val context = application.applicationContext
 
-    val liveUser: MutableLiveData<User> = MutableLiveData()
+    val liveUserData: MutableLiveData<UserData> = MutableLiveData()
     val liveStatus: MutableLiveData<Boolean> = MutableLiveData()
 
     var authenticationUser: String? = null
@@ -40,7 +40,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
                 if(db.loggedInUserDao().getAll()?.size!! > 0) {
                     val dbVal = db.loggedInUserDao().getAll()!!.get(0)
-                    val user = User(
+                    val user = UserData(
                         dbVal?.login!!,
                         dbVal?.password!!,
                         dbVal?.token!!,
@@ -54,37 +54,37 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
         ).start()
     }
 
-    fun getUser() = liveUser
+    fun getUser() = liveUserData
     fun getStatus() = liveStatus
 
-    fun signUpFirebase(user: User){
+    fun signUpFirebase(userData: UserData){
 
         liveStatus.postValue(false)
-        auth.createUserWithEmailAndPassword(user.name, user.pass)
+        auth.createUserWithEmailAndPassword(userData.name, userData.pass)
             .addOnSuccessListener {
 
                 userFirebase = auth.currentUser!!
-                authenticationUser = user.name
-                user.session = session.toString()
+                authenticationUser = userData.name
+                userData.session = session.toString()
 
                 userFirebase.sendEmailVerification()
                     .addOnCompleteListener {
                     Thread(
                         Runnable {
-                            waitEmailVerification(user, userFirebase)
+                            waitEmailVerification(userData, userFirebase)
                         }
                     ).start()
                 }
             }.addOnFailureListener { f ->
 
-               auth.signInWithEmailAndPassword(user.name, user.pass)
+               auth.signInWithEmailAndPassword(userData.name, userData.pass)
                    .addOnSuccessListener {
-                       authenticationUser = user.name
-                       liveUser.postValue(user)
+                       authenticationUser = userData.name
+                       liveUserData.postValue(userData)
                        Thread(
                            Runnable {
                                db.clearAllTables()
-                               db.loggedInUserDao().insert(user.toDatabaseFormat())
+                               db.loggedInUserDao().insert(userData.toDatabaseFormat())
                            }
                        ).start()
                    }.addOnFailureListener {
@@ -93,18 +93,18 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
             }
     }
 
-    fun waitEmailVerification(user: User, userFirebase: FirebaseUser?){
+    fun waitEmailVerification(userData: UserData, userFirebase: FirebaseUser?){
 
         userFirebase?.reload()
         if(userFirebase?.isEmailVerified!!)
         {
-            liveUser.postValue(user)
+            liveUserData.postValue(userData)
             db.clearAllTables()
-            db.loggedInUserDao().insert(user.toDatabaseFormat())
+            db.loggedInUserDao().insert(userData.toDatabaseFormat())
         }
         else{
             Thread.sleep(5000)
-            waitEmailVerification(user, userFirebase)
+            waitEmailVerification(userData, userFirebase)
         }
     }
 

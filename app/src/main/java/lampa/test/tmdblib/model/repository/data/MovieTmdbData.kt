@@ -1,8 +1,8 @@
 package lampa.test.tmdblib.model.repository.data
 
-    data class Movie (
+    data class MovieTmdbData (
 
         val page: Int,
         val total_pages: Int,
-        val results: List<Results>
+        val results: List<MovieResultsTmdbData>
     )

@@ -1,13 +1,12 @@
 package lampa.test.tmdblib.model.repository.internet
 
 import android.os.AsyncTask
-import android.util.Log
 import lampa.test.tmdblib.BuildConfig
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.model.repository.internet.api.JsonPlaceHolderApi
-import lampa.test.tmdblib.model.repository.data.Movie
-import lampa.test.tmdblib.model.repository.data.WrapperMovie
+import lampa.test.tmdblib.model.repository.data.MovieTmdbData
+import lampa.test.tmdblib.model.repository.data.WrapperMovieData
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -21,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFromInternetMovieToMovieViewModel)
     : MainContract.InternetLoadMovie {
 
-    private lateinit var postMovie: Movie
+    private lateinit var postMovieTmdbData: MovieTmdbData
     private var page: Int = 1
     private var totalPage: Int = 1
     private var searchTypeMovie: String = "popular"
@@ -66,30 +65,30 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
 
             jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
 
-            val call: Call<Movie>? = jsonPlaceHolderApi
+            val call: Call<MovieTmdbData>? = jsonPlaceHolderApi
                 .getListMovie(searchTypeMovie,
                     "9bb79091064ef827e213e1b974a3b718",
                     "ru",
                     page)
 
-            call?.enqueue(object : Callback<Movie?> {
+            call?.enqueue(object : Callback<MovieTmdbData?> {
                 override fun onResponse(
-                    call: Call<Movie?>,
-                    response: Response<Movie?>
+                    call: Call<MovieTmdbData?>,
+                    response: Response<MovieTmdbData?>
                 ) {
-                    postMovie = response.body()!!
+                    postMovieTmdbData = response.body()!!
 
                     callBackFromInternetMovieToMovieMainContract.onMovieLoad(
-                        WrapperMovie(
-                        0,postMovie,ADD_TO_FAVORITE)
+                        WrapperMovieData(
+                        0,postMovieTmdbData,ADD_TO_FAVORITE)
                     )
 
                     if(totalPage == null)
-                        totalPage = postMovie?.total_pages
+                        totalPage = postMovieTmdbData?.total_pages
                 }
 
                 override fun onFailure(
-                    call: Call<Movie?>,
+                    call: Call<MovieTmdbData?>,
                     t: Throwable?
                 ) {
                     callBackFromInternetMovieToMovieMainContract.onFailure(t.toString())
@@ -111,28 +110,28 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
 
             jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
 
-            val call: Call<Movie>? = jsonPlaceHolderApi
+            val call: Call<MovieTmdbData>? = jsonPlaceHolderApi
                 .getLikeMovie(session_id,
                     "9bb79091064ef827e213e1b974a3b718",
                     "ru",
                     page,
                     "created_at.asc")
 
-            call?.enqueue(object : Callback<Movie?> {
+            call?.enqueue(object : Callback<MovieTmdbData?> {
                 override fun onResponse(
-                    call: Call<Movie?>,
-                    response: Response<Movie?>
+                    call: Call<MovieTmdbData?>,
+                    response: Response<MovieTmdbData?>
                 ) {
-                    postMovie = response.body()!!
-                    var wrapperMovie = WrapperMovie(0,postMovie,ADD_TO_FAVORITE)
+                    postMovieTmdbData = response.body()!!
+                    var wrapperMovie = WrapperMovieData(0,postMovieTmdbData,ADD_TO_FAVORITE)
                     callBackFromInternetMovieToMovieMainContract.onMovieLoad(wrapperMovie)
 
                     if(totalPage == null)
-                        totalPage = postMovie?.total_pages
+                        totalPage = postMovieTmdbData?.total_pages
                 }
 
                 override fun onFailure(
-                    call: Call<Movie?>,
+                    call: Call<MovieTmdbData?>,
                     t: Throwable?
                 ) {
                     callBackFromInternetMovieToMovieMainContract.onFailure(t.toString())

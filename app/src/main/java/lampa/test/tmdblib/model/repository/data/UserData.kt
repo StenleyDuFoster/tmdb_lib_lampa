@@ -2,7 +2,7 @@ package lampa.test.tmdblib.model.repository.data
 
 import lampa.test.tmdblib.model.repository.local.enity.LoggedInUser
 
-data class User (
+data class UserData (
 
     val name: String,
     val pass: String,

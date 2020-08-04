@@ -44,7 +44,7 @@
                 app:layout_scrollFlags="enterAlways">
 
                 <Button
-                    android:id="@+id/b_linear"
+                    android:id="@+id/buttonLinear"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_margin="5dp"
@@ -52,7 +52,7 @@
                     android:textSize="20dp" />
 
                 <Button
-                    android:id="@+id/b_grid"
+                    android:id="@+id/buttonGrid"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_margin="5dp"
@@ -70,7 +70,7 @@
                 </Spinner>
 
                 <Button
-                    android:id="@+id/b_my_like_list"
+                    android:id="@+id/buttonMyLikeList"
                     android:layout_gravity="center"
                     android:background="@drawable/ic_favorite"
                     android:layout_width="40dp"
@@ -94,7 +94,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/b_back_page"
+                android:id="@+id/buttonBackPage"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
@@ -104,7 +104,7 @@
                 android:rotation="180" />
 
             <Button
-                android:id="@+id/b_next_page"
+                android:id="@+id/buttonNextPage"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"

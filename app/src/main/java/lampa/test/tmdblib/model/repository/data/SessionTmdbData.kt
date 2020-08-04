@@ -1,6 +1,6 @@
 package lampa.test.tmdblib.model.repository.data
 
-data class Session(
+data class SessionTmdbData(
 
     val success: Boolean,
     val guest_session_id: String,

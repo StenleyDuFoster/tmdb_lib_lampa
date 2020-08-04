@@ -11,14 +11,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.model.repository.data.Results
+import lampa.test.tmdblib.model.repository.data.MovieResultsTmdbData
 import lampa.test.tmdblib.utils.anim.Animate
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
-class RecyclerAdapter(exampleList: ArrayList<Results>, type: Int, listener: CallBackFromRecyclerToFragment?) :
+class RecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, type: Int, listener: CallBackFromRecyclerToFragment?) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-    private val mExampleList: ArrayList<Results>
+    private val mExampleList: ArrayList<MovieResultsTmdbData>
     private var mListener: CallBackFromRecyclerToFragment? = listener
     val animClass = Animate()
 
@@ -89,7 +89,7 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type: Int, listener: Call
         holder: ViewHolder,
         position: Int
     ) {
-        val currentItem: Results = mExampleList[position]
+        val currentItem: MovieResultsTmdbData = mExampleList[position]
 
         if (currentItem.title.length > 20)
             holder.textMain.setText(currentItem.title.substring(0,20) + " ...")

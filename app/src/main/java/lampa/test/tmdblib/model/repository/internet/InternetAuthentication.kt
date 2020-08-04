@@ -4,7 +4,7 @@ import android.os.AsyncTask
 import lampa.test.tmdblib.BuildConfig
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetAuthToLoginViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.model.repository.data.Session
+import lampa.test.tmdblib.model.repository.data.SessionTmdbData
 import lampa.test.tmdblib.model.repository.internet.api.JsonPlaceHolderApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -48,19 +48,19 @@ class InternetAuthentication (callBackFromInternetAuthToLoginViewModel: CallBack
     private inner class LoadSession: AsyncTask<Void, Void, Void>(){
         override fun doInBackground(vararg p0: Void?): Void? {
 
-            val call: Call<Session>? = jsonPlaceHolderApi
+            val call: Call<SessionTmdbData>? = jsonPlaceHolderApi
                 .getSession("9bb79091064ef827e213e1b974a3b718")
 
-            call?.enqueue(object : Callback<Session?> {
+            call?.enqueue(object : Callback<SessionTmdbData?> {
                 override fun onResponse(
-                    call: Call<Session?>,
-                    response: Response<Session?>
+                    call: Call<SessionTmdbData?>,
+                    response: Response<SessionTmdbData?>
                 ) {
                     callBackFromInternetAuthToLoginViewModel.onAuthenticationTmdbSuccess(response.body()?.guest_session_id!!)
                 }
 
                 override fun onFailure(
-                    call: Call<Session?>,
+                    call: Call<SessionTmdbData?>,
                     t: Throwable?
                 ) {
                     //callBackFromInternetAuthToLoginViewModel.onFailure(t.toString())

@@ -1,4 +1,4 @@
-package lampa.test.tmdblib.fragments
+package lampa.test.tmdblib.view.fragments
 
 import android.app.Activity
 import android.os.Bundle
@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.fragments.callback.CallBackFromMainFToActivity
-import lampa.test.tmdblib.model.repository.data.Results
-import lampa.test.tmdblib.model.repository.data.WrapperMovie
+import lampa.test.tmdblib.model.repository.data.MovieResultsTmdbData
+import lampa.test.tmdblib.model.repository.data.WrapperMovieData
 import lampa.test.tmdblib.model.viewmodel.MovieViewModel
 import lampa.test.tmdblib.utils.anim.Animate
 import lampa.test.tmdblib.utils.connection_manager.ConnectionManager
@@ -37,7 +37,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     private lateinit var callBackFromMainFToActivity: CallBackFromMainFToActivity
 
-    private var allContent: ArrayList<Results> = ArrayList()
+    private var allContent: ArrayList<MovieResultsTmdbData> = ArrayList()
 
     private lateinit var progressBar: ProgressBar
 
@@ -48,22 +48,11 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
                                savedInstanceState: Bundle?): View? {
 
         movieViewModel = ViewModelProvider(activity!!).get(MovieViewModel::class.java)
-
         val v: View = inflater.inflate(R.layout.fragment_main, null)
-        recycler = v.findViewById(R.id.recycler)
-
-        linearLayoutManager = LinearLayoutManager(v.context,LinearLayoutManager.VERTICAL,false)
-        var orientation = 3
-
-        if(resources.configuration.orientation == 2)
-            orientation = 5
-
-        gridLayoutManager = GridLayoutManager(v.context,orientation,GridLayoutManager.VERTICAL,false)
-        gridLayoutManager.spanSizeLookup
 
         progressBar = activity?.findViewById(R.id.progress_bar)!!
 
-        initRecycler()
+        initRecycler(v)
         initViewModelObservers()
         initConnectionManager()
 
@@ -72,11 +61,11 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     private fun initViewModelObservers(){
 
-        movieViewModel.getMovie().observe(viewLifecycleOwner, Observer { wrapperMovie: WrapperMovie ->
+        movieViewModel.getMovie().observe(viewLifecycleOwner, Observer { wrapperMovieData: WrapperMovieData ->
 
-            val result_array = ArrayList(wrapperMovie.movie.results)
+            val result_array = ArrayList(wrapperMovieData.movieTmdbData.results)
 
-            if(wrapperMovie.showAllOrAddToShow == R.integer.ALL_PAGE) {
+            if(wrapperMovieData.showAllOrAddToShow == R.integer.ALL_PAGE) {
 
                 allContent = result_array
                 adapter = RecyclerAdapter(allContent,
@@ -95,7 +84,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
                 animateClass.scale(progressBar, 0.0f)
             }
 
-            isLikeListOpen = wrapperMovie.toLikeList
+            isLikeListOpen = wrapperMovieData.toLikeList
         })
 
         movieViewModel.getProgress().observe(viewLifecycleOwner, Observer { failure: String ->
@@ -109,8 +98,18 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
         })
     }
 
-    private fun initRecycler(){
+    private fun initRecycler(v: View){
 
+        linearLayoutManager = LinearLayoutManager(v.context,LinearLayoutManager.VERTICAL,false)
+        var orientation = 3
+
+        if(resources.configuration.orientation == 2)
+            orientation = 5
+
+        gridLayoutManager = GridLayoutManager(v.context,orientation,GridLayoutManager.VERTICAL,false)
+        gridLayoutManager.spanSizeLookup
+
+        recycler = v.findViewById(R.id.recycler)
         recycler.layoutManager = linearLayoutManager
 
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener(){

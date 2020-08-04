@@ -1,12 +1,11 @@
 package lampa.test.tmdblib.model.repository.internet
 
 import android.os.AsyncTask
-import android.util.Log
 import lampa.test.tmdblib.BuildConfig
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetPostMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.model.repository.data.PostMovieRating
-import lampa.test.tmdblib.model.repository.data.PostResponse
+import lampa.test.tmdblib.model.repository.data.PostMovieRatingData
+import lampa.test.tmdblib.model.repository.data.PostResponseData
 import lampa.test.tmdblib.model.repository.internet.api.JsonPlaceHolderApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -63,20 +62,20 @@ class InternetPostRateMovie(callBackFromInternetPostMovieToMovieViewModel: CallB
 
         override fun doInBackground(vararg p0: Void?): Void? {
 
-            val call: Call<PostResponse> = jsonPlaceHolderApi
+            val call: Call<PostResponseData> = jsonPlaceHolderApi
                 .postLikeMovie(movie_id,"9bb79091064ef827e213e1b974a3b718",
-                    session_id, PostMovieRating(8f))
+                    session_id, PostMovieRatingData(8f))
 
-            call?.enqueue(object : Callback<PostResponse?> {
+            call?.enqueue(object : Callback<PostResponseData?> {
                 override fun onResponse(
-                    call: Call<PostResponse?>,
-                    response: Response<PostResponse?>
+                    call: Call<PostResponseData?>,
+                    responseData: Response<PostResponseData?>
                 ) {
-                    callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(response.body()?.status_message.toString())
+                    callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(responseData.body()?.status_message.toString())
                 }
 
                 override fun onFailure(
-                    call: Call<PostResponse?>,
+                    call: Call<PostResponseData?>,
                     t: Throwable?
                 ) {
                     callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(t.toString())
@@ -93,20 +92,20 @@ class InternetPostRateMovie(callBackFromInternetPostMovieToMovieViewModel: CallB
 
         override fun doInBackground(vararg p0: Void?): Void? {
 
-            val call: Call<PostResponse> = jsonPlaceHolderApi
+            val call: Call<PostResponseData> = jsonPlaceHolderApi
                 .deleteLikeMovie(movie_id,"9bb79091064ef827e213e1b974a3b718",
                     session_id)
 
-            call?.enqueue(object : Callback<PostResponse?> {
+            call?.enqueue(object : Callback<PostResponseData?> {
                 override fun onResponse(
-                    call: Call<PostResponse?>,
-                    response: Response<PostResponse?>
+                    call: Call<PostResponseData?>,
+                    responseData: Response<PostResponseData?>
                 ) {
-                    callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(response.body()?.status_message.toString())
+                    callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(responseData.body()?.status_message.toString())
                 }
 
                 override fun onFailure(
-                    call: Call<PostResponse?>,
+                    call: Call<PostResponseData?>,
                     t: Throwable?
                 ) {
                     callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(t.toString())
