@@ -58,10 +58,11 @@ class MovieViewModel(application: Application) : AndroidViewModel(application), 
         internetInternetLoadMovie?.setMovieType(movieType)
     }
 
-    override fun onMovieLoad(movie: Movie) {
+    override fun onMovieLoad(wrapperMovie: WrapperMovie) {
 
-        var wrapperMovie = WrapperMovie(showAllOrAddToShow, movie)
-        liveMovie.postValue(wrapperMovie)
+        val wm = wrapperMovie
+        wm.showAllOrAddToShow = showAllOrAddToShow
+        liveMovie.postValue(wm)
     }
 
     override fun onFailure(failure: String) {
@@ -74,7 +75,14 @@ class MovieViewModel(application: Application) : AndroidViewModel(application), 
                                     movie_id)
     }
 
+    override fun postDeleteLikeMovie(movie_id: Int) {
+
+        internetPostLikeMovie.postDeleteLike("4b196263ed969f7cc9a2b4a2816461a6",
+            movie_id)
+    }
+
     override fun getLikeMovie() {
+        showAllOrAddToShow = R.integer.ALL_PAGE
         internetInternetLoadMovie?.loadLikeListMovie("4b196263ed969f7cc9a2b4a2816461a6")
     }
 

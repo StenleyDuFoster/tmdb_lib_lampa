@@ -8,6 +8,7 @@ interface MainContract {
         fun addPage()
         fun changeMovieType(movieType: String)
         fun postLikeMovie(movie_id: Int)
+        fun postDeleteLikeMovie(movie_id: Int)
         fun getLikeMovie()
     }
 

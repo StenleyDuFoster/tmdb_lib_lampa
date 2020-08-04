@@ -7,6 +7,7 @@ import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieVie
 import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.model.repository.internet.api.JsonPlaceHolderApi
 import lampa.test.tmdblib.model.repository.data.Movie
+import lampa.test.tmdblib.model.repository.data.WrapperMovie
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -78,7 +79,10 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
                 ) {
                     postMovie = response.body()!!
 
-                    callBackFromInternetMovieToMovieMainContract.onMovieLoad(postMovie)
+                    callBackFromInternetMovieToMovieMainContract.onMovieLoad(
+                        WrapperMovie(
+                        0,postMovie,ADD_TO_FAVORITE)
+                    )
 
                     if(totalPage == null)
                         totalPage = postMovie?.total_pages
@@ -111,6 +115,7 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
                 .getLikeMovie(session_id,
                     "9bb79091064ef827e213e1b974a3b718",
                     "ru",
+                    page,
                     "created_at.asc")
 
             call?.enqueue(object : Callback<Movie?> {
@@ -119,8 +124,8 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
                     response: Response<Movie?>
                 ) {
                     postMovie = response.body()!!
-
-                    callBackFromInternetMovieToMovieMainContract.onMovieLoad(postMovie)
+                    var wrapperMovie = WrapperMovie(0,postMovie,ADD_TO_FAVORITE)
+                    callBackFromInternetMovieToMovieMainContract.onMovieLoad(wrapperMovie)
 
                     if(totalPage == null)
                         totalPage = postMovie?.total_pages
@@ -147,12 +152,18 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
     override fun loadAddPageMovie() {
 
         page += 1
-        if(!ADD_TO_FAVORITE)
-            LoadListMovie().execute()
+        if(totalPage <= page) {
+
+            if (!ADD_TO_FAVORITE)
+                LoadListMovie().execute()
+            else
+                LoadLikeMovie().execute()
+        }
     }
 
     override fun loadLikeListMovie(session_id: String) {
 
+        page = 1
         ADD_TO_FAVORITE = true
         this.session_id = session_id
         LoadLikeMovie().execute()

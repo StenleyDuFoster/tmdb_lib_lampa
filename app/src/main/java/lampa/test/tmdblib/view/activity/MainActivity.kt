@@ -16,7 +16,6 @@ import lampa.test.tmdblib.model.repository.data.User
 import lampa.test.tmdblib.utils.anim.Animate
 import lampa.test.tmdblib.view.fragments.FragmentLogin
 
-
 class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackFromLoginFToActivity {
 
     private  var mainFragment: FragmentMain? = null

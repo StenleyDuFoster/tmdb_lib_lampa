@@ -21,6 +21,7 @@ interface JsonPlaceHolderApi {
     fun getLikeMovie(@Path("session_id") session_id: String,
                      @Query("api_key") api_key: String,
                      @Query("language") language: String,
+                     @Query("page") page: Int,
                      @Query("sort_by") sort_by: String
     ): Call<Movie>?
 

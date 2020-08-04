@@ -2,6 +2,7 @@ package lampa.test.tmdblib.model.repository.data
 
     data class WrapperMovie (
 
-        val showAllOrAddToShow:Int,
-        val movie: Movie
+        var showAllOrAddToShow:Int,
+        val movie: Movie,
+        val toLikeList: Boolean
     )

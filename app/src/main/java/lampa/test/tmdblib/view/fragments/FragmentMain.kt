@@ -41,7 +41,8 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     private lateinit var progressBar: ProgressBar
 
-    private var isDownload:Boolean = false
+    private var isDownload = false
+    private var isLikeListOpen = false
 
     override fun onCreateView (inflater: LayoutInflater, container: ViewGroup?,
                                savedInstanceState: Bundle?): View? {
@@ -93,6 +94,8 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
                 isDownload = false
                 animateClass.scale(progressBar, 0.0f)
             }
+
+            isLikeListOpen = wrapperMovie.toLikeList
         })
 
         movieViewModel.getProgress().observe(viewLifecycleOwner, Observer { failure: String ->
@@ -114,8 +117,10 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (((recycler.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() > recycler.adapter?.itemCount!!/2) &&
-                    !isDownload) {
+                if (((recycler.layoutManager as LinearLayoutManager)
+                        .findLastVisibleItemPosition() > recycler.adapter?.itemCount!!/2)
+                        && !isDownload) {
+
                     isDownload = true
                     val runnableCode = object: Runnable {
                         override fun run() {
@@ -192,6 +197,13 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
     }
 
     override fun onFavoriteClick(position: Int) {
-        movieViewModel.postLikeMovie(allContent[position].id)
+
+        if(!isLikeListOpen)
+            movieViewModel.postLikeMovie(allContent[position].id)
+        else {
+            movieViewModel.postDeleteLikeMovie(allContent[position].id)
+            allContent.removeAt(position)
+            recycler.adapter?.notifyDataSetChanged()
+        }
     }
 }
