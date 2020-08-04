@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.model.repository.data.Results
+import lampa.test.tmdblib.utils.anim.Animate
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
 class RecyclerAdapter(exampleList: ArrayList<Results>, type: Int, listener: CallBackFromRecyclerToFragment?) :
@@ -19,6 +20,7 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type: Int, listener: Call
 
     private val mExampleList: ArrayList<Results>
     private var mListener: CallBackFromRecyclerToFragment? = listener
+    val animClass = Animate()
 
     var type = type
 
@@ -48,6 +50,8 @@ class RecyclerAdapter(exampleList: ArrayList<Results>, type: Int, listener: Call
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         listener.onFavoriteClick(position)
+                        animClass.alphaBlink(imageFavorite)
+
                     }
                 }
             })

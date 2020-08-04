@@ -46,23 +46,12 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackF
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
         fTrans = supportFragmentManager.beginTransaction()
-        //fTrans.add(R.id.fragment_cont_constrain, mainFragment)
+
         fTrans.add(R.id.fragment_details_constrain, detailsFragment)
         fTrans.add(R.id.fragment_details_constrain, loginFragment)
         fTrans.hide(detailsFragment)
-        //fTrans.hide(mainFragment)
 
         fTrans.commit()
-
-        initButtonLayoutManager()
-        initButtonNextBack()
-
-//        Thread(Runnable {
-//            Thread.sleep(5000)
-//
-//            MediaStore.Images.Media.insertImage(getContentResolver(),
-//                mainFragment.recycler.card_image.drawToBitmap(), "yourTitle" , "yourDescription")
-//        })
     }
 
     private fun initButtonLayoutManager() {
@@ -125,6 +114,16 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackF
         }
         b_next_page.setOnClickListener(clickListenerPageManager)
         b_back_page.setOnClickListener(clickListenerPageManager)
+    }
+
+    private fun initButtonMyLikeList(){
+
+        val b_my_like_list = findViewById<Button>(R.id.b_my_like_list)
+
+        b_my_like_list.setOnClickListener {
+
+            mainFragment?.getMyLikeList()
+        }
     }
 
     private fun initSpinner(){
@@ -193,11 +192,14 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackF
 
         fTrans = supportFragmentManager.beginTransaction()
         mainFragment = FragmentMain()
-        //mainFragment.userViewModel
+
         fTrans.add(R.id.fragment_cont_constrain, mainFragment!!)
         fTrans.hide(loginFragment)
 
         fTrans.commit()
         initSpinner()
+        initButtonMyLikeList()
+        initButtonLayoutManager()
+        initButtonNextBack()
     }
 }

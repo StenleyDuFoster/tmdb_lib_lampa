@@ -28,4 +28,16 @@ class Animate {
         recycler.setLayoutAnimation(controller)
         recycler.startLayoutAnimation()
     }
+
+    fun alphaBlink(v: View){
+
+        val startAlpha = v.alpha
+
+        var animY = ObjectAnimator.ofFloat(v, View.ALPHA,startAlpha, 1f)
+        var animX = ObjectAnimator.ofFloat(v, View.ALPHA,1f, startAlpha)
+        var anim = AnimatorSet()
+        anim.setDuration(200)
+        anim.play(animX).after(animY)
+        anim.start()
+    }
 }

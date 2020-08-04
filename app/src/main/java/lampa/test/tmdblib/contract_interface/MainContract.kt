@@ -8,12 +8,14 @@ interface MainContract {
         fun addPage()
         fun changeMovieType(movieType: String)
         fun postLikeMovie(movie_id: Int)
+        fun getLikeMovie()
     }
 
     interface InternetLoadMovie {
 
         fun loadPageMovie()
         fun loadAddPageMovie()
+        fun loadLikeListMovie(session_id: String)
         fun setMovieType(movieType: String)
     }
 
@@ -24,6 +26,7 @@ interface MainContract {
 
     interface InternetPostLikeMovie {
 
-        fun post(session_id:String, movie_id: Int)
+        fun postAddToLike(session_id:String, movie_id: Int)
+        fun postDeleteLike(session_id:String, movie_id: Int)
     }
 }

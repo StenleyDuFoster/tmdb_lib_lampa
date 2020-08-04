@@ -1,6 +1,7 @@
 package lampa.test.tmdblib.model.repository.internet
 
 import android.os.AsyncTask
+import android.util.Log
 import lampa.test.tmdblib.BuildConfig
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
@@ -23,13 +24,15 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
     private var page: Int = 1
     private var totalPage: Int = 1
     private var searchTypeMovie: String = "popular"
+    private var ADD_TO_FAVORITE = false
+    private lateinit var session_id: String
     private val callBackFromInternetMovieToMovieMainContract:CallBackFromInternetMovieToMovieViewModel
 
     private val interceptor:HttpLoggingInterceptor
     private val client:OkHttpClient
 
-    private val retrofit:Retrofit
-    private val jsonPlaceHolderApi:JsonPlaceHolderApi
+    private lateinit var retrofit:Retrofit
+    private lateinit var jsonPlaceHolderApi:JsonPlaceHolderApi
 
     init{
         this.callBackFromInternetMovieToMovieMainContract = callBackFromInternetMovieToMovieViewModel
@@ -44,14 +47,6 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
         client = OkHttpClient.Builder()
             .addInterceptor(interceptor)
             .build()
-
-        retrofit = Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/movie/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
-            .build()
-
-        jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
     }
 
     override fun setMovieType(movieType: String){
@@ -59,11 +54,19 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
         loadPageMovie()
     }
 
-    private inner class LoadMovie: AsyncTask<Void,Void,Void>(){
+    private inner class LoadListMovie: AsyncTask<Void,Void,Void>(){
         override fun doInBackground(vararg p0: Void?): Void? {
 
+            retrofit = Retrofit.Builder()
+                .baseUrl("https://api.themoviedb.org/3/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build()
+
+            jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
+
             val call: Call<Movie>? = jsonPlaceHolderApi
-                .getTopRatedMovie(searchTypeMovie,
+                .getListMovie(searchTypeMovie,
                     "9bb79091064ef827e213e1b974a3b718",
                     "ru",
                     page)
@@ -92,15 +95,66 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
         }
     }
 
+    private inner class LoadLikeMovie: AsyncTask<Void,Void,Void>(){
+
+        override fun doInBackground(vararg p0: Void?): Void? {
+
+            retrofit = Retrofit.Builder()
+                .baseUrl("https://api.themoviedb.org/3/guest_session/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build()
+
+            jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
+
+            val call: Call<Movie>? = jsonPlaceHolderApi
+                .getLikeMovie(session_id,
+                    "9bb79091064ef827e213e1b974a3b718",
+                    "ru",
+                    "created_at.asc")
+
+            call?.enqueue(object : Callback<Movie?> {
+                override fun onResponse(
+                    call: Call<Movie?>,
+                    response: Response<Movie?>
+                ) {
+                    postMovie = response.body()!!
+
+                    callBackFromInternetMovieToMovieMainContract.onMovieLoad(postMovie)
+
+                    if(totalPage == null)
+                        totalPage = postMovie?.total_pages
+                }
+
+                override fun onFailure(
+                    call: Call<Movie?>,
+                    t: Throwable?
+                ) {
+                    callBackFromInternetMovieToMovieMainContract.onFailure(t.toString())
+                }
+            })
+            return null
+        }
+    }
+
     override fun loadPageMovie() {
 
+        ADD_TO_FAVORITE = false
         page = 1
-        LoadMovie().execute()
+        LoadListMovie().execute()
     }
 
     override fun loadAddPageMovie() {
 
         page += 1
-        LoadMovie().execute()
+        if(!ADD_TO_FAVORITE)
+            LoadListMovie().execute()
+    }
+
+    override fun loadLikeListMovie(session_id: String) {
+
+        ADD_TO_FAVORITE = true
+        this.session_id = session_id
+        LoadLikeMovie().execute()
     }
 }

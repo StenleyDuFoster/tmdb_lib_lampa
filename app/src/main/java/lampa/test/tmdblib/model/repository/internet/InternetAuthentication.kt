@@ -74,5 +74,4 @@ class InternetAuthentication (callBackFromInternetAuthToLoginViewModel: CallBack
 
         LoadSession().execute()
     }
-
 }

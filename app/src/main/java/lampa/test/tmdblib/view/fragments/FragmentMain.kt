@@ -26,7 +26,7 @@ import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
 class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
-    lateinit var userViewModel: MovieViewModel
+    lateinit var movieViewModel: MovieViewModel
 
     lateinit var recycler: RecyclerView
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -46,7 +46,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
     override fun onCreateView (inflater: LayoutInflater, container: ViewGroup?,
                                savedInstanceState: Bundle?): View? {
 
-        userViewModel = ViewModelProvider(activity!!).get(MovieViewModel::class.java)
+        movieViewModel = ViewModelProvider(activity!!).get(MovieViewModel::class.java)
 
         val v: View = inflater.inflate(R.layout.fragment_main, null)
         recycler = v.findViewById(R.id.recycler)
@@ -63,15 +63,15 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
         progressBar = activity?.findViewById(R.id.progress_bar)!!
 
         initRecycler()
-        initViewModel()
+        initViewModelObservers()
         initConnectionManager()
 
         return v
     }
 
-    private fun initViewModel(){
+    private fun initViewModelObservers(){
 
-        userViewModel.getMovie().observe(viewLifecycleOwner, Observer { wrapperMovie: WrapperMovie ->
+        movieViewModel.getMovie().observe(viewLifecycleOwner, Observer { wrapperMovie: WrapperMovie ->
 
             val result_array = ArrayList(wrapperMovie.movie.results)
 
@@ -95,13 +95,13 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
             }
         })
 
-        userViewModel.getProgress().observe(viewLifecycleOwner, Observer { failure: String ->
+        movieViewModel.getProgress().observe(viewLifecycleOwner, Observer { failure: String ->
 
             Toast.makeText(context, failure, Toast.LENGTH_LONG).show()
             animateClass.scale(progressBar, 0.0f)
         })
 
-        userViewModel.getPostStatus().observe(viewLifecycleOwner, Observer { msg: String ->
+        movieViewModel.getPostStatus().observe(viewLifecycleOwner, Observer { msg: String ->
             Toast.makeText(context,msg,Toast.LENGTH_LONG).show()
         })
     }
@@ -119,7 +119,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
                     isDownload = true
                     val runnableCode = object: Runnable {
                         override fun run() {
-                            userViewModel.addPage()
+                            movieViewModel.addPage()
                         }
                     }
                     runnableCode.run()
@@ -140,7 +140,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     fun getPage() {
 
-        userViewModel.getPage()
+        movieViewModel.getPage()
         allContent = ArrayList()
         allContent.clear()
 
@@ -152,7 +152,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     fun changeMovieTypeFromFragment(movieType: String) {
 
-        userViewModel.changeMovieType(movieType)
+        movieViewModel.changeMovieType(movieType)
         getPage()
     }
 
@@ -177,6 +177,11 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
         }
     }
 
+    fun getMyLikeList(){
+
+        movieViewModel.getLikeMovie()
+    }
+
     override fun onAttach(activity: Activity) {
         callBackFromMainFToActivity = activity as CallBackFromMainFToActivity
         super.onAttach(activity)
@@ -187,6 +192,6 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
     }
 
     override fun onFavoriteClick(position: Int) {
-        userViewModel.postLikeMovie(allContent[position].id)
+        movieViewModel.postLikeMovie(allContent[position].id)
     }
 }

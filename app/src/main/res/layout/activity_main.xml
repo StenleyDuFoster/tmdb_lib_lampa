@@ -31,11 +31,12 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <ScrollView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="enterAlways">
 
             <LinearLayout
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/appColor"
@@ -67,6 +68,13 @@
                     android:layout_width="200dp"
                     android:layout_height="wrap_content">
                 </Spinner>
+
+                <Button
+                    android:id="@+id/b_my_like_list"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_favorite"
+                    android:layout_width="40dp"
+                    android:layout_height="28dp"/>
 
             </LinearLayout>
         </ScrollView>

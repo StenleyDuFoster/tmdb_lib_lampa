@@ -10,20 +10,33 @@ import retrofit2.http.*
 
 interface JsonPlaceHolderApi {
 
-    @GET("{search}")
-    fun getTopRatedMovie(@Path("search") search: String,
-                         @Query("api_key") api_key: String,
-                         @Query("language") language: String,
-                         @Query("page") page: Int
+    @GET("movie/{search}")
+    fun getListMovie(@Path("search") search: String,
+                     @Query("api_key") api_key: String,
+                     @Query("language") language: String,
+                     @Query("page") page: Int
+    ): Call<Movie>?
+
+    @GET("{session_id}/rated/movies?")
+    fun getLikeMovie(@Path("session_id") session_id: String,
+                     @Query("api_key") api_key: String,
+                     @Query("language") language: String,
+                     @Query("sort_by") sort_by: String
     ): Call<Movie>?
 
     @GET("new?")
     fun getSession(@Query("api_key") api_key: String): Call<Session>?
 
-    @POST("3/movie/{movie_id}/rating?")
+    @POST("{movie_id}/rating?")
     fun postLikeMovie(@Path("movie_id") movie_id: Int,
                       @Query("api_key") api_key: String,
                       @Query("guest_session_id") guest_session_id: String,
                       @Body userData: PostMovieRating
+    ): Call<PostResponse>
+
+    @DELETE("{movie_id}/rating?")
+    fun deleteLikeMovie(@Path("movie_id") movie_id: Int,
+                        @Query("api_key") api_key: String,
+                        @Query("guest_session_id") guest_session_id: String
     ): Call<PostResponse>
 }

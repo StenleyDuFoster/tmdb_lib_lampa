@@ -11,7 +11,7 @@ import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.model.repository.data.Movie
 import lampa.test.tmdblib.model.repository.data.WrapperMovie
 import lampa.test.tmdblib.model.repository.internet.InternetMovieLoader
-import lampa.test.tmdblib.model.repository.internet.InternetPostLikeMovie
+import lampa.test.tmdblib.model.repository.internet.InternetPostRateMovie
 
 class MovieViewModel(application: Application) : AndroidViewModel(application), MainContract.ViewModel,
     CallBackFromInternetMovieToMovieViewModel, CallBackFromInternetPostMovieToMovieViewModel {
@@ -34,7 +34,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application), 
         internetInternetLoadMovie?.loadPageMovie()
 
         internetPostLikeMovie =
-            InternetPostLikeMovie(this)
+            InternetPostRateMovie(this)
     }
 
     fun getMovie() = liveMovie
@@ -70,8 +70,12 @@ class MovieViewModel(application: Application) : AndroidViewModel(application), 
 
     override fun postLikeMovie(movie_id: Int) {
 
-        internetPostLikeMovie.post("4b196263ed969f7cc9a2b4a2816461a6",
+        internetPostLikeMovie.postAddToLike("4b196263ed969f7cc9a2b4a2816461a6",
                                     movie_id)
+    }
+
+    override fun getLikeMovie() {
+        internetInternetLoadMovie?.loadLikeListMovie("4b196263ed969f7cc9a2b4a2816461a6")
     }
 
     override fun onPostSuccess(session_msg: String) {
