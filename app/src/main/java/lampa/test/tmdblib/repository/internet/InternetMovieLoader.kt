@@ -1,12 +1,12 @@
-package lampa.test.tmdblib.model.repository.internet
+package lampa.test.tmdblib.repository.internet
 
 import android.os.AsyncTask
 import lampa.test.tmdblib.BuildConfig
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.model.repository.internet.api.JsonPlaceHolderApi
-import lampa.test.tmdblib.model.repository.data.MovieTmdbData
-import lampa.test.tmdblib.model.repository.data.WrapperMovieData
+import lampa.test.tmdblib.repository.internet.api.JsonPlaceHolderApi
+import lampa.test.tmdblib.repository.data.MovieTmdbData
+import lampa.test.tmdblib.repository.data.WrapperMovieData
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -26,7 +26,7 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
     private var searchTypeMovie: String = "popular"
     private var ADD_TO_FAVORITE = false
     private lateinit var session_id: String
-    private val callBackFromInternetMovieToMovieMainContract:CallBackFromInternetMovieToMovieViewModel
+    private val callBackFromInternetMovieToMovieMainContract = callBackFromInternetMovieToMovieViewModel
 
     private val interceptor:HttpLoggingInterceptor
     private val client:OkHttpClient
@@ -35,7 +35,6 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
     private lateinit var jsonPlaceHolderApi:JsonPlaceHolderApi
 
     init{
-        this.callBackFromInternetMovieToMovieMainContract = callBackFromInternetMovieToMovieViewModel
 
         interceptor = HttpLoggingInterceptor()
         interceptor.level =
@@ -83,8 +82,6 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
                         0,postMovieTmdbData,ADD_TO_FAVORITE)
                     )
 
-                    if(totalPage == null)
-                        totalPage = postMovieTmdbData?.total_pages
                 }
 
                 override fun onFailure(
@@ -126,8 +123,6 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
                     var wrapperMovie = WrapperMovieData(0,postMovieTmdbData,ADD_TO_FAVORITE)
                     callBackFromInternetMovieToMovieMainContract.onMovieLoad(wrapperMovie)
 
-                    if(totalPage == null)
-                        totalPage = postMovieTmdbData?.total_pages
                 }
 
                 override fun onFailure(

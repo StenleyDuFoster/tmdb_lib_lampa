@@ -1,4 +1,4 @@
-package lampa.test.tmdblib.model.repository.data
+package lampa.test.tmdblib.repository.data
 
 data class SessionTmdbData(
 

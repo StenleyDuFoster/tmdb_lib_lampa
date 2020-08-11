@@ -1,11 +1,11 @@
-package lampa.test.tmdblib.model.repository.internet
+package lampa.test.tmdblib.repository.internet
 
 import android.os.AsyncTask
 import lampa.test.tmdblib.BuildConfig
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetAuthToLoginViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.model.repository.data.SessionTmdbData
-import lampa.test.tmdblib.model.repository.internet.api.JsonPlaceHolderApi
+import lampa.test.tmdblib.repository.data.SessionTmdbData
+import lampa.test.tmdblib.repository.internet.api.JsonPlaceHolderApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -14,15 +14,13 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class InternetAuthentication (callBackFromInternetAuthToLoginViewModel: CallBackFromInternetAuthToLoginViewModel)
+class InternetAuthenticationTmdb (val callBackFromInternetAuthToLoginViewModel: CallBackFromInternetAuthToLoginViewModel)
     : MainContract.InternetAuth {
 
-    val callBackFromInternetAuthToLoginViewModel: CallBackFromInternetAuthToLoginViewModel
-    val retrofit: Retrofit
+    private val retrofit: Retrofit
     val jsonPlaceHolderApi: JsonPlaceHolderApi
 
     init{
-        this.callBackFromInternetAuthToLoginViewModel = callBackFromInternetAuthToLoginViewModel
 
         val interceptor = HttpLoggingInterceptor()
         interceptor.level =

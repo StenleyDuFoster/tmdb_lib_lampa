@@ -15,16 +15,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.fragments.callback.CallBackFromMainFToActivity
-import lampa.test.tmdblib.model.repository.data.MovieResultsTmdbData
-import lampa.test.tmdblib.model.repository.data.WrapperMovieData
+import lampa.test.tmdblib.view.fragments.callback.CallBackFromMainFToActivity
+import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
+import lampa.test.tmdblib.repository.data.WrapperMovieData
 import lampa.test.tmdblib.model.viewmodel.MovieViewModel
-import lampa.test.tmdblib.utils.anim.Animate
+import lampa.test.tmdblib.utils.anim.CustomAnimate
 import lampa.test.tmdblib.utils.connection_manager.ConnectionManager
 import lampa.test.tmdblib.view.recycler.RecyclerAdapter
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
-class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
+class FragmentMain(session: String) : Fragment(), CallBackFromRecyclerToFragment {
 
     lateinit var movieViewModel: MovieViewModel
 
@@ -33,7 +33,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
     private lateinit var gridLayoutManager: GridLayoutManager
     private lateinit var adapter: RecyclerAdapter
 
-    private val animateClass = Animate()
+    private val animateClass = CustomAnimate()
 
     private lateinit var callBackFromMainFToActivity: CallBackFromMainFToActivity
 
@@ -43,6 +43,8 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     private var isDownload = false
     private var isLikeListOpen = false
+
+    private var session = session
 
     override fun onCreateView (inflater: LayoutInflater, container: ViewGroup?,
                                savedInstanceState: Bundle?): View? {
@@ -55,6 +57,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
         initRecycler(v)
         initViewModelObservers()
         initConnectionManager()
+        movieViewModel.setSessionId(session)
 
         return v
     }
@@ -63,11 +66,11 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
         movieViewModel.getMovie().observe(viewLifecycleOwner, Observer { wrapperMovieData: WrapperMovieData ->
 
-            val result_array = ArrayList(wrapperMovieData.movieTmdbData.results)
+            val resultArray = ArrayList(wrapperMovieData.movieTmdbData.results)
 
             if(wrapperMovieData.showAllOrAddToShow == R.integer.ALL_PAGE) {
 
-                allContent = result_array
+                allContent = resultArray
                 adapter = RecyclerAdapter(allContent,
                                                    defineType(recycler.layoutManager),
                                                    this as CallBackFromRecyclerToFragment)
@@ -77,7 +80,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
             }
             else {
 
-                allContent.addAll(result_array)
+                allContent.addAll(resultArray)
                 recycler.adapter?.notifyItemRangeInserted(recycler.adapter!!.itemCount,
                     recycler.adapter!!.itemCount + 20)
                 isDownload = false
@@ -121,12 +124,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
                         && !isDownload) {
 
                     isDownload = true
-                    val runnableCode = object: Runnable {
-                        override fun run() {
-                            movieViewModel.addPage()
-                        }
-                    }
-                    runnableCode.run()
+                   movieViewModel.addPage()
                 }
             }
         })
@@ -134,11 +132,11 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     private fun initConnectionManager() {
 
-        val get_page = Runnable {
+        val getPage = Runnable {
             if(allContent.size < 10)
                 getPage()
         }
-        val connectionManager = ConnectionManager(context!!, get_page)
+        val connectionManager = ConnectionManager(context!!, getPage)
         connectionManager.checkInternet()
     }
 
@@ -162,7 +160,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
 
     fun setLayoutManager(type: Int){
 
-        var oldScrollPos = (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+        val oldScrollPos = (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
         when (type){
             1 -> recycler.layoutManager = linearLayoutManager
             2 -> recycler.layoutManager = gridLayoutManager
@@ -173,11 +171,11 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
         recycler.scrollToPosition(oldScrollPos)
     }
 
-    fun defineType(layoutManager: RecyclerView.LayoutManager?): Int{
+    private fun defineType(layoutManager: RecyclerView.LayoutManager?): Int{
 
-        when (layoutManager) {
-            linearLayoutManager -> return 1
-            else -> return 2
+        return when (layoutManager) {
+            linearLayoutManager -> 1
+            else -> 2
         }
     }
 
@@ -192,7 +190,7 @@ class FragmentMain : Fragment(), CallBackFromRecyclerToFragment {
     }
 
     override fun onMovieClick(position: Int) {
-        callBackFromMainFToActivity.openMovie(allContent.get(position))
+        callBackFromMainFToActivity.openMovie(allContent[position])
     }
 
     override fun onFavoriteClick(position: Int) {

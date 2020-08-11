@@ -11,41 +11,31 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.model.repository.data.MovieResultsTmdbData
-import lampa.test.tmdblib.utils.anim.Animate
+import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
+import lampa.test.tmdblib.utils.anim.CustomAnimate
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
-class RecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, type: Int, listener: CallBackFromRecyclerToFragment?) :
+class RecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, var type: Int, listener: CallBackFromRecyclerToFragment?) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-    private val mExampleList: ArrayList<MovieResultsTmdbData>
+    private val mExampleList: ArrayList<MovieResultsTmdbData> = exampleList
     private var mListener: CallBackFromRecyclerToFragment? = listener
-    val animClass = Animate()
-
-    var type = type
-
-    init {
-        mExampleList = exampleList
-    }
+    val animClass = CustomAnimate()
 
     inner class ViewHolder(itemView: View, listener: CallBackFromRecyclerToFragment?) :
         RecyclerView.ViewHolder(itemView) {
-        var textMain: TextView
-        var textSlave: TextView
-        var imageView: ImageView
-        var imageFavorite: ImageView
+        var textMain: TextView = itemView.findViewById(R.id.card_main_text)
+        var textSlave: TextView = itemView.findViewById(R.id.card_slave_text)
+        var imageView: ImageView = itemView.findViewById(R.id.card_image)
+        private var imageFavorite: ImageView = itemView.findViewById(R.id.image_favorite)
         lateinit var textContent: TextView
 
         init {
-            textMain = itemView.findViewById(R.id.card_main_text)
-            textSlave = itemView.findViewById(R.id.card_slave_text)
-            imageView = itemView.findViewById(R.id.card_image)
-            imageFavorite = itemView.findViewById(R.id.image_favorite)
 
-            if(getItemViewType(position)==1)
+            if(getItemViewType(position) == 1)
                 textContent = itemView.findViewById(R.id.card_content_text)
 
-            imageFavorite.setOnClickListener({ v ->
+            imageFavorite.setOnClickListener {
                 if (listener != null) {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
@@ -54,16 +44,16 @@ class RecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, type: Int, l
 
                     }
                 }
-            })
+            }
 
-            itemView.setOnClickListener({ v ->
+            itemView.setOnClickListener {
                 if (listener != null) {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         listener.onMovieClick(position)
                     }
                 }
-            })
+            }
         }
     }
 
@@ -71,13 +61,12 @@ class RecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, type: Int, l
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val lay: Int
-        when (viewType) {
+        val lay: Int = when (viewType) {
             1 -> {
-                lay = R.layout.card_linear
+                R.layout.card_linear
             }
             else -> {
-                lay = R.layout.card_grid
+                R.layout.card_grid
             }
         }
 
@@ -94,9 +83,9 @@ class RecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, type: Int, l
         if (currentItem.title.length > 20)
             holder.textMain.setText(currentItem.title.substring(0,20) + " ...")
         else
-            holder.textMain.setText(currentItem.title)
+            holder.textMain.text = currentItem.title
 
-        holder.textSlave.setText(currentItem.release_date)
+        holder.textSlave.text = currentItem.release_date
 
         Glide.with(holder.imageView.context)
             .asBitmap()
@@ -109,7 +98,7 @@ class RecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, type: Int, l
                 if(overview.length > 100)
                     holder.textContent.setText(overview.substring(0,100) + " ...")
                 else
-                    holder.textContent.setText(overview)
+                    holder.textContent.text = overview
             }
         }
     }

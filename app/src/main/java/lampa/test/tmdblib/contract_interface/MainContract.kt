@@ -6,6 +6,7 @@ interface MainContract {
 
         fun getPage()
         fun addPage()
+        fun setSessionId(session_id: String)
         fun changeMovieType(movieType: String)
         fun postLikeMovie(movie_id: Int)
         fun postDeleteLikeMovie(movie_id: Int)

@@ -8,9 +8,9 @@ import lampa.test.tmdblib.R
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetPostMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.model.repository.data.WrapperMovieData
-import lampa.test.tmdblib.model.repository.internet.InternetMovieLoader
-import lampa.test.tmdblib.model.repository.internet.InternetPostRateMovie
+import lampa.test.tmdblib.repository.data.WrapperMovieData
+import lampa.test.tmdblib.repository.internet.InternetMovieLoader
+import lampa.test.tmdblib.repository.internet.InternetPostRateMovie
 
 class MovieViewModel(application: Application) : AndroidViewModel(application), MainContract.ViewModel,
     CallBackFromInternetMovieToMovieViewModel, CallBackFromInternetPostMovieToMovieViewModel {
@@ -26,6 +26,8 @@ class MovieViewModel(application: Application) : AndroidViewModel(application), 
     val livePostStatus: MutableLiveData<String> = MutableLiveData()
 
     var context = application.applicationContext
+
+    lateinit var session_id:String
 
     init {
         internetInternetLoadMovie =
@@ -68,21 +70,24 @@ class MovieViewModel(application: Application) : AndroidViewModel(application), 
         liveProgress.postValue(failure)
     }
 
+    override fun setSessionId(session_id: String){
+        this.session_id = session_id
+    }
+
     override fun postLikeMovie(movie_id: Int) {
 
-        internetPostLikeMovie.postAddToLike("4b196263ed969f7cc9a2b4a2816461a6",
-                                    movie_id)
+        internetPostLikeMovie.postAddToLike(session_id, movie_id)
     }
 
     override fun postDeleteLikeMovie(movie_id: Int) {
 
-        internetPostLikeMovie.postDeleteLike("4b196263ed969f7cc9a2b4a2816461a6",
+        internetPostLikeMovie.postDeleteLike(session_id,
             movie_id)
     }
 
     override fun getLikeMovie() {
         showAllOrAddToShow = R.integer.ALL_PAGE
-        internetInternetLoadMovie?.loadLikeListMovie("4b196263ed969f7cc9a2b4a2816461a6")
+        internetInternetLoadMovie?.loadLikeListMovie(session_id)
     }
 
     override fun onPostSuccess(session_msg: String) {

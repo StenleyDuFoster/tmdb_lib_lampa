@@ -1,7 +1,7 @@
-package lampa.test.tmdblib.model.repository.local.dao
+package lampa.test.tmdblib.repository.local.dao
 
 import androidx.room.*
-import lampa.test.tmdblib.model.repository.local.enity.LoggedInUser
+import lampa.test.tmdblib.repository.local.enity.LoggedInUser
 
     @Dao
     open interface LoggedInUserDao {

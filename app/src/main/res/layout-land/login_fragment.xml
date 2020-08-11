@@ -31,6 +31,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/registerCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -86,11 +87,35 @@
                         android:fontFamily="@string/font_main"
                         android:gravity="center"
                         android:hint="Пароль"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textPassword"
                         android:textColorHint="#858585" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+        <LinearLayout
+            android:alpha="0"
+            android:id="@+id/layLoading"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/buttonLog"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mainLogoImage">
+
+            <ProgressBar
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/textLoading"
+                android:layout_gravity="center"
+                android:layout_width="180dp"
+                android:layout_height="50dp"/>
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

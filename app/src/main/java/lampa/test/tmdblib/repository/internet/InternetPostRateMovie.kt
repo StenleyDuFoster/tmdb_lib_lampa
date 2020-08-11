@@ -1,12 +1,12 @@
-package lampa.test.tmdblib.model.repository.internet
+package lampa.test.tmdblib.repository.internet
 
 import android.os.AsyncTask
 import lampa.test.tmdblib.BuildConfig
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetPostMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.model.repository.data.PostMovieRatingData
-import lampa.test.tmdblib.model.repository.data.PostResponseData
-import lampa.test.tmdblib.model.repository.internet.api.JsonPlaceHolderApi
+import lampa.test.tmdblib.repository.data.PostMovieRatingData
+import lampa.test.tmdblib.repository.data.PostResponseData
+import lampa.test.tmdblib.repository.internet.api.JsonPlaceHolderApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call

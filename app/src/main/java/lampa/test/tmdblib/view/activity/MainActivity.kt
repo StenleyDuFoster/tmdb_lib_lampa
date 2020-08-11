@@ -10,14 +10,15 @@ import kotlinx.android.synthetic.main.activity_main.*
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.view.fragments.FragmentDetails
 import lampa.test.tmdblib.view.fragments.FragmentMain
-import lampa.test.tmdblib.fragments.callback.CallBackFromLoginFToActivity
-import lampa.test.tmdblib.fragments.callback.CallBackFromMainFToActivity
-import lampa.test.tmdblib.model.repository.data.MovieResultsTmdbData
-import lampa.test.tmdblib.model.repository.data.UserData
-import lampa.test.tmdblib.utils.anim.Animate
+import lampa.test.tmdblib.view.fragments.callback.CallBackFromLoginFToActivity
+import lampa.test.tmdblib.view.fragments.callback.CallBackFromMainFToActivity
+import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
+import lampa.test.tmdblib.repository.data.UserData
+import lampa.test.tmdblib.utils.anim.CustomAnimate
 import lampa.test.tmdblib.view.fragments.FragmentLogin
 
-class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackFromLoginFToActivity {
+class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity,
+    CallBackFromLoginFToActivity {
 
     private var mainFragment: FragmentMain? = null
     private val detailsFragment = FragmentDetails()
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackF
     private var page:Int = 1
     private var totalPage:Int? = null
 
-    private val animateClass = Animate()
+    private val animateClass = CustomAnimate()
 
     private lateinit var searchTypeMovie: String
 
@@ -119,20 +120,20 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackF
 
     private fun initSpinner(){
 
-        val spinner_items:Array<String> = arrayOf(
+        val spinnerItems:Array<String> = arrayOf(
             getString(R.string.search_now_playing),
             getString(R.string.search_popular),
             getString(R.string.search_top_rated),
             getString(R.string.search_upcoming)
         )
-        val spinner_user_visible:Array<String> = arrayOf(
+        val spinnerUserVisible:Array<String> = arrayOf(
             "сейчас в прокате",
             "популярные",
             "лучшие оценки",
             "скоро выйдут"
         )
         val adapter: ArrayAdapter<String> =
-            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spinner_user_visible)
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spinnerUserVisible)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
         val itemSelectedListener: OnItemSelectedListener = object : OnItemSelectedListener {
@@ -142,11 +143,11 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackF
                 position: Int,
                 id: Long
             ) {
-                  searchTypeMovie = spinner_items[position]
+                  searchTypeMovie = spinnerItems[position]
                   page = 1
 
                   if(mainFragment != null)
-                    mainFragment?.changeMovieTypeFromFragment(spinner_items[position])
+                    mainFragment?.changeMovieTypeFromFragment(spinnerItems[position])
               }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
@@ -159,7 +160,7 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackF
         super.onBackPressed()
     }
 
-    fun initFTrans(){
+    private fun initFTrans(){
 
         fTrans = supportFragmentManager.beginTransaction()
         fTrans.setCustomAnimations(R.anim.in_leaft_to_right, R.anim.out_leaft_to_right,
@@ -178,8 +179,8 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity, CallBackF
 
     override fun userLogin(userData: UserData) {
 
-        fTrans = supportFragmentManager.beginTransaction()
-        mainFragment = FragmentMain()
+        initFTrans()
+        mainFragment = FragmentMain(userData.session)
 
         fTrans.add(R.id.fragment_cont_constrain, mainFragment!!)
         fTrans.hide(loginFragment)

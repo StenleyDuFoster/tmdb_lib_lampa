@@ -1,4 +1,4 @@
-package lampa.test.tmdblib.model.repository.local.enity
+package lampa.test.tmdblib.repository.local.enity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

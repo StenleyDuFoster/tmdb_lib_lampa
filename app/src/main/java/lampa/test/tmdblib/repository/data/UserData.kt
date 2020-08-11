@@ -1,6 +1,6 @@
-package lampa.test.tmdblib.model.repository.data
+package lampa.test.tmdblib.repository.data
 
-import lampa.test.tmdblib.model.repository.local.enity.LoggedInUser
+import lampa.test.tmdblib.repository.local.enity.LoggedInUser
 
 data class UserData (
 
@@ -10,15 +10,14 @@ data class UserData (
     val signIn: Boolean,
     var session: String
 ){
-    fun toDatabaseFormat(): LoggedInUser{
+    fun toDatabaseFormat(): LoggedInUser {
 
-        val loggedInUser = LoggedInUser(
+        return LoggedInUser(
             name,
             pass,
             token,
             signIn,
             session
         )
-        return loggedInUser
     }
 }

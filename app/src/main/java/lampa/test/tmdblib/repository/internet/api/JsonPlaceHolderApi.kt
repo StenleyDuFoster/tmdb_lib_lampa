@@ -1,9 +1,9 @@
-package lampa.test.tmdblib.model.repository.internet.api
+package lampa.test.tmdblib.repository.internet.api
 
-import lampa.test.tmdblib.model.repository.data.MovieTmdbData
-import lampa.test.tmdblib.model.repository.data.PostMovieRatingData
-import lampa.test.tmdblib.model.repository.data.PostResponseData
-import lampa.test.tmdblib.model.repository.data.SessionTmdbData
+import lampa.test.tmdblib.repository.data.MovieTmdbData
+import lampa.test.tmdblib.repository.data.PostMovieRatingData
+import lampa.test.tmdblib.repository.data.PostResponseData
+import lampa.test.tmdblib.repository.data.SessionTmdbData
 
 import retrofit2.Call
 import retrofit2.http.*

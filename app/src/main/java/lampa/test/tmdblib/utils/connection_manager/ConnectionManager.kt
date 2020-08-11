@@ -5,15 +5,10 @@ import android.net.ConnectivityManager
 import android.os.Handler
 import android.widget.Toast
 
-class ConnectionManager (var context: Context, runnable: Runnable) {
+class ConnectionManager (var context: Context, private var runnable: Runnable) {
 
-    var checkLoopHandler: Boolean? = null
-    var stateLoopHandler: Boolean? = null
-    var runnable: Runnable
-
-    init {
-        this.runnable = runnable
-    }
+    private var checkLoopHandler: Boolean? = null
+    private var stateLoopHandler: Boolean? = null
 
     fun checkInternet(): Boolean {
         val connection = hasConnection()
