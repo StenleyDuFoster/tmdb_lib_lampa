@@ -31,6 +31,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
     private val liveUserData: MutableLiveData<UserData> = MutableLiveData()
     private val liveStatus: MutableLiveData<String> = MutableLiveData()
+    private val liveError: MutableLiveData<String> = MutableLiveData()
     private val liveIsUserLogIn: MutableLiveData<Boolean> = MutableLiveData()
 
     private var authenticationUser: String? = null
@@ -66,6 +67,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
     fun getUser() = liveUserData
     fun getStatus() = liveStatus
+    fun getError() = liveError
     fun getIsLogIn() = liveIsUserLogIn
 
     fun signUpFirebase(userData: UserData){
@@ -112,8 +114,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                            }
                        )
 
-                   }.addOnFailureListener {
-                        liveStatus.postValue("пользователь не найден или данные не верны")
+                   }.addOnFailureListener {ex->
+                        liveError.postValue(ex.message.toString())
                    }
             }
     }

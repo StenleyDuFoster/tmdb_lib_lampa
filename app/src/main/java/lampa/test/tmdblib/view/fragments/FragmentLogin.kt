@@ -31,22 +31,27 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment) {
 
         loginViewModel = ViewModelProvider(activity!!).get(LoginViewModel::class.java)
         callbackToActivity = activity as CallBackFromLoginFToActivity
-        initAlpha()
         view.setBackgroundColor(Color.WHITE)
 
         val clickListenerButtonLog = View.OnClickListener {
-            loginViewModel.signUpFirebase(
-                UserData(
-                    name = nameEdit.text.toString(),
-                    pass = passEdit.text.toString(),
-                    token = "",
-                    signIn = true,
-                    session = ""
+            if(nameEdit.length()>0 && passEdit.length()>0) {
+
+                loginViewModel.signUpFirebase(
+                    UserData(
+                        name = nameEdit.text.toString(),
+                        pass = passEdit.text.toString(),
+                        token = "",
+                        signIn = true,
+                        session = ""
+                    )
                 )
-            )
-            animateClass.alphaFadeOut(materialCardView)
-            animateClass.alphaFadeOut(buttonLog)
-            buttonLog.isClickable = false
+                animateClass.alphaFadeOut(materialCardView)
+                animateClass.alphaFadeOut(buttonLog)
+                buttonLog.isClickable = false
+                nameEdit.isClickable = false
+                passEdit.isClickable = false
+            } else
+                nameEdit.setError("login and password should not be empty")
         }
 
         val buttonLog = view.findViewById<Button>(R.id.buttonLog)
@@ -55,6 +60,16 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment) {
 
         loginViewModel.getUser().observe(viewLifecycleOwner, Observer { user ->
                 callbackToActivity.userLogin(user)
+        })
+
+        loginViewModel.getError().observe(viewLifecycleOwner, Observer { error ->
+            animateClass.alphaFadeIn(materialCardView)
+            animateClass.alphaFadeIn(buttonLog)
+            animateClass.alphaFadeOut(layLoading)
+            buttonLog.isClickable = true
+            nameEdit.isClickable = true
+            passEdit.isClickable = true
+            nameEdit.setError(error)
         })
 
         loginViewModel.getIsLogIn().observe(viewLifecycleOwner, Observer {

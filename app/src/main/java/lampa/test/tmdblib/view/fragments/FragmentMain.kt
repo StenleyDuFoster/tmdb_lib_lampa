@@ -22,7 +22,7 @@ import lampa.test.tmdblib.view.fragments.base.BaseFragment
 import lampa.test.tmdblib.view.recycler.MovieRecyclerAdapter
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
-class FragmentMain(session: String) : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerToFragment {
+class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerToFragment {
 
     lateinit var movieViewModel: MovieViewModel
 
@@ -42,7 +42,7 @@ class FragmentMain(session: String) : BaseFragment(R.layout.fragment_main), Call
     private var isDownload = false
     private var isLikeListOpen = false
 
-    private var session = session
+    var session = "session"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 

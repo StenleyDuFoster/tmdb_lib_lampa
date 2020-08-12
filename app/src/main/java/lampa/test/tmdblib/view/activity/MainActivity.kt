@@ -53,7 +53,8 @@ class MainActivity : BaseActivity(), CallBackFromMainFToActivity {
             }
         }
 
-        mainFragment = FragmentMain(intent.extras?.get("session_id") as String)
+        mainFragment = FragmentMain()
+        mainFragment!!.session = intent.extras?.get("session_id") as String
         detailsFragment = FragmentDetails()
         addFragmentToFragmentManager(R.id.fragment_cont_constrain, mainFragment!!)
         initButtonLayoutManager()
@@ -85,12 +86,12 @@ class MainActivity : BaseActivity(), CallBackFromMainFToActivity {
 
     private fun initButtonMyLikeList(){
 
-        val likeFragment = FragmentMain(intent.extras?.get("session_id") as String)
+        //val likeFragment = FragmentMain(intent.extras?.get("session_id") as String)
 
         buttonMyLikeList.setOnClickListener {
 
-            addWithBackStackFragmentToFragmentManager(R.id.fragment_details_constrain, likeFragment!!)
-            likeFragment?.getMyLikeList()
+        //    addWithBackStackFragmentToFragmentManager(R.id.fragment_details_constrain, likeFragment!!)
+        //    likeFragment?.getMyLikeList()
         }
     }
 

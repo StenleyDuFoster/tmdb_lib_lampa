@@ -38,12 +38,12 @@
             app:layout_scrollFlags="enterAlways">
 
             <LinearLayout
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/appColor"
-                android:orientation="horizontal"
-                app:layout_scrollFlags="enterAlways">
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/buttonLinear"

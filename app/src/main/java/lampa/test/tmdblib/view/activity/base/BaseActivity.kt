@@ -24,14 +24,6 @@ abstract class BaseActivity: AppCompatActivity() {
         fragmentTransition.commit()
     }
 
-    fun removeFragmentFromFragmentManager(fragment:Fragment){
-
-        initFragmentTransition()
-        fragmentTransition.remove(fragment)
-        fragmentTransition.addToBackStack(null)
-        fragmentTransition.commit()
-    }
-
     fun initFragmentTransition(){
 
         fragmentTransition = supportFragmentManager.beginTransaction()
