@@ -2,9 +2,9 @@ package lampa.test.tmdblib.model.viewmodel
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.room.Room
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -15,6 +15,7 @@ import lampa.test.tmdblib.contract_interface.CallBackFromInternetAuthToLoginView
 import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.repository.data.UserData
 import lampa.test.tmdblib.repository.internet.InternetAuthenticationTmdb
+import lampa.test.tmdblib.repository.local.dao.LoggedInUserDao
 import lampa.test.tmdblib.repository.local.database.LoggedDatabase
 
 class LoginViewModel(application: Application) : AndroidViewModel(application),
@@ -30,14 +31,19 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
     private val liveUserData: MutableLiveData<UserData> = MutableLiveData()
     private val liveStatus: MutableLiveData<String> = MutableLiveData()
+    private val liveIsUserLogIn: MutableLiveData<Boolean> = MutableLiveData()
 
     private var authenticationUser: String? = null
     private var session: String? = null
 
     init {
 
-        db = Room.databaseBuilder(context, LoggedDatabase::class.java, "database_login")
-            .build()
+        db = LoggedDatabase.getInstance(context)
+        Thread(
+            Runnable {
+        Log.v("112233",db.toString())
+        Log.v("112233",db.loggedInUserDao().getAll().toString()) }
+        ).start()
 
         Thread(
             Runnable {
@@ -51,7 +57,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                         true,
                         dbVal.session_id
                     )
-
+                    liveIsUserLogIn.postValue(true)
                     signUpFirebase(user)
                 }
             }
@@ -60,6 +66,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
     fun getUser() = liveUserData
     fun getStatus() = liveStatus
+    fun getIsLogIn() = liveIsUserLogIn
 
     fun signUpFirebase(userData: UserData){
 
@@ -76,6 +83,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                         Thread(
                             Runnable {
                                 waitEmailVerification(userData, userFirebase)
+                                Log.v("112233","3")
                             }
                         ).start()
                 }
@@ -84,22 +92,20 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                 firebaseAuth.signInWithEmailAndPassword(userData.name, userData.pass)
                    .addOnSuccessListener {
                        authenticationUser = userData.name
-                       liveUserData.postValue(userData)
 
                        firebaseDatabase.getReference(firebaseAuth.currentUser?.uid!!).addValueEventListener(
-                           object : ValueEventListener{
-                               override fun onCancelled(p0: DatabaseError) {
-                                   TODO("Not yet implemented")
-                               }
+                           object : ValueEventListener {
+                               override fun onCancelled(databaseError: DatabaseError) { }
 
-                               override fun onDataChange(p0: DataSnapshot) {
+                               override fun onDataChange(dataSnapshot: DataSnapshot) {
                                    val logInUser = userData
-                                   logInUser.session = p0.getValue().toString()
+                                   logInUser.session = dataSnapshot.getValue().toString()
 
                                    Thread(
                                        Runnable {
                                            createLogInUser(logInUser)
                                            liveUserData.postValue(logInUser)
+                                           Log.v("112233","4")
                                        }
                                    ).start()
                                }
@@ -121,7 +127,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
             newUserData.session = session.toString()
             liveStatus.postValue(null)
             liveUserData.postValue(newUserData)
-            db.clearAllTables()
+            db.loggedInUserDao().delete()
             db.loggedInUserDao().insert(newUserData.toDatabaseFormat())
         }
         else {
@@ -132,7 +138,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
     private fun createLogInUser(userData:UserData){
 
-        db.clearAllTables()
+        db.loggedInUserDao().delete()
         db.loggedInUserDao().insert(userData.toDatabaseFormat())
     }
 
@@ -140,5 +146,11 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
         firebaseDatabase.getReference(userFirebase.uid).setValue(session_id)
         this.session = session_id
+    }
+
+    fun  logOut(){
+
+        db.loggedInUserDao().delete()
+        firebaseAuth.signOut()
     }
 }

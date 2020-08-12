@@ -1,33 +1,26 @@
 package lampa.test.tmdblib.view.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-
 import lampa.test.tmdblib.R
+import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
+import lampa.test.tmdblib.utils.anim.CustomAnimate
+import lampa.test.tmdblib.view.activity.base.BaseActivity
 import lampa.test.tmdblib.view.fragments.FragmentDetails
 import lampa.test.tmdblib.view.fragments.FragmentMain
-import lampa.test.tmdblib.view.fragments.callback.CallBackFromLoginFToActivity
 import lampa.test.tmdblib.view.fragments.callback.CallBackFromMainFToActivity
-import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
-import lampa.test.tmdblib.repository.data.UserData
-import lampa.test.tmdblib.utils.anim.CustomAnimate
-import lampa.test.tmdblib.view.fragments.FragmentLogin
 
-class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity,
-    CallBackFromLoginFToActivity {
+class MainActivity : BaseActivity(), CallBackFromMainFToActivity {
 
     private var mainFragment: FragmentMain? = null
-    private val detailsFragment = FragmentDetails()
-    private val loginFragment = FragmentLogin()
+    private var detailsFragment: FragmentDetails? = null
 
-    private var fTrans = supportFragmentManager.beginTransaction()
-
-    private var page:Int = 1
-    private var totalPage:Int? = null
+    lateinit var intentToLoginActivity: Intent
 
     private val animateClass = CustomAnimate()
 
@@ -39,25 +32,38 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity,
         initMain()
     }
 
-    private fun initMain(){
+    private fun initMain() {
 
+        intentToLoginActivity = Intent(this, LoginActivity::class.java)
         setActionBar(materialToolbar)
-        actionBar?.title = "Фильмы"
+        title = "Фильмы"
+        materialToolbar.inflateMenu(R.menu.main_toolbar)
         materialToolbar.setNavigationOnClickListener { onBackPressed() }
+        materialToolbar.setOnMenuItemClickListener { menuItem ->
+            when(menuItem.itemId){
+                R.id.action_out -> {
 
-        fTrans = supportFragmentManager.beginTransaction()
+                    mainFragment?.movieViewModel?.logOut()
+                    startActivity(intentToLoginActivity)
+                    finish()
 
-        fTrans.add(R.id.fragment_details_constrain, detailsFragment)
-        fTrans.add(R.id.fragment_details_constrain, loginFragment)
-        fTrans.hide(detailsFragment)
+                    return@setOnMenuItemClickListener true
+                }
+                else -> return@setOnMenuItemClickListener true
+            }
+        }
 
-        fTrans.commit()
+        mainFragment = FragmentMain(intent.extras?.get("session_id") as String)
+        detailsFragment = FragmentDetails()
+        addFragmentToFragmentManager(R.id.fragment_cont_constrain, mainFragment!!)
+        initButtonLayoutManager()
+        initButtonMyLikeList()
+        initSpinner()
     }
 
     private fun initButtonLayoutManager() {
 
         val clickListenerLayoutManager = View.OnClickListener{v ->
-            fTrans = supportFragmentManager.beginTransaction()
             when(v.id){
                 R.id.buttonLinear ->
                 {
@@ -77,44 +83,14 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity,
         buttonGrid.setOnClickListener(clickListenerLayoutManager)
     }
 
-    private fun initButtonNextBack(){
-
-        val clickListenerPageManager = View.OnClickListener{v ->
-            fTrans = supportFragmentManager.beginTransaction()
-            when(v.id){
-                R.id.buttonNextPage ->
-                {
-                    if(page < totalPage!!) {
-                        page ++
-                        mainFragment?.getPage()
-                        buttonBackPage.alpha = 1.0f
-                    }
-                    if(page == totalPage){
-                        buttonNextPage.alpha = 0.5f
-                    }
-                }
-                R.id.buttonBackPage ->
-                {
-                    if(page > 1) {
-                        page --
-                        mainFragment?.getPage()
-                        buttonNextPage.alpha = 1.0f
-                    }
-                    if(page == 1){
-                        buttonBackPage.alpha = 0.5f
-                    }
-                }
-            }
-        }
-        buttonNextPage.setOnClickListener(clickListenerPageManager)
-        buttonBackPage.setOnClickListener(clickListenerPageManager)
-    }
-
     private fun initButtonMyLikeList(){
+
+        val likeFragment = FragmentMain(intent.extras?.get("session_id") as String)
 
         buttonMyLikeList.setOnClickListener {
 
-            mainFragment?.getMyLikeList()
+            addWithBackStackFragmentToFragmentManager(R.id.fragment_details_constrain, likeFragment!!)
+            likeFragment?.getMyLikeList()
         }
     }
 
@@ -132,11 +108,12 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity,
             "лучшие оценки",
             "скоро выйдут"
         )
-        val adapter: ArrayAdapter<String> =
+        val arraySpinnerAdapter: ArrayAdapter<String> =
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spinnerUserVisible)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
-        val itemSelectedListener: OnItemSelectedListener = object : OnItemSelectedListener {
+        arraySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = arraySpinnerAdapter
+
+        val spinnerItemSelectedListener: OnItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View?,
@@ -144,51 +121,25 @@ class MainActivity : AppCompatActivity(), CallBackFromMainFToActivity,
                 id: Long
             ) {
                   searchTypeMovie = spinnerItems[position]
-                  page = 1
 
                   if(mainFragment != null)
                     mainFragment?.changeMovieTypeFromFragment(spinnerItems[position])
               }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        spinner.onItemSelectedListener = itemSelectedListener
+        spinner.onItemSelectedListener = spinnerItemSelectedListener
     }
 
     override fun onBackPressed() {
         actionBar?.setDisplayHomeAsUpEnabled(false)
         actionBar?.title = "Фильмы"
+
         super.onBackPressed()
-    }
-
-    private fun initFTrans(){
-
-        fTrans = supportFragmentManager.beginTransaction()
-        fTrans.setCustomAnimations(R.anim.in_leaft_to_right, R.anim.out_leaft_to_right,
-            R.anim.in_leaft_to_right, R.anim.out_leaft_to_right)
     }
 
     override fun openMovie(movie: MovieResultsTmdbData) {
 
-        initFTrans()
-        detailsFragment.setContent(movie)
-
-        fTrans.show(detailsFragment)
-        fTrans.addToBackStack(null)
-        fTrans.commit()
-    }
-
-    override fun userLogin(userData: UserData) {
-
-        initFTrans()
-        mainFragment = FragmentMain(userData.session)
-
-        fTrans.add(R.id.fragment_cont_constrain, mainFragment!!)
-        fTrans.hide(loginFragment)
-
-        fTrans.commit()
-        initSpinner()
-        initButtonMyLikeList()
-        initButtonLayoutManager()
-        initButtonNextBack()
+        detailsFragment?.content = movie
+        addWithBackStackFragmentToFragmentManager(R.id.fragment_details_constrain, detailsFragment!!)
     }
 }

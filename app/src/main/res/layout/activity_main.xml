@@ -19,7 +19,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="@+id/fragment_details_constrain"
         app:layout_constraintStart_toStartOf="@+id/fragment_details_constrain"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+    </Toolbar>
 
 </com.google.android.material.appbar.AppBarLayout>
 

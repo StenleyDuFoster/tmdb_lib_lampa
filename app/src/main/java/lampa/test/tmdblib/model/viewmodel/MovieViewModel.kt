@@ -11,11 +11,13 @@ import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.repository.data.WrapperMovieData
 import lampa.test.tmdblib.repository.internet.InternetMovieLoader
 import lampa.test.tmdblib.repository.internet.InternetPostRateMovie
+import lampa.test.tmdblib.repository.local.database.LoggedDatabase
 
-class MovieViewModel(application: Application) : AndroidViewModel(application), MainContract.ViewModel,
+class MovieViewModel(application: Application) : AndroidViewModel(application),
+    MainContract.MovieViewModel,
     CallBackFromInternetMovieToMovieViewModel, CallBackFromInternetPostMovieToMovieViewModel {
 
-    var internetInternetLoadMovie: MainContract.InternetLoadMovie
+    var internetLoadMovie: MainContract.InternetLoadMovie
     var internetPostLikeMovie: MainContract.InternetPostLikeMovie
 
     var showAllOrAddToShow = R.integer.ALL_PAGE
@@ -30,9 +32,8 @@ class MovieViewModel(application: Application) : AndroidViewModel(application), 
     lateinit var session_id:String
 
     init {
-        internetInternetLoadMovie =
+        internetLoadMovie =
             InternetMovieLoader(this)
-        internetInternetLoadMovie?.loadPageMovie()
 
         internetPostLikeMovie =
             InternetPostRateMovie(this)
@@ -45,18 +46,18 @@ class MovieViewModel(application: Application) : AndroidViewModel(application), 
     override fun getPage() {
 
         showAllOrAddToShow = R.integer.ALL_PAGE
-        internetInternetLoadMovie?.loadPageMovie()
+        internetLoadMovie?.loadPageMovie()
     }
 
     override fun addPage() {
 
         showAllOrAddToShow = R.integer.ADD_TO_PAGE
-        internetInternetLoadMovie?.loadAddPageMovie()
+        internetLoadMovie?.loadAddPageMovie()
     }
 
     override fun changeMovieType(movieType: String) {
 
-        internetInternetLoadMovie?.setMovieType(movieType)
+        internetLoadMovie?.setMovieType(movieType)
     }
 
     override fun onMovieLoad(wrapperMovieData: WrapperMovieData) {
@@ -87,7 +88,17 @@ class MovieViewModel(application: Application) : AndroidViewModel(application), 
 
     override fun getLikeMovie() {
         showAllOrAddToShow = R.integer.ALL_PAGE
-        internetInternetLoadMovie?.loadLikeListMovie(session_id)
+        internetLoadMovie?.loadLikeListMovie(session_id)
+    }
+
+    override fun logOut() {
+
+        val db = LoggedDatabase.getInstance(context)
+        Thread(
+            Runnable {
+                db.loggedInUserDao().delete()
+            }
+        ).start()
     }
 
     override fun onPostSuccess(session_msg: String) {

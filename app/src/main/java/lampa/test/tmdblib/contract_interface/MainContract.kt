@@ -2,7 +2,7 @@ package lampa.test.tmdblib.contract_interface
 
 interface MainContract {
 
-    interface ViewModel {
+    interface MovieViewModel {
 
         fun getPage()
         fun addPage()
@@ -11,6 +11,8 @@ interface MainContract {
         fun postLikeMovie(movie_id: Int)
         fun postDeleteLikeMovie(movie_id: Int)
         fun getLikeMovie()
+
+        fun logOut()
     }
 
     interface InternetLoadMovie {

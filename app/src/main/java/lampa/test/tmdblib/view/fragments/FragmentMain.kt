@@ -2,13 +2,10 @@ package lampa.test.tmdblib.view.fragments
 
 import android.app.Activity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,17 +18,18 @@ import lampa.test.tmdblib.repository.data.WrapperMovieData
 import lampa.test.tmdblib.model.viewmodel.MovieViewModel
 import lampa.test.tmdblib.utils.anim.CustomAnimate
 import lampa.test.tmdblib.utils.connection_manager.ConnectionManager
-import lampa.test.tmdblib.view.recycler.RecyclerAdapter
+import lampa.test.tmdblib.view.fragments.base.BaseFragment
+import lampa.test.tmdblib.view.recycler.MovieRecyclerAdapter
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
-class FragmentMain(session: String) : Fragment(), CallBackFromRecyclerToFragment {
+class FragmentMain(session: String) : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerToFragment {
 
     lateinit var movieViewModel: MovieViewModel
 
     lateinit var recycler: RecyclerView
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var gridLayoutManager: GridLayoutManager
-    private lateinit var adapter: RecyclerAdapter
+    private lateinit var adapterMovie: MovieRecyclerAdapter
 
     private val animateClass = CustomAnimate()
 
@@ -46,20 +44,16 @@ class FragmentMain(session: String) : Fragment(), CallBackFromRecyclerToFragment
 
     private var session = session
 
-    override fun onCreateView (inflater: LayoutInflater, container: ViewGroup?,
-                               savedInstanceState: Bundle?): View? {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         movieViewModel = ViewModelProvider(activity!!).get(MovieViewModel::class.java)
-        val v: View = inflater.inflate(R.layout.fragment_main, null)
 
         progressBar = activity?.findViewById(R.id.progress_bar)!!
 
-        initRecycler(v)
+        initRecycler(view)
         initViewModelObservers()
         initConnectionManager()
         movieViewModel.setSessionId(session)
-
-        return v
     }
 
     private fun initViewModelObservers(){
@@ -71,10 +65,10 @@ class FragmentMain(session: String) : Fragment(), CallBackFromRecyclerToFragment
             if(wrapperMovieData.showAllOrAddToShow == R.integer.ALL_PAGE) {
 
                 allContent = resultArray
-                adapter = RecyclerAdapter(allContent,
+                adapterMovie = MovieRecyclerAdapter(allContent,
                                                    defineType(recycler.layoutManager),
                                                    this as CallBackFromRecyclerToFragment)
-                recycler.adapter = adapter
+                recycler.adapter = adapterMovie
                 animateClass.recycler(recycler)
                 animateClass.scale(progressBar, 0.0f)
             }
@@ -146,8 +140,8 @@ class FragmentMain(session: String) : Fragment(), CallBackFromRecyclerToFragment
         allContent = ArrayList()
         allContent.clear()
 
-        adapter = RecyclerAdapter(allContent, 1, this as CallBackFromRecyclerToFragment)
-        recycler.adapter = adapter
+        adapterMovie = MovieRecyclerAdapter(allContent, 1, this as CallBackFromRecyclerToFragment)
+        recycler.adapter = adapterMovie
 
         animateClass.scale(progressBar, 1.0f)
     }
@@ -165,8 +159,8 @@ class FragmentMain(session: String) : Fragment(), CallBackFromRecyclerToFragment
             1 -> recycler.layoutManager = linearLayoutManager
             2 -> recycler.layoutManager = gridLayoutManager
         }
-        adapter.type = type
-        recycler.adapter = adapter
+        adapterMovie.type = type
+        recycler.adapter = adapterMovie
         animateClass.recycler(recycler)
         recycler.scrollToPosition(oldScrollPos)
     }

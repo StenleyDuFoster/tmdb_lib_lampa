@@ -15,8 +15,8 @@ import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
 import lampa.test.tmdblib.utils.anim.CustomAnimate
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
-class RecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, var type: Int, listener: CallBackFromRecyclerToFragment?) :
-    RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class MovieRecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, var type: Int, listener: CallBackFromRecyclerToFragment?) :
+    RecyclerView.Adapter<MovieRecyclerAdapter.ViewHolder>() {
 
     private val mExampleList: ArrayList<MovieResultsTmdbData> = exampleList
     private var mListener: CallBackFromRecyclerToFragment? = listener

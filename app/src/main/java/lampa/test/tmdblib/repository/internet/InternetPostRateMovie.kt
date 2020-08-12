@@ -15,16 +15,13 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class InternetPostRateMovie(callBackFromInternetPostMovieToMovieViewModel: CallBackFromInternetPostMovieToMovieViewModel)
+class InternetPostRateMovie(val callBackFromInternetPostMovieToMovieViewModel: CallBackFromInternetPostMovieToMovieViewModel)
     : MainContract.InternetPostLikeMovie {
 
-    val callBackFromInternetPostMovieToMovieViewModel:CallBackFromInternetPostMovieToMovieViewModel
     val retrofit:Retrofit
     val jsonPlaceHolderApi:JsonPlaceHolderApi
 
     init{
-        this.callBackFromInternetPostMovieToMovieViewModel = callBackFromInternetPostMovieToMovieViewModel
-
         val interceptor = HttpLoggingInterceptor()
         interceptor.level =
             if (BuildConfig.DEBUG)

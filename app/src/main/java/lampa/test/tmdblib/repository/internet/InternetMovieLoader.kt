@@ -17,7 +17,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFromInternetMovieToMovieViewModel)
+class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBackFromInternetMovieToMovieViewModel)
     : MainContract.InternetLoadMovie {
 
     private lateinit var postMovieTmdbData: MovieTmdbData
@@ -26,7 +26,6 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
     private var searchTypeMovie: String = "popular"
     private var ADD_TO_FAVORITE = false
     private lateinit var session_id: String
-    private val callBackFromInternetMovieToMovieMainContract = callBackFromInternetMovieToMovieViewModel
 
     private val interceptor:HttpLoggingInterceptor
     private val client:OkHttpClient
@@ -77,7 +76,7 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
                 ) {
                     postMovieTmdbData = response.body()!!
 
-                    callBackFromInternetMovieToMovieMainContract.onMovieLoad(
+                    callBackFromInternetMovieToMovieViewModel.onMovieLoad(
                         WrapperMovieData(
                         0,postMovieTmdbData,ADD_TO_FAVORITE)
                     )
@@ -88,7 +87,7 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
                     call: Call<MovieTmdbData?>,
                     t: Throwable?
                 ) {
-                    callBackFromInternetMovieToMovieMainContract.onFailure(t.toString())
+                    callBackFromInternetMovieToMovieViewModel.onFailure(t.toString())
                 }
             })
             return null
@@ -121,7 +120,7 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
                 ) {
                     postMovieTmdbData = response.body()!!
                     var wrapperMovie = WrapperMovieData(0,postMovieTmdbData,ADD_TO_FAVORITE)
-                    callBackFromInternetMovieToMovieMainContract.onMovieLoad(wrapperMovie)
+                    callBackFromInternetMovieToMovieViewModel.onMovieLoad(wrapperMovie)
 
                 }
 
@@ -129,7 +128,7 @@ class InternetMovieLoader(callBackFromInternetMovieToMovieViewModel: CallBackFro
                     call: Call<MovieTmdbData?>,
                     t: Throwable?
                 ) {
-                    callBackFromInternetMovieToMovieMainContract.onFailure(t.toString())
+                    callBackFromInternetMovieToMovieViewModel.onFailure(t.toString())
                 }
             })
             return null
