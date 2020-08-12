@@ -73,11 +73,11 @@
                     android:layout_height="match_parent">
 
                     <ImageButton
-                        android:layout_margin="10dp"
+                        android:layout_margin="5dp"
                         android:id="@+id/image_favorite"
                         android:alpha="0.4"
-                        android:layout_width="20dp"
-                        android:layout_height="15dp"
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
                         android:background="@drawable/ic_favorite"
                         android:layout_gravity="bottom"/>
 
