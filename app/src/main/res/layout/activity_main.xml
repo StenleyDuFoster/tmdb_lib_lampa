@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".view.activity.MainActivity"
-    android:background="@color/appColor">
+    android:background="@color/appColor"
+    tools:context=".view.activity.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <Toolbar
-        android:background="@color/colorPrimary"
-        android:id="@+id/materialToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/fragment_details_constrain"
-        app:layout_constraintStart_toStartOf="@+id/fragment_details_constrain"
-        app:layout_constraintTop_toTopOf="parent" >
+        <Toolbar
+            android:id="@+id/materialToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="@+id/fragment_details_constrain"
+            app:layout_constraintStart_toStartOf="@+id/fragment_details_constrain"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:menu="@menu/main_toolbar">
 
-    </Toolbar>
+        </Toolbar>
 
-</com.google.android.material.appbar.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -32,61 +33,53 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="enterAlways">
+            android:background="@color/appColor"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                android:gravity="center"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/buttonLinear"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/ic_linear_foreground"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/buttonGrid"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/ic_grid_foreground"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
+                android:textSize="20dp" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:background="@color/appColor"
-                android:orientation="horizontal">
+                android:layout_gravity="center"
+                android:layout_margin="5dp"></Spinner>
 
-                <Button
-                    android:id="@+id/buttonLinear"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/ic_linear_foreground"
-                    android:textSize="20dp" />
+            <Button
+                android:id="@+id/buttonMyLikeList"
+                android:layout_width="40dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_favorite" />
 
-                <Button
-                    android:id="@+id/buttonGrid"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/ic_grid_foreground"
-                    android:scaleX="0.6"
-                    android:scaleY="0.6"
-                    android:textSize="20dp" />
-
-                <Spinner
-                    android:layout_margin="5dp"
-                    android:layout_gravity="center"
-                    android:id="@+id/spinner"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content">
-                </Spinner>
-
-                <Button
-                    android:id="@+id/buttonMyLikeList"
-                    android:layout_gravity="center"
-                    android:background="@drawable/ic_favorite"
-                    android:layout_width="40dp"
-                    android:layout_height="28dp"/>
-
-            </LinearLayout>
-        </ScrollView>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/fragment_cont_constrain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="600dp"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal" />
 
         <LinearLayout
 
@@ -131,11 +124,12 @@
         app:layout_constraintTop_toBottomOf="@+id/materialToolbar" />
 
     <ProgressBar
-        android:scaleX="0"
-        android:scaleY="0"
         android:id="@+id/progress_bar"
-        android:layout_gravity="center"
         android:layout_width="100dp"
-        android:layout_height="100dp"/>
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:scaleX="0"
+        android:scaleY="0" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

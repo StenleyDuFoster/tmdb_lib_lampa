@@ -52,6 +52,7 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-database:19.2.1'//---------------------------------firebase
     implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
 
     testImplementation 'junit:junit:4.13'//---------------------------------------------------------test
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

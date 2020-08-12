@@ -15,22 +15,24 @@ import lampa.test.tmdblib.view.fragments.base.BaseFragment
 
 class FragmentDetails : BaseFragment(R.layout.fragment_details) {
 
-    lateinit var content: MovieResultsTmdbData
+    var content: MovieResultsTmdbData? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        titleText.text = content.title
-        genreText.text = content.release_date
-        contentText.text = content.overview
-        ratingBar.rating = content.vote_average
+        if(content != null) {
+            titleText.text = content?.title
+            genreText.text = content?.release_date
+            contentText.text = content?.overview
+            ratingBar.rating = content?.vote_average!!
 
-        Glide.with(activity?.applicationContext!!)
-            .asBitmap()
-            .load("https://image.tmdb.org/t/p/w500" + content.poster_path)
-            .into(imageDetails)
+            Glide.with(activity?.applicationContext!!)
+                .asBitmap()
+                .load("https://image.tmdb.org/t/p/w500" + content?.poster_path)
+                .into(imageDetails)
 
-        activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
-        activity?.actionBar?.title = content.title
-        super.onViewCreated(view, savedInstanceState)
+            activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
+            activity?.actionBar?.title = content?.title
+            super.onViewCreated(view, savedInstanceState)
+        }
     }
 }
