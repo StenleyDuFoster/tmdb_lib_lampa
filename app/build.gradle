@@ -50,8 +50,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
 
-    implementation 'com.google.firebase:firebase-database:19.2.1'//---------------------------------firebase
-    implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-database:19.3.1'//---------------------------------firebase
+    implementation 'com.google.firebase:firebase-auth:19.3.2'
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
 
     testImplementation 'junit:junit:4.13'//---------------------------------------------------------test
@@ -67,17 +67,20 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'//-------------------------------------recycler
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.8.0'//-------------------------------ok http
+    implementation "com.squareup.okhttp3:logging-interceptor:$okkHttpVersion"//---------------------ok http
 
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'//----------------------------------------retrofit
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"//-----------------------------retrofit
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
 
-    implementation 'com.github.bumptech.glide:glide:4.11.0'//---------------------------------------glide
+    implementation "com.github.bumptech.glide:glide:$glideVersion"//--------------------------------glide
 
-    implementation 'androidx.room:room-runtime:2.2.5'//---------------------------------------------room
-    implementation 'androidx.room:room-rxjava2:2.2.2'
-    kapt 'androidx.room:room-compiler:2.2.5'
-    implementation 'androidx.room:room-ktx:2.2.5'
-    androidTestImplementation 'androidx.room:room-testing:2.2.5'
+    implementation "androidx.room:room-runtime:$roomVersion"//--------------------------------------room
+    implementation "androidx.room:room-rxjava2:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    androidTestImplementation "androidx.room:room-testing:$roomVersion"
+
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"//--------------------------------------dagger
+    implementation "com.google.dagger:dagger:$daggerVersion"
 }

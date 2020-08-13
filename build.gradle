@@ -27,7 +27,12 @@ task clean(type: Delete) {
 }
 
 ext {
+    okkHttpVersion = '4.8.0'
+    retrofitVersion = '2.9.0'
+    glideVersion = '4.11.0'
+    daggerVersion = '2.17'
     roomVersion = '2.2.5'
+
     archLifecycleVersion = '2.2.0'
     coreTestingVersion = '2.1.0'
     materialVersion = '1.1.0'

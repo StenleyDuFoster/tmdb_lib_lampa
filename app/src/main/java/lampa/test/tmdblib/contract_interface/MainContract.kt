@@ -23,10 +23,7 @@ interface MainContract {
         fun setMovieType(movieType: String)
     }
 
-    interface InternetAuth {
-
-        fun createSession()
-    }
+    interface InternetAuth
 
     interface InternetPostLikeMovie {
 

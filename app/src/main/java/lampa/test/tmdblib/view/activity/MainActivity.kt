@@ -86,12 +86,9 @@ class MainActivity : BaseActivity(), CallBackFromMainFToActivity {
 
     private fun initButtonMyLikeList(){
 
-        //val likeFragment = FragmentMain(intent.extras?.get("session_id") as String)
-
         buttonMyLikeList.setOnClickListener {
 
-        //    addWithBackStackFragmentToFragmentManager(R.id.fragment_details_constrain, likeFragment!!)
-        //    likeFragment?.getMyLikeList()
+            mainFragment?.getMyLikeList()
         }
     }
 
