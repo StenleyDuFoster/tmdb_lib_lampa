@@ -37,7 +37,7 @@ interface JsonPlaceHolderApi {
                       @Body userData: PostMovieRatingData
     ): Single<PostResponseData>
 
-    @DELETE("{movie_id}/rating?")
+    @DELETE("movie/{movie_id}/rating?")
     fun deleteLikeMovie(@Path("movie_id") movie_id: Int,
                         @Query("api_key") api_key: String,
                         @Query("guest_session_id") guest_session_id: String

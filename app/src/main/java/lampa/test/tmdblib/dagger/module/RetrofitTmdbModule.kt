@@ -18,6 +18,7 @@ class RetrofitTmdbModule {
     @Singleton
     fun getPlaceHolder(): JsonPlaceHolderApi{
         var interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
 
         val client = OkHttpClient.Builder()
             .addInterceptor(interceptor)

@@ -7,6 +7,7 @@ import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.dagger.component.DaggerComponent
 import lampa.test.tmdblib.repository.data.PostMovieRatingData
 import lampa.test.tmdblib.repository.internet.api.JsonPlaceHolderApi
+import lampa.test.tmdblib.utils.constant.ApiConstant
 
 class InternetPostRateMovie(val callBackFromInternetPostMovieToMovieViewModel: CallBackFromInternetPostMovieToMovieViewModel)
     : MainContract.InternetPostLikeMovie {
@@ -14,18 +15,20 @@ class InternetPostRateMovie(val callBackFromInternetPostMovieToMovieViewModel: C
     val jsonPlaceHolderApi:JsonPlaceHolderApi
 
     init {
-        jsonPlaceHolderApi = DaggerComponent.create().getTmdbPlaceHolderApi()
+        jsonPlaceHolderApi = DaggerComponent.create().getTmdbPlaceHolderApiByRetrofit()
     }
 
     override fun postAddToLike(session_id:String, movie_id: Int) {
 
-        jsonPlaceHolderApi.postLikeMovie(movie_id,"9bb79091064ef827e213e1b974a3b718",
-            session_id, PostMovieRatingData(8f))
+        jsonPlaceHolderApi.postLikeMovie(
+                movie_id,
+                ApiConstant().API_V3,
+                session_id,
+                PostMovieRatingData(8f))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { responseData ->
-
                     callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(responseData.status_message)
                 },
                 { t ->
@@ -35,13 +38,14 @@ class InternetPostRateMovie(val callBackFromInternetPostMovieToMovieViewModel: C
 
     override fun postDeleteLike(session_id:String, movie_id: Int) {
 
-        jsonPlaceHolderApi.deleteLikeMovie(movie_id,"9bb79091064ef827e213e1b974a3b718",
-            session_id)
+        jsonPlaceHolderApi.deleteLikeMovie(
+                movie_id,
+                ApiConstant().API_V3,
+                session_id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { responseData ->
-
                     callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(responseData.status_message)
                 },
                 { t ->

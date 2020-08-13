@@ -9,5 +9,5 @@ import javax.inject.Singleton
 @Component (modules = [RetrofitTmdbModule::class])
 interface Component {
 
-    fun getTmdbPlaceHolderApi() : JsonPlaceHolderApi
+    fun getTmdbPlaceHolderApiByRetrofit() : JsonPlaceHolderApi
 }

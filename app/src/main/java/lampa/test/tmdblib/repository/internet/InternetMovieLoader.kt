@@ -7,6 +7,7 @@ import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.dagger.component.DaggerComponent
 import lampa.test.tmdblib.repository.internet.api.JsonPlaceHolderApi
 import lampa.test.tmdblib.repository.data.WrapperMovieData
+import lampa.test.tmdblib.utils.constant.ApiConstant
 
 class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBackFromInternetMovieToMovieViewModel)
     : MainContract.InternetLoadMovie {
@@ -20,7 +21,7 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
     private val jsonPlaceHolderApi:JsonPlaceHolderApi
 
     init {
-        jsonPlaceHolderApi = DaggerComponent.create().getTmdbPlaceHolderApi()
+        jsonPlaceHolderApi = DaggerComponent.create().getTmdbPlaceHolderApiByRetrofit()
     }
 
     override fun setMovieType(movieType: String){
@@ -30,10 +31,11 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
 
     fun loadListMovie(){
 
-        jsonPlaceHolderApi.getListMovie(searchTypeMovie,
-            "9bb79091064ef827e213e1b974a3b718",
-            "ru",
-            page)
+        jsonPlaceHolderApi.getListMovie(
+                searchTypeMovie,
+                ApiConstant().API_V3,
+                "ru",
+                page)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -51,16 +53,16 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
 
     fun loadLikeMovie(){
 
-        jsonPlaceHolderApi.getLikeMovie(session_id,
-            "9bb79091064ef827e213e1b974a3b718",
-            "ru",
-            page,
-            "created_at.asc")
+        jsonPlaceHolderApi.getLikeMovie(
+                session_id,
+                ApiConstant().API_V3,
+                "ru",
+                page,
+                ApiConstant().API_SORT)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { movieTmdbData ->
-
                     var wrapperMovie = WrapperMovieData(0,movieTmdbData,ADD_TO_FAVORITE)
                     callBackFromInternetMovieToMovieViewModel.onMovieLoad(wrapperMovie)
                 },
