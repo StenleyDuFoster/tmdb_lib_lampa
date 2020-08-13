@@ -1,114 +1,51 @@
 package lampa.test.tmdblib.repository.internet
 
-import android.os.AsyncTask
-import lampa.test.tmdblib.BuildConfig
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetPostMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
+import lampa.test.tmdblib.dagger.component.DaggerComponent
 import lampa.test.tmdblib.repository.data.PostMovieRatingData
-import lampa.test.tmdblib.repository.data.PostResponseData
 import lampa.test.tmdblib.repository.internet.api.JsonPlaceHolderApi
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class InternetPostRateMovie(val callBackFromInternetPostMovieToMovieViewModel: CallBackFromInternetPostMovieToMovieViewModel)
     : MainContract.InternetPostLikeMovie {
 
-    val retrofit:Retrofit
     val jsonPlaceHolderApi:JsonPlaceHolderApi
 
-    init{
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level =
-            if (BuildConfig.DEBUG)
-                HttpLoggingInterceptor.Level.BODY
-            else
-                HttpLoggingInterceptor.Level.NONE
-
-        val client = OkHttpClient.Builder()
-            .addInterceptor(interceptor)
-            .build()
-
-        retrofit = Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/movie/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
-            .build()
-
-        jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi::class.java)
+    init {
+        jsonPlaceHolderApi = DaggerComponent.create().getTmdbPlaceHolderApi()
     }
 
     override fun postAddToLike(session_id:String, movie_id: Int) {
 
-        postLikeToTMDB(session_id, movie_id).execute()
+        jsonPlaceHolderApi.postLikeMovie(movie_id,"9bb79091064ef827e213e1b974a3b718",
+            session_id, PostMovieRatingData(8f))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { responseData ->
+
+                    callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(responseData.status_message)
+                },
+                { t ->
+                    callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(t.toString())
+                })
     }
 
     override fun postDeleteLike(session_id:String, movie_id: Int) {
 
-        postDeleteToTMDB(session_id, movie_id).execute()
-    }
+        jsonPlaceHolderApi.deleteLikeMovie(movie_id,"9bb79091064ef827e213e1b974a3b718",
+            session_id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { responseData ->
 
-    private inner class postLikeToTMDB(session_id:String, movie_id: Int): AsyncTask<Void, Void, Void>(){
-
-        val session_id = session_id
-        val movie_id = movie_id
-
-        override fun doInBackground(vararg p0: Void?): Void? {
-
-            val call: Call<PostResponseData> = jsonPlaceHolderApi
-                .postLikeMovie(movie_id,"9bb79091064ef827e213e1b974a3b718",
-                    session_id, PostMovieRatingData(8f))
-
-            call?.enqueue(object : Callback<PostResponseData?> {
-                override fun onResponse(
-                    call: Call<PostResponseData?>,
-                    responseData: Response<PostResponseData?>
-                ) {
-                    callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(responseData.body()?.status_message.toString())
-                }
-
-                override fun onFailure(
-                    call: Call<PostResponseData?>,
-                    t: Throwable?
-                ) {
+                    callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(responseData.status_message)
+                },
+                { t ->
                     callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(t.toString())
-                }
-            })
-            return null
-        }
-    }
-
-    private inner class postDeleteToTMDB(session_id:String, movie_id: Int): AsyncTask<Void, Void, Void>(){
-
-        val session_id = session_id
-        val movie_id = movie_id
-
-        override fun doInBackground(vararg p0: Void?): Void? {
-
-            val call: Call<PostResponseData> = jsonPlaceHolderApi
-                .deleteLikeMovie(movie_id,"9bb79091064ef827e213e1b974a3b718",
-                    session_id)
-
-            call?.enqueue(object : Callback<PostResponseData?> {
-                override fun onResponse(
-                    call: Call<PostResponseData?>,
-                    responseData: Response<PostResponseData?>
-                ) {
-                    callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(responseData.body()?.status_message.toString())
-                }
-
-                override fun onFailure(
-                    call: Call<PostResponseData?>,
-                    t: Throwable?
-                ) {
-                    callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(t.toString())
-                }
-            })
-            return null
-        }
+                })
     }
 }

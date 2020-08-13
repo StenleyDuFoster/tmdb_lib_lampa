@@ -1,6 +1,7 @@
 package lampa.test.tmdblib.model.viewmodel
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 
@@ -14,30 +15,21 @@ import lampa.test.tmdblib.repository.internet.InternetPostRateMovie
 import lampa.test.tmdblib.repository.local.database.LoggedDatabase
 
 class MovieViewModel(application: Application) : AndroidViewModel(application),
-    MainContract.MovieViewModel,
-    CallBackFromInternetMovieToMovieViewModel, CallBackFromInternetPostMovieToMovieViewModel {
+    MainContract.MovieViewModel, CallBackFromInternetMovieToMovieViewModel, CallBackFromInternetPostMovieToMovieViewModel {
 
-    var internetLoadMovie: MainContract.InternetLoadMovie
-    var internetPostLikeMovie: MainContract.InternetPostLikeMovie
+    private var internetLoadMovie: MainContract.InternetLoadMovie = InternetMovieLoader(this)
+    private var internetPostLikeMovie: MainContract.InternetPostLikeMovie = InternetPostRateMovie(this)
 
-    var showAllOrAddToShow = R.integer.ALL_PAGE
+    private var showAllOrAddToShow = R.integer.ALL_PAGE
 
-    val liveMovieData: MutableLiveData<WrapperMovieData> = MutableLiveData()
-    val liveProgress: MutableLiveData<String> = MutableLiveData()
+    private val liveMovieData: MutableLiveData<WrapperMovieData> = MutableLiveData()
+    private val liveProgress: MutableLiveData<String> = MutableLiveData()
 
-    val livePostStatus: MutableLiveData<String> = MutableLiveData()
+    private val livePostStatus: MutableLiveData<String> = MutableLiveData()
 
-    var context = application.applicationContext
+    var context: Context = application.applicationContext
 
     lateinit var session_id:String
-
-    init {
-        internetLoadMovie =
-            InternetMovieLoader(this)
-
-        internetPostLikeMovie =
-            InternetPostRateMovie(this)
-    }
 
     fun getMovie() = liveMovieData
     fun getProgress() = liveProgress
@@ -46,25 +38,24 @@ class MovieViewModel(application: Application) : AndroidViewModel(application),
     override fun getPage() {
 
         showAllOrAddToShow = R.integer.ALL_PAGE
-        internetLoadMovie?.loadPageMovie()
+        internetLoadMovie.loadPageMovie()
     }
 
     override fun addPage() {
 
         showAllOrAddToShow = R.integer.ADD_TO_PAGE
-        internetLoadMovie?.loadAddPageMovie()
+        internetLoadMovie.loadAddPageMovie()
     }
 
     override fun changeMovieType(movieType: String) {
 
-        internetLoadMovie?.setMovieType(movieType)
+        internetLoadMovie.setMovieType(movieType)
     }
 
     override fun onMovieLoad(wrapperMovieData: WrapperMovieData) {
 
-        val wm = wrapperMovieData
-        wm.showAllOrAddToShow = showAllOrAddToShow
-        liveMovieData.postValue(wm)
+        wrapperMovieData.showAllOrAddToShow = showAllOrAddToShow
+        liveMovieData.postValue(wrapperMovieData)
     }
 
     override fun onFailure(failure: String) {
@@ -88,7 +79,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application),
 
     override fun getLikeMovie() {
         showAllOrAddToShow = R.integer.ALL_PAGE
-        internetLoadMovie?.loadLikeListMovie(session_id)
+        internetLoadMovie.loadLikeListMovie(session_id)
     }
 
     override fun logOut() {

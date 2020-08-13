@@ -2,8 +2,6 @@ package lampa.test.tmdblib.model.viewmodel
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
-import android.util.Log.d
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
@@ -13,7 +11,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -43,7 +40,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     private var authenticationUser: String? = null
     private var session: String? = null
 
-    val databaseSubscribe: Disposable
+    private val databaseSubscribe: Disposable
 
     init {
 
@@ -52,7 +49,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe( { dbUser ->
                 if(dbUser?.size!! > 0) {
-                    val dbVal = dbUser?.get(0)
+                    val dbVal = dbUser[0]
                     val user = UserData(
                         dbVal?.login!!,
                         dbVal.password,
@@ -89,7 +86,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                             }
                         ).start()
                 }
-            }.addOnFailureListener {t->
+            }.addOnFailureListener {
                 firebaseAuth.signInWithEmailAndPassword(userData.name, userData.pass)
                    .addOnSuccessListener {
                        authenticationUser = userData.name
@@ -99,11 +96,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                                override fun onCancelled(databaseError: DatabaseError) { }
 
                                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                   val logInUser = userData
-                                   logInUser.session = dataSnapshot.getValue().toString()
+                                   userData.session = dataSnapshot.value.toString()
 
-                                   createLogInUser(logInUser)
-                                   liveUserData.postValue(logInUser)
+                                   createLogInUser(userData)
+                                   liveUserData.postValue(userData)
                                }
                            }
                        )
@@ -119,13 +115,11 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
         userFirebase?.reload()
         if(userFirebase?.isEmailVerified!!)
         {
-            val newUserData = userData
-            newUserData.session = session.toString()
+            userData.session = session.toString()
             liveStatus.postValue(null)
-            liveUserData.postValue(newUserData)
-            Log.v("112233","in3")
+            liveUserData.postValue(userData)
             db.loggedInUserDao().delete()
-            db.loggedInUserDao().insert(newUserData.toDatabaseFormat())
+            db.loggedInUserDao().insert(userData.toDatabaseFormat())
         }
         else {
             Thread.sleep(1000)
@@ -135,14 +129,11 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
     private fun createLogInUser(userData:UserData){
 
-        Completable.fromAction(
-            {
-                db.loggedInUserDao().delete()
-                db.loggedInUserDao().insert(userData.toDatabaseFormat())
-            }
-        )
-            .subscribeOn(Schedulers.io())
-            .subscribe()
+        Completable.fromAction {
+            db.loggedInUserDao().delete()
+            db.loggedInUserDao().insert(userData.toDatabaseFormat())
+        }.subscribeOn(Schedulers.io())
+              .subscribe()
     }
 
     override fun onAuthenticationTmdbSuccess(session_id: String) {

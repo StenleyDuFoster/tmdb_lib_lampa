@@ -20,7 +20,7 @@ class LoginActivity : BaseActivity(), CallBackFromLoginFToActivity {
     fun initFragment(){
 
         val fragmentSignInOrRegister = FragmentLogin()
-        addWithBackStackFragmentToFragmentManager(R.id.content_container, fragmentSignInOrRegister)
+        addFragmentToFragmentManager(R.id.content_container, fragmentSignInOrRegister)
     }
 
     override fun userLogin(userData: UserData) {
