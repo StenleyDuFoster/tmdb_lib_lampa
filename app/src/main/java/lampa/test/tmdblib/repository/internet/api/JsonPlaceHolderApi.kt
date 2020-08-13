@@ -17,7 +17,7 @@ interface JsonPlaceHolderApi {
                      @Query("page") page: Int
     ): Call<MovieTmdbData>?
 
-    @GET("{session_id}/rated/movies?")
+    @GET("guest_session/{session_id}/rated/movies?")
     fun getLikeMovie(@Path("session_id") session_id: String,
                      @Query("api_key") api_key: String,
                      @Query("language") language: String,

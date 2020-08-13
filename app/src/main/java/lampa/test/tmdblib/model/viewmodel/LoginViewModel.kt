@@ -3,6 +3,7 @@ package lampa.test.tmdblib.model.viewmodel
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import android.util.Log.d
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
@@ -11,12 +12,17 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import io.reactivex.Completable
+import io.reactivex.Maybe
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetAuthToLoginViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.repository.data.UserData
 import lampa.test.tmdblib.repository.internet.InternetAuthenticationTmdb
-import lampa.test.tmdblib.repository.local.dao.LoggedInUserDao
 import lampa.test.tmdblib.repository.local.database.LoggedDatabase
+
 
 class LoginViewModel(application: Application) : AndroidViewModel(application),
     CallBackFromInternetAuthToLoginViewModel {
@@ -37,20 +43,16 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     private var authenticationUser: String? = null
     private var session: String? = null
 
+    val databaseSubscribe: Disposable
+
     init {
 
         db = LoggedDatabase.getInstance(context)
-        Thread(
-            Runnable {
-        Log.v("112233",db.toString())
-        Log.v("112233",db.loggedInUserDao().getAll().toString()) }
-        ).start()
-
-        Thread(
-            Runnable {
-
-                if(db.loggedInUserDao().getAll()?.size!! > 0) {
-                    val dbVal = db.loggedInUserDao().getAll()!![0]
+        databaseSubscribe = db.loggedInUserDao().getAll()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe( { dbUser ->
+                if(dbUser?.size!! > 0) {
+                    val dbVal = dbUser?.get(0)
                     val user = UserData(
                         dbVal?.login!!,
                         dbVal.password,
@@ -61,8 +63,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                     liveIsUserLogIn.postValue(true)
                     signUpFirebase(user)
                 }
-            }
-        ).start()
+            }, { error("Error db user init (loginViewModel)")})
     }
 
     fun getUser() = liveUserData
@@ -71,7 +72,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     fun getIsLogIn() = liveIsUserLogIn
 
     fun signUpFirebase(userData: UserData){
-
+        databaseSubscribe.dispose()
         liveStatus.postValue("проверка пользователя")
         firebaseAuth.createUserWithEmailAndPassword(userData.name, userData.pass)
             .addOnSuccessListener {
@@ -85,12 +86,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                         Thread(
                             Runnable {
                                 waitEmailVerification(userData, userFirebase)
-                                Log.v("112233","3")
                             }
                         ).start()
                 }
-            }.addOnFailureListener {
-
+            }.addOnFailureListener {t->
                 firebaseAuth.signInWithEmailAndPassword(userData.name, userData.pass)
                    .addOnSuccessListener {
                        authenticationUser = userData.name
@@ -103,13 +102,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                                    val logInUser = userData
                                    logInUser.session = dataSnapshot.getValue().toString()
 
-                                   Thread(
-                                       Runnable {
-                                           createLogInUser(logInUser)
-                                           liveUserData.postValue(logInUser)
-                                           Log.v("112233","4")
-                                       }
-                                   ).start()
+                                   createLogInUser(logInUser)
+                                   liveUserData.postValue(logInUser)
                                }
                            }
                        )
@@ -129,6 +123,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
             newUserData.session = session.toString()
             liveStatus.postValue(null)
             liveUserData.postValue(newUserData)
+            Log.v("112233","in3")
             db.loggedInUserDao().delete()
             db.loggedInUserDao().insert(newUserData.toDatabaseFormat())
         }
@@ -140,19 +135,19 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
     private fun createLogInUser(userData:UserData){
 
-        db.loggedInUserDao().delete()
-        db.loggedInUserDao().insert(userData.toDatabaseFormat())
+        Completable.fromAction(
+            {
+                db.loggedInUserDao().delete()
+                db.loggedInUserDao().insert(userData.toDatabaseFormat())
+            }
+        )
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     override fun onAuthenticationTmdbSuccess(session_id: String) {
 
         firebaseDatabase.getReference(userFirebase.uid).setValue(session_id)
         this.session = session_id
-    }
-
-    fun  logOut(){
-
-        db.loggedInUserDao().delete()
-        firebaseAuth.signOut()
     }
 }

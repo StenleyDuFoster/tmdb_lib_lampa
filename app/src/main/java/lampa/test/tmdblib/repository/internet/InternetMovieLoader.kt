@@ -99,7 +99,7 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
         override fun doInBackground(vararg p0: Void?): Void? {
 
             retrofit = Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/3/guest_session/")
+                .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()

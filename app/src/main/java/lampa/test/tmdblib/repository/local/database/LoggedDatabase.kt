@@ -24,5 +24,14 @@ abstract class LoggedDatabase: RoomDatabase() {
                         Room.databaseBuilder(context,
                                 LoggedDatabase::class.java, "Sample.db")
                                 .build()
+
+                fun destroyInstance() {
+
+                        if (INSTANCE?.isOpen == true) {
+                                INSTANCE?.close()
+                        }
+
+                        INSTANCE = null
+                }
         }
 }
