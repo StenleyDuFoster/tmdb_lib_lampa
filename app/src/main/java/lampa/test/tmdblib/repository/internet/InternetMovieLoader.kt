@@ -29,7 +29,7 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
         loadPageMovie()
     }
 
-    fun loadListMovie(){
+    fun loadListMovie() {
 
         jsonPlaceHolderApi.getListMovie(
                 searchTypeMovie,

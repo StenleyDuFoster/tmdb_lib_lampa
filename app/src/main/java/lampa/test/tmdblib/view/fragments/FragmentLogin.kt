@@ -2,6 +2,7 @@ package lampa.test.tmdblib.view.fragments
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,8 @@ import lampa.test.tmdblib.view.fragments.callback.CallBackFromLoginFToActivity
 import lampa.test.tmdblib.repository.data.UserData
 import lampa.test.tmdblib.model.viewmodel.LoginViewModel
 import lampa.test.tmdblib.utils.anim.CustomAnimate
+import lampa.test.tmdblib.view.activity.MainActivity
+import lampa.test.tmdblib.view.activity.base.BaseActivity
 import lampa.test.tmdblib.view.fragments.base.BaseFragment
 
 @Suppress("PLUGIN_WARNING")
@@ -69,7 +72,17 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment) {
             buttonLog.isClickable = true
             nameEdit.isClickable = true
             passEdit.isClickable = true
-            nameEdit.setError(error)
+            nameEdit.setError(error.localizedMessage.toString())
+            view.setBackgroundColor(Color.WHITE)
+
+            if(error.message.toString().contains("network"))
+            {
+                val loginDatabase = Runnable {
+                    loginViewModel.initialize()
+                }
+
+                (activity!! as BaseActivity).networkChangeReceiver.setRunnableCode(loginDatabase)
+            }
         })
 
         loginViewModel.getIsLogIn().observe(viewLifecycleOwner, Observer {

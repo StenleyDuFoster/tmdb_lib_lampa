@@ -2,6 +2,7 @@ package lampa.test.tmdblib.model.viewmodel
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
@@ -19,6 +20,7 @@ import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.repository.data.UserData
 import lampa.test.tmdblib.repository.internet.InternetAuthenticationTmdb
 import lampa.test.tmdblib.repository.local.database.LoggedDatabase
+import java.lang.Exception
 
 
 class LoginViewModel(application: Application) : AndroidViewModel(application),
@@ -29,22 +31,26 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     private var firebaseDatabase = FirebaseDatabase.getInstance()
     private lateinit var userFirebase:FirebaseUser
 
-    private var db: LoggedDatabase
+    private val db: LoggedDatabase
     val context: Context = application.applicationContext
 
     private val liveUserData: MutableLiveData<UserData> = MutableLiveData()
     private val liveStatus: MutableLiveData<String> = MutableLiveData()
-    private val liveError: MutableLiveData<String> = MutableLiveData()
+    private val liveError: MutableLiveData<Exception> = MutableLiveData()
     private val liveIsUserLogIn: MutableLiveData<Boolean> = MutableLiveData()
 
     private var authenticationUser: String? = null
     private var session: String? = null
 
-    private val databaseSubscribe: Disposable
+    private lateinit var databaseSubscribe: Disposable
 
     init {
-
         db = LoggedDatabase.getInstance(context)
+        initialize()
+    }
+
+    fun initialize(){
+        Log.v("112233","in")
         databaseSubscribe = db.loggedInUserDao().getAll()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe( { dbUser ->
@@ -105,7 +111,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                        )
 
                    }.addOnFailureListener {ex->
-                        liveError.postValue(ex.message.toString())
+                        liveError.postValue(ex)
                    }
             }
     }

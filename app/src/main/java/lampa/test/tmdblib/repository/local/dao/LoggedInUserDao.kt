@@ -14,8 +14,8 @@ open interface LoggedInUserDao {
       fun insert(loggedInUser: LoggedInUser)
 
       @Update
-      fun update(loggedInUser: LoggedInUser?)
+      fun update(loggedInUser: LoggedInUser?)//rx
 
-      @Query("DELETE FROM login_user_table")
+      @Query("DELETE FROM login_user_table")//rx
       fun delete()
 }

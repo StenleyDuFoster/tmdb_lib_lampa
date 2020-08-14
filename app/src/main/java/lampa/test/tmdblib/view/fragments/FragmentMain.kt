@@ -17,7 +17,8 @@ import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
 import lampa.test.tmdblib.repository.data.WrapperMovieData
 import lampa.test.tmdblib.model.viewmodel.MovieViewModel
 import lampa.test.tmdblib.utils.anim.CustomAnimate
-import lampa.test.tmdblib.utils.connection_manager.ConnectionManager
+import lampa.test.tmdblib.view.activity.MainActivity
+import lampa.test.tmdblib.view.activity.base.BaseActivity
 import lampa.test.tmdblib.view.fragments.base.BaseFragment
 import lampa.test.tmdblib.view.recycler.MovieRecyclerAdapter
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
@@ -130,8 +131,8 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
             if(allContent.size < 10)
                 getPage()
         }
-        val connectionManager = ConnectionManager(context!!, getPage)
-        connectionManager.checkInternet()
+
+        (activity!! as BaseActivity).networkChangeReceiver.setRunnableCode(getPage)
     }
 
     fun getPage() {
