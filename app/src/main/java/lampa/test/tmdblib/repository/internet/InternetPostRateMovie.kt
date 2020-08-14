@@ -4,7 +4,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetPostMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.dagger.component.DaggerComponent
+import lampa.test.tmdblib.dagger.component.DaggerRetrofitComponent
 import lampa.test.tmdblib.repository.data.PostMovieRatingData
 import lampa.test.tmdblib.repository.internet.api.JsonPlaceHolderApi
 import lampa.test.tmdblib.utils.constant.ApiConstant
@@ -15,7 +15,7 @@ class InternetPostRateMovie(val callBackFromInternetPostMovieToMovieViewModel: C
     val jsonPlaceHolderApi:JsonPlaceHolderApi
 
     init {
-        jsonPlaceHolderApi = DaggerComponent.create().getTmdbPlaceHolderApiByRetrofit()
+        jsonPlaceHolderApi = DaggerRetrofitComponent.create().getTmdbPlaceHolderApiByRetrofit()
     }
 
     override fun postAddToLike(session_id:String, movie_id: Int) {

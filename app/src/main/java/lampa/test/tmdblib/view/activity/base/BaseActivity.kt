@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import lampa.test.tmdblib.R
+import lampa.test.tmdblib.dagger.component.DaggerRetrofitComponent
 import lampa.test.tmdblib.utils.connection_manager.NetworkChangeReceiver
 
 abstract class BaseActivity: AppCompatActivity() {
@@ -22,18 +23,19 @@ abstract class BaseActivity: AppCompatActivity() {
         super.onStart()
     }
 
-    fun addWithBackStackFragmentToFragmentManager(container_id:Int, fragment:Fragment){
+    fun addWithBackStackFragmentToFragmentManager(fragment:Fragment, hideFragment:Fragment){
 
         initFragmentTransition()
-        fragmentTransition.add(container_id, fragment)
+        fragmentTransition.add(R.id.fragment_cont, fragment)
         fragmentTransition.addToBackStack(null)
+        fragmentTransition.hide(hideFragment)
         fragmentTransition.commit()
     }
 
-    fun addFragmentToFragmentManager(container_id:Int, fragment:Fragment){
+    fun addFragmentToFragmentManager(fragment:Fragment){
 
         initFragmentTransition()
-        fragmentTransition.add(container_id, fragment)
+        fragmentTransition.add(R.id.fragment_cont, fragment)
         fragmentTransition.commit()
     }
 

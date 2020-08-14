@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "908013122312",
+    "firebase_url": "https://tmdb-lib.firebaseio.com",
+    "project_id": "tmdb-lib",
+    "storage_bucket": "tmdb-lib.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908013122312:android:6e1f9ae62851b7b26472bd",
+        "android_client_info": {
+          "package_name": "lampa.test.tmdblib"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "908013122312-4f69h114f4roc3gsjang3uug4uodv93c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lampa.test.tmdblib",
+            "certificate_hash": "709204d8fd9d943aca4a3c5c7c18bcbd9d6d0936"
+          }
+        },
+        {
+          "client_id": "908013122312-3hh0gomo06m044csu4vbc3dvde7eospm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2i53B_OZof5QWVHCSgzdQWSv3DU_RsdE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "908013122312-3hh0gomo06m044csu4vbc3dvde7eospm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

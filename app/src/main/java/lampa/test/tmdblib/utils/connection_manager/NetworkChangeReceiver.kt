@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.widget.Toast
 
-
 class NetworkChangeReceiver: BroadcastReceiver() {
 
     var doAfterConnectionWillResume:Runnable? = null
@@ -28,15 +27,15 @@ class NetworkChangeReceiver: BroadcastReceiver() {
             oldNetworkState = newNetworkState
         }
         else
-            {
-                newNetworkState = true
+        {
+            newNetworkState = true
 
-                if(newNetworkState != oldNetworkState)
-                    Toast.makeText(context,"соединение востановлено", Toast.LENGTH_SHORT).show()
+            if(newNetworkState != oldNetworkState)
+                Toast.makeText(context,"соединение востановлено", Toast.LENGTH_SHORT).show()
 
-                oldNetworkState = newNetworkState
-                doAfterConnectionWillResume?.run()
-            }
+            oldNetworkState = newNetworkState
+            doAfterConnectionWillResume?.run()
+        }
     }
 
     fun setRunnableCode(doAfterConnectionWillResume: Runnable){

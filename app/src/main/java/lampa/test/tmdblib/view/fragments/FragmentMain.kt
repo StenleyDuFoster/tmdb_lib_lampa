@@ -3,6 +3,8 @@ package lampa.test.tmdblib.view.fragments
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.ProgressBar
 import android.widget.Toast
 
@@ -10,6 +12,7 @@ import androidx.lifecycle.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_main.*
 
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.view.fragments.callback.CallBackFromMainFToActivity
@@ -44,16 +47,20 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
     private var isLikeListOpen = false
 
     var session = "session"
+    private lateinit var searchTypeMovie: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        movieViewModel = ViewModelProvider(activity!!).get(MovieViewModel::class.java)
+        movieViewModel = ViewModelProvider(this).get(MovieViewModel::class.java)
 
         progressBar = activity?.findViewById(R.id.progress_bar)!!
 
         initRecycler(view)
         initViewModelObservers()
         initConnectionManager()
+        initButtonLayoutManager()
+        initButtonMyLikeList()
+        initSpinner()
         movieViewModel.setSessionId(session)
     }
 
@@ -177,6 +184,71 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
     fun getMyLikeList(){
 
         movieViewModel.getLikeMovie()
+    }
+
+    private fun initButtonLayoutManager() {
+
+        val clickListenerLayoutManager = View.OnClickListener{v ->
+            when(v.id){
+                R.id.buttonLinear ->
+                {
+                    animateClass.scale(buttonLinear,1.0f)
+                    animateClass.scale(buttonGrid,0.6f)
+                    setLayoutManager(1)
+                }
+                R.id.buttonGrid ->
+                {
+                    animateClass.scale(buttonGrid,1.0f)
+                    animateClass.scale(buttonLinear,0.6f)
+                    setLayoutManager(2)
+                }
+            }
+        }
+        buttonLinear.setOnClickListener(clickListenerLayoutManager)
+        buttonGrid.setOnClickListener(clickListenerLayoutManager)
+    }
+
+    private fun initButtonMyLikeList(){
+
+        buttonMyLikeList.setOnClickListener {
+
+            getMyLikeList()
+        }
+    }
+
+    private fun initSpinner(){
+
+        val spinnerItems:Array<String> = arrayOf(
+            getString(R.string.search_now_playing),
+            getString(R.string.search_popular),
+            getString(R.string.search_top_rated),
+            getString(R.string.search_upcoming)
+        )
+        val spinnerUserVisible:Array<String> = arrayOf(
+            "сейчас в прокате",
+            "популярные",
+            "лучшие оценки",
+            "скоро выйдут"
+        )
+        val arraySpinnerAdapter: ArrayAdapter<String> =
+            ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, spinnerUserVisible)
+        arraySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = arraySpinnerAdapter
+
+        val spinnerItemSelectedListener: AdapterView.OnItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                searchTypeMovie = spinnerItems[position]
+                changeMovieTypeFromFragment(spinnerItems[position])
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+        spinner.onItemSelectedListener = spinnerItemSelectedListener
     }
 
     override fun onAttach(activity: Activity) {

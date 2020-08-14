@@ -7,7 +7,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component (modules = [RetrofitTmdbModule::class])
-interface Component {
+interface RetrofitComponent {
 
     fun getTmdbPlaceHolderApiByRetrofit() : JsonPlaceHolderApi
 }

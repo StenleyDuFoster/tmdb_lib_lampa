@@ -2,9 +2,10 @@ package lampa.test.tmdblib.repository.internet
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import lampa.test.tmdblib.App
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.dagger.component.DaggerComponent
+import lampa.test.tmdblib.dagger.component.DaggerRetrofitComponent
 import lampa.test.tmdblib.repository.internet.api.JsonPlaceHolderApi
 import lampa.test.tmdblib.repository.data.WrapperMovieData
 import lampa.test.tmdblib.utils.constant.ApiConstant
@@ -21,10 +22,11 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
     private val jsonPlaceHolderApi:JsonPlaceHolderApi
 
     init {
-        jsonPlaceHolderApi = DaggerComponent.create().getTmdbPlaceHolderApiByRetrofit()
+        jsonPlaceHolderApi = DaggerRetrofitComponent.create().getTmdbPlaceHolderApiByRetrofit()
     }
 
     override fun setMovieType(movieType: String){
+
         searchTypeMovie = movieType
         loadPageMovie()
     }
@@ -40,7 +42,6 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { movieTmdbData ->
-
                     callBackFromInternetMovieToMovieViewModel.onMovieLoad(
                         WrapperMovieData(
                             0,movieTmdbData,ADD_TO_FAVORITE)
@@ -63,8 +64,9 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { movieTmdbData ->
-                    var wrapperMovie = WrapperMovieData(0,movieTmdbData,ADD_TO_FAVORITE)
-                    callBackFromInternetMovieToMovieViewModel.onMovieLoad(wrapperMovie)
+                    callBackFromInternetMovieToMovieViewModel.onMovieLoad(
+                        WrapperMovieData(
+                            0,movieTmdbData,ADD_TO_FAVORITE))
                 },
                 {t ->
                     callBackFromInternetMovieToMovieViewModel.onFailure(t.toString())

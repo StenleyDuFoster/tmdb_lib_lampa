@@ -5,8 +5,10 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -31,7 +33,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     private var firebaseDatabase = FirebaseDatabase.getInstance()
     private lateinit var userFirebase:FirebaseUser
 
-    private val db: LoggedDatabase
+    private lateinit var db: LoggedDatabase
     val context: Context = application.applicationContext
 
     private val liveUserData: MutableLiveData<UserData> = MutableLiveData()
@@ -45,12 +47,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     private lateinit var databaseSubscribe: Disposable
 
     init {
-        db = LoggedDatabase.getInstance(context)
-        initialize()
+        //initialize()
     }
 
     fun initialize(){
-        Log.v("112233","in")
         databaseSubscribe = db.loggedInUserDao().getAll()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe( { dbUser ->
@@ -64,7 +64,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                         dbVal.session_id
                     )
                     liveIsUserLogIn.postValue(true)
-                    signUpFirebase(user)
+  //                  signUpFirebase(user)
                 }
             }, { error("Error db user init (loginViewModel)")})
     }
@@ -74,63 +74,25 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     fun getError() = liveError
     fun getIsLogIn() = liveIsUserLogIn
 
-    fun signUpFirebase(userData: UserData){
-        databaseSubscribe.dispose()
-        liveStatus.postValue("проверка пользователя")
-        firebaseAuth.createUserWithEmailAndPassword(userData.name, userData.pass)
-            .addOnSuccessListener {
-                liveStatus.postValue("ожидание подтверждения почты")
-                internetAuthentication = InternetAuthenticationTmdb(this)
-                userFirebase = firebaseAuth.currentUser!!
-                authenticationUser = userData.name
-                userData.session = session.toString()
-                userFirebase.sendEmailVerification()
-                    .addOnCompleteListener {
-                        Thread(
-                            Runnable {
-                                waitEmailVerification(userData, userFirebase)
-                            }
-                        ).start()
+    fun signUpFirebase(userData: GoogleSignInAccount){
+        //databaseSubscribe.dispose()
+
+        val credential = GoogleAuthProvider.getCredential("908013122312-3hh0gomo06m044csu4vbc3dvde7eospm.apps.googleusercontent.com", null)
+        firebaseAuth.signInWithCredential(credential)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d("TAG", "signInWithCredential:success")
+                    val user = firebaseAuth.currentUser
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w("TAG", "signInWithCredential:failure", task.exception)
+                    // ...
                 }
-            }.addOnFailureListener {
-                firebaseAuth.signInWithEmailAndPassword(userData.name, userData.pass)
-                   .addOnSuccessListener {
-                       authenticationUser = userData.name
 
-                       firebaseDatabase.getReference(firebaseAuth.currentUser?.uid!!).addValueEventListener(
-                           object : ValueEventListener {
-                               override fun onCancelled(databaseError: DatabaseError) { }
-
-                               override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                   userData.session = dataSnapshot.value.toString()
-
-                                   createLogInUser(userData)
-                                   liveUserData.postValue(userData)
-                               }
-                           }
-                       )
-
-                   }.addOnFailureListener {ex->
-                        liveError.postValue(ex)
-                   }
+                // ...
             }
-    }
 
-    private fun waitEmailVerification(userData: UserData, userFirebase: FirebaseUser?){
-
-        userFirebase?.reload()
-        if(userFirebase?.isEmailVerified!!)
-        {
-            userData.session = session.toString()
-            liveStatus.postValue(null)
-            liveUserData.postValue(userData)
-            db.loggedInUserDao().delete()
-            db.loggedInUserDao().insert(userData.toDatabaseFormat())
-        }
-        else {
-            Thread.sleep(1000)
-            waitEmailVerification(userData, userFirebase)
-        }
     }
 
     private fun createLogInUser(userData:UserData){

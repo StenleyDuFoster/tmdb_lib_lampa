@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import lampa.test.tmdblib.App
 
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieViewModel
@@ -13,8 +15,9 @@ import lampa.test.tmdblib.repository.data.WrapperMovieData
 import lampa.test.tmdblib.repository.internet.InternetMovieLoader
 import lampa.test.tmdblib.repository.internet.InternetPostRateMovie
 import lampa.test.tmdblib.repository.local.database.LoggedDatabase
+import javax.inject.Inject
 
-class MovieViewModel(application: Application) : AndroidViewModel(application),
+class MovieViewModel  : ViewModel(),
     MainContract.MovieViewModel, CallBackFromInternetMovieToMovieViewModel, CallBackFromInternetPostMovieToMovieViewModel {
 
     private var internetLoadMovie: MainContract.InternetLoadMovie = InternetMovieLoader(this)
@@ -27,7 +30,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application),
 
     private val livePostStatus: MutableLiveData<String> = MutableLiveData()
 
-    var context: Context = application.applicationContext
+    var context: Context = App.applicationComponent.getContext()
 
     lateinit var session_id:String
 
