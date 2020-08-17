@@ -22,18 +22,20 @@ import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.repository.data.UserData
 import lampa.test.tmdblib.repository.internet.InternetAuthenticationTmdb
 import lampa.test.tmdblib.repository.local.database.LoggedDatabase
+import lampa.test.tmdblib.utils.constant.FirebaseAuthConstant
 import java.lang.Exception
-
 
 class LoginViewModel(application: Application) : AndroidViewModel(application),
     CallBackFromInternetAuthToLoginViewModel {
 
-    private lateinit var internetAuthentication: MainContract.InternetAuth
+    private var internetAuthentication: MainContract.InternetAuth
     private var firebaseAuth = FirebaseAuth.getInstance()
     private var firebaseDatabase = FirebaseDatabase.getInstance()
-    private lateinit var userFirebase:FirebaseUser
+    private var userFirebase:FirebaseUser? = null
+    private lateinit var databaseListener: ValueEventListener
+    private lateinit var firebaseToken: String
 
-    private lateinit var db: LoggedDatabase
+    private var db: LoggedDatabase
     val context: Context = application.applicationContext
 
     private val liveUserData: MutableLiveData<UserData> = MutableLiveData()
@@ -41,13 +43,14 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     private val liveError: MutableLiveData<Exception> = MutableLiveData()
     private val liveIsUserLogIn: MutableLiveData<Boolean> = MutableLiveData()
 
-    private var authenticationUser: String? = null
     private var session: String? = null
 
     private lateinit var databaseSubscribe: Disposable
 
     init {
-        //initialize()
+        db = LoggedDatabase.getInstance(context)
+        internetAuthentication = InternetAuthenticationTmdb(this)
+        initialize()
     }
 
     fun initialize(){
@@ -56,15 +59,12 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
             .subscribe( { dbUser ->
                 if(dbUser?.size!! > 0) {
                     val dbVal = dbUser[0]
-                    val user = UserData(
-                        dbVal?.login!!,
-                        dbVal.password,
-                        dbVal.token,
-                        true,
-                        dbVal.session_id
-                    )
+
+                    session = dbVal!!.session_id
+
                     liveIsUserLogIn.postValue(true)
-  //                  signUpFirebase(user)
+                    firebaseToken = dbVal.token
+                    firebaseSignIn()
                 }
             }, { error("Error db user init (loginViewModel)")})
     }
@@ -75,38 +75,71 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     fun getIsLogIn() = liveIsUserLogIn
 
     fun signUpFirebase(userData: GoogleSignInAccount){
-        //databaseSubscribe.dispose()
+        databaseSubscribe.dispose()
 
-        val credential = GoogleAuthProvider.getCredential("908013122312-3hh0gomo06m044csu4vbc3dvde7eospm.apps.googleusercontent.com", null)
+        firebaseToken = userData.idToken!!
+        firebaseSignIn()
+    }
+
+    private fun firebaseSignIn(){
+
+        val credential = GoogleAuthProvider.getCredential(firebaseToken, null)
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("TAG", "signInWithCredential:success")
                     val user = firebaseAuth.currentUser
+
+                    databaseListener = (object:ValueEventListener {
+                        override fun onCancelled(error: DatabaseError) {
+                            liveError.postValue(error.toException())
+                        }
+
+                        override fun onDataChange(snapshot: DataSnapshot) {
+
+                            if (userFirebase == null) {
+                                if (snapshot.getValue() != null) {
+                                    userFirebase = user
+                                    session = snapshot.getValue().toString()
+                                    createLogInUser(user?.email!!, firebaseToken)
+                                } else {
+                                    userFirebase = user
+                                    internetAuthentication.startAuth()
+                                }
+                            }
+                        }
+                    })
+
+                    firebaseDatabase.getReference(user!!.uid).addValueEventListener(databaseListener)
                 } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("TAG", "signInWithCredential:failure", task.exception)
-                    // ...
+                    liveError.postValue(task.exception)
                 }
-
-                // ...
             }
-
     }
 
-    private fun createLogInUser(userData:UserData){
+    private fun createLogInUser(email: String, token: String){
+
+        val userData = UserData(
+
+            email,
+            "",
+            FirebaseAuthConstant().AUTH_WITH_GOOGLE,
+            token,
+            session!!
+        )
 
         Completable.fromAction {
             db.loggedInUserDao().delete()
             db.loggedInUserDao().insert(userData.toDatabaseFormat())
         }.subscribeOn(Schedulers.io())
               .subscribe()
+
+        liveUserData.postValue(userData)
     }
 
     override fun onAuthenticationTmdbSuccess(session_id: String) {
 
-        firebaseDatabase.getReference(userFirebase.uid).setValue(session_id)
-        this.session = session_id
+        session = session_id
+        firebaseDatabase.getReference(userFirebase?.uid!!).setValue(session)
+        createLogInUser(userFirebase?.email!!, firebaseToken)
     }
 }

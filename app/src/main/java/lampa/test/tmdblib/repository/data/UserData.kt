@@ -4,20 +4,20 @@ import lampa.test.tmdblib.repository.local.enity.LoggedInUser
 
 data class UserData (
 
-    val name: String,
-    val pass: String,
+    val login: String,
+    val password: String,
+    val signInMethod: Int,
     val token: String,
-    val signIn: Boolean,
-    var session: String
+    val session_id: String
 ){
     fun toDatabaseFormat(): LoggedInUser {
 
         return LoggedInUser(
-            name,
-            pass,
+            login,
+            password,
+            signInMethod,
             token,
-            signIn,
-            session
+            session_id
         )
     }
 }

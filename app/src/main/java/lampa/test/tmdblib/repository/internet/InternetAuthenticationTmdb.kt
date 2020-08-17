@@ -12,18 +12,16 @@ import lampa.test.tmdblib.utils.constant.ApiConstant
 class InternetAuthenticationTmdb (val callBackFromInternetAuthToLoginViewModel: CallBackFromInternetAuthToLoginViewModel) :
     MainContract.InternetAuth {
 
-    val jsonPlaceHolderApi: JsonPlaceHolderApi
+    override fun startAuth(){
 
-    init {
-
-        jsonPlaceHolderApi = DaggerRetrofitComponent.create().getTmdbPlaceHolderApiByRetrofit()
-
+        val jsonPlaceHolderApi = DaggerRetrofitComponent.create().getTmdbPlaceHolderApiByRetrofit()
         jsonPlaceHolderApi.getSession(ApiConstant().API_V3)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { responseData ->
                     callBackFromInternetAuthToLoginViewModel.onAuthenticationTmdbSuccess(responseData.guest_session_id!!)
-                }, { })
+                }, { error("Auth callBack failure") })
+
     }
 }

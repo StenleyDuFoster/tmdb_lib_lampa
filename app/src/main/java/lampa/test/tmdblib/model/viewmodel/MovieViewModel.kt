@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 import lampa.test.tmdblib.App
 
 import lampa.test.tmdblib.R
@@ -88,6 +89,8 @@ class MovieViewModel  : ViewModel(),
     override fun logOut() {
 
         val db = LoggedDatabase.getInstance(context)
+        val firebaseAuth = FirebaseAuth.getInstance()
+        firebaseAuth.signOut()
         Thread(
             Runnable {
                 db.loggedInUserDao().delete()

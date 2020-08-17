@@ -30,23 +30,22 @@ class LoginActivity : BaseActivity(), CallBackFromLoginFToActivity {
     override fun userLogin(userData: UserData) {
 
         val intentToMAinActivity = Intent(this, MainActivity::class.java)
-        intentToMAinActivity.putExtra("session_id", userData.session)
+        intentToMAinActivity.putExtra("session_id", userData.session_id)
         startActivity(intentToMAinActivity)
         finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.w("TAGO123", "start" + requestCode)
         super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 1) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
                 loginFragment.loginViewModel.signUpFirebase(account)
+                Log.w("TAGO123", "ok")
 
             } catch (e: ApiException) {
-                Log.w("TAG", "Google sign in failed", e)
+                Log.w("TAGO123", "Google sign in failed", e)
             }
-        }
     }
 }

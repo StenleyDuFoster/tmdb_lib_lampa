@@ -9,7 +9,7 @@ class LoggedInUser(
     @PrimaryKey
     val login: String,
     val password: String,
+    val signInMethod: Int,
     val token: String,
-    val signIn: Boolean,
     val session_id: String
 )
