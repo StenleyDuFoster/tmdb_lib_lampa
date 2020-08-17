@@ -10,7 +10,7 @@ import retrofit2.Call
 import retrofit2.http.*
 import java.util.*
 
-interface JsonPlaceHolderApi {
+interface JsonTmdbPlaceHolderApi {
 
     @GET("movie/{search}")
     fun getListMovie(@Path("search") search: String,

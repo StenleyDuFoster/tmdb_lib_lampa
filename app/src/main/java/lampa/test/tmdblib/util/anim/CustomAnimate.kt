@@ -1,4 +1,4 @@
-package lampa.test.tmdblib.utils.anim
+package lampa.test.tmdblib.util.anim
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator

@@ -1,23 +1,27 @@
 package lampa.test.tmdblib
 
 import android.app.Application
+import android.content.Context
+import android.widget.Toast
 import lampa.test.tmdblib.dagger.component.ContextComponent
 import lampa.test.tmdblib.dagger.component.DaggerContextComponent
 import lampa.test.tmdblib.dagger.module.ContextModule
 
 class App : Application() {
     companion object {
-        lateinit var applicationComponent: ContextComponent
+        lateinit var contextComponent: ContextComponent
     }
 
     override fun onCreate() {
         super.onCreate()
-        initDagger()
+        createContextWithDagger()
     }
 
-    private fun initDagger() {
-        applicationComponent = DaggerContextComponent.builder()
+    private fun createContextWithDagger() {
+        contextComponent = DaggerContextComponent.builder()
             .contextModule(ContextModule(this))
             .build()
     }
+
+
 }

@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import lampa.test.tmdblib.repository.local.dao.LoggedInUserDao
 import lampa.test.tmdblib.repository.local.enity.LoggedInUser
 
-@Database(entities = (arrayOf(LoggedInUser::class)), version = 3, exportSchema = false)
+@Database(entities = (arrayOf(LoggedInUser::class)), version = 4, exportSchema = false)
 abstract class LoggedDatabase: RoomDatabase() {
         abstract fun loggedInUserDao(): LoggedInUserDao
 
@@ -23,6 +23,7 @@ abstract class LoggedDatabase: RoomDatabase() {
                 private fun buildDatabase(context: Context) =
                         Room.databaseBuilder(context,
                                 LoggedDatabase::class.java, "Sample.db")
+                                .fallbackToDestructiveMigration()
                                 .build()
 
                 fun destroyInstance() {

@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
-import lampa.test.tmdblib.utils.anim.CustomAnimate
+import lampa.test.tmdblib.util.anim.CustomAnimate
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
 class MovieRecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, var type: Int, listener: CallBackFromRecyclerToFragment?) :
@@ -41,7 +41,6 @@ class MovieRecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, var typ
                     if (position != RecyclerView.NO_POSITION) {
                         listener.onFavoriteClick(position)
                         animClass.alphaBlink(imageFavorite)
-
                     }
                 }
             }

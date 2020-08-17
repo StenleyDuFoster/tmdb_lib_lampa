@@ -6,8 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.dagger.component.DaggerRetrofitComponent
-import lampa.test.tmdblib.utils.connection_manager.NetworkChangeReceiver
+import lampa.test.tmdblib.util.connection_manager.NetworkChangeReceiver
 
 abstract class BaseActivity: AppCompatActivity() {
 

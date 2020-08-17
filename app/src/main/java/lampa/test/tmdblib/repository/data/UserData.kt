@@ -1,5 +1,7 @@
 package lampa.test.tmdblib.repository.data
 
+import android.net.wifi.hotspot2.pps.Credential
+import com.google.firebase.auth.AuthCredential
 import lampa.test.tmdblib.repository.local.enity.LoggedInUser
 
 data class UserData (

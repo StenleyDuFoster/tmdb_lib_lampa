@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ProgressBar
-import android.widget.Toast
 
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,8 +18,8 @@ import lampa.test.tmdblib.view.fragments.callback.CallBackFromMainFToActivity
 import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
 import lampa.test.tmdblib.repository.data.WrapperMovieData
 import lampa.test.tmdblib.model.viewmodel.MovieViewModel
-import lampa.test.tmdblib.utils.anim.CustomAnimate
-import lampa.test.tmdblib.view.activity.MainActivity
+import lampa.test.tmdblib.util.anim.CustomAnimate
+import lampa.test.tmdblib.util.toast.makeToast
 import lampa.test.tmdblib.view.activity.base.BaseActivity
 import lampa.test.tmdblib.view.fragments.base.BaseFragment
 import lampa.test.tmdblib.view.recycler.MovieRecyclerAdapter
@@ -94,12 +93,12 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
 
         movieViewModel.getProgress().observe(viewLifecycleOwner, Observer { failure: String ->
 
-            Toast.makeText(context, failure, Toast.LENGTH_LONG).show()
+            makeToast(failure)
             animateClass.scale(progressBar, 0.0f)
         })
 
         movieViewModel.getPostStatus().observe(viewLifecycleOwner, Observer { msg: String ->
-            Toast.makeText(context,msg,Toast.LENGTH_LONG).show()
+            makeToast(msg)
         })
     }
 

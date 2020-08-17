@@ -1,11 +1,10 @@
 package lampa.test.tmdblib.model.viewmodel
 
-import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import io.reactivex.schedulers.Schedulers
 import lampa.test.tmdblib.App
 
 import lampa.test.tmdblib.R
@@ -16,7 +15,6 @@ import lampa.test.tmdblib.repository.data.WrapperMovieData
 import lampa.test.tmdblib.repository.internet.InternetMovieLoader
 import lampa.test.tmdblib.repository.internet.InternetPostRateMovie
 import lampa.test.tmdblib.repository.local.database.LoggedDatabase
-import javax.inject.Inject
 
 class MovieViewModel  : ViewModel(),
     MainContract.MovieViewModel, CallBackFromInternetMovieToMovieViewModel, CallBackFromInternetPostMovieToMovieViewModel {
@@ -31,7 +29,7 @@ class MovieViewModel  : ViewModel(),
 
     private val livePostStatus: MutableLiveData<String> = MutableLiveData()
 
-    var context: Context = App.applicationComponent.getContext()
+    var context: Context = App.contextComponent.getContext()
 
     lateinit var session_id:String
 
@@ -91,14 +89,12 @@ class MovieViewModel  : ViewModel(),
         val db = LoggedDatabase.getInstance(context)
         val firebaseAuth = FirebaseAuth.getInstance()
         firebaseAuth.signOut()
-        Thread(
-            Runnable {
-                db.loggedInUserDao().delete()
-            }
-        ).start()
+        db.loggedInUserDao().delete()
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
-    override fun onPostSuccess(session_msg: String) {
-        livePostStatus.postValue(session_msg)
+    override fun onPostSuccess(session_id: String) {
+        livePostStatus.postValue(session_id)
     }
 }

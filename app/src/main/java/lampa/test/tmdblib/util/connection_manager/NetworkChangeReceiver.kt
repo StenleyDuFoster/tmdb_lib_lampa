@@ -1,10 +1,10 @@
-package lampa.test.tmdblib.utils.connection_manager
+package lampa.test.tmdblib.util.connection_manager
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.widget.Toast
+import lampa.test.tmdblib.util.toast.makeToast
 
 class NetworkChangeReceiver: BroadcastReceiver() {
 
@@ -22,7 +22,7 @@ class NetworkChangeReceiver: BroadcastReceiver() {
             newNetworkState = false
 
             if(newNetworkState != oldNetworkState)
-                Toast.makeText(context,"соединение потеряно", Toast.LENGTH_SHORT).show()
+                makeToast("соединение потеряно")
 
             oldNetworkState = newNetworkState
         }
@@ -31,7 +31,7 @@ class NetworkChangeReceiver: BroadcastReceiver() {
             newNetworkState = true
 
             if(newNetworkState != oldNetworkState)
-                Toast.makeText(context,"соединение востановлено", Toast.LENGTH_SHORT).show()
+                makeToast("соединение востановлено")
 
             oldNetworkState = newNetworkState
             doAfterConnectionWillResume?.run()

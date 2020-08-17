@@ -2,14 +2,9 @@ package lampa.test.tmdblib.view.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
-import lampa.test.tmdblib.utils.anim.CustomAnimate
 import lampa.test.tmdblib.view.activity.base.BaseActivity
 import lampa.test.tmdblib.view.fragments.FragmentDetails
 import lampa.test.tmdblib.view.fragments.FragmentMain

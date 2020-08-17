@@ -2,11 +2,13 @@ package lampa.test.tmdblib.view.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
+
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.repository.data.UserData
+import lampa.test.tmdblib.util.toast.makeToast
 import lampa.test.tmdblib.view.activity.base.BaseActivity
 import lampa.test.tmdblib.view.fragments.FragmentLogin
 import lampa.test.tmdblib.view.fragments.callback.CallBackFromLoginFToActivity
@@ -18,11 +20,6 @@ class LoginActivity : BaseActivity(), CallBackFromLoginFToActivity {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        initFragment()
-    }
-
-    fun initFragment(){
 
         addFragmentToFragmentManager(loginFragment)
     }
@@ -36,16 +33,14 @@ class LoginActivity : BaseActivity(), CallBackFromLoginFToActivity {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.w("TAGO123", "start" + requestCode)
         super.onActivityResult(requestCode, resultCode, data)
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
                 loginFragment.loginViewModel.signUpFirebase(account)
-                Log.w("TAGO123", "ok")
 
             } catch (e: ApiException) {
-                Log.w("TAGO123", "Google sign in failed", e)
+                makeToast(e.message!!)
             }
     }
 }

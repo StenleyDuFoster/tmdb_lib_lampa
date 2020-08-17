@@ -1,4 +1,4 @@
-package lampa.test.tmdblib.utils.constant
+package lampa.test.tmdblib.util.constant
 
 data class ApiConstant (
 

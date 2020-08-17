@@ -2,13 +2,12 @@ package lampa.test.tmdblib.repository.internet
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import lampa.test.tmdblib.App
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.dagger.component.DaggerRetrofitComponent
-import lampa.test.tmdblib.repository.internet.api.JsonPlaceHolderApi
+import lampa.test.tmdblib.repository.internet.api.JsonTmdbPlaceHolderApi
 import lampa.test.tmdblib.repository.data.WrapperMovieData
-import lampa.test.tmdblib.utils.constant.ApiConstant
+import lampa.test.tmdblib.util.constant.ApiConstant
 
 class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBackFromInternetMovieToMovieViewModel)
     : MainContract.InternetLoadMovie {
@@ -19,10 +18,10 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
     private var ADD_TO_FAVORITE = false
     private lateinit var session_id: String
 
-    private val jsonPlaceHolderApi:JsonPlaceHolderApi
+    private val jsonTmdbPlaceHolderApi:JsonTmdbPlaceHolderApi
 
     init {
-        jsonPlaceHolderApi = DaggerRetrofitComponent.create().getTmdbPlaceHolderApiByRetrofit()
+        jsonTmdbPlaceHolderApi = DaggerRetrofitComponent.create().getTmdbPlaceHolderApiByRetrofit()
     }
 
     override fun setMovieType(movieType: String){
@@ -33,7 +32,7 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
 
     fun loadListMovie() {
 
-        jsonPlaceHolderApi.getListMovie(
+        jsonTmdbPlaceHolderApi.getListMovie(
                 searchTypeMovie,
                 ApiConstant().API_V3,
                 "ru",
@@ -54,7 +53,7 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
 
     fun loadLikeMovie(){
 
-        jsonPlaceHolderApi.getLikeMovie(
+        jsonTmdbPlaceHolderApi.getLikeMovie(
                 session_id,
                 ApiConstant().API_V3,
                 "ru",
