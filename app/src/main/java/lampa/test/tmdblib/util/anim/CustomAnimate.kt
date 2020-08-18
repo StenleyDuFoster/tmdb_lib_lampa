@@ -7,7 +7,7 @@ import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import lampa.test.tmdblib.R
 
-class CustomAnimate {
+object CustomAnimate {
 
     fun scale(v: View, finalScale:Float){
 

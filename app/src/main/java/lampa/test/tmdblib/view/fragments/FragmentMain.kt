@@ -34,8 +34,6 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
     private lateinit var gridLayoutManager: GridLayoutManager
     private lateinit var adapterMovie: MovieRecyclerAdapter
 
-    private val animateClass = CustomAnimate()
-
     private lateinit var callBackFromMainFToActivity: CallBackFromMainFToActivity
 
     private var allContent: ArrayList<MovieResultsTmdbData> = ArrayList()
@@ -76,8 +74,8 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
                                                    defineType(recycler.layoutManager),
                                                    this as CallBackFromRecyclerToFragment)
                 recycler.adapter = adapterMovie
-                animateClass.recycler(recycler)
-                animateClass.scale(progressBar, 0.0f)
+                CustomAnimate.recycler(recycler)
+                CustomAnimate.scale(progressBar, 0.0f)
             }
             else {
 
@@ -85,7 +83,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
                 recycler.adapter?.notifyItemRangeInserted(recycler.adapter!!.itemCount,
                     recycler.adapter!!.itemCount + 20)
                 isDownload = false
-                animateClass.scale(progressBar, 0.0f)
+                CustomAnimate.scale(progressBar, 0.0f)
             }
 
             isLikeListOpen = wrapperMovieData.toLikeList
@@ -94,7 +92,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
         movieViewModel.getProgress().observe(viewLifecycleOwner, Observer { failure: String ->
 
             makeToast(failure)
-            animateClass.scale(progressBar, 0.0f)
+            CustomAnimate.scale(progressBar, 0.0f)
         })
 
         movieViewModel.getPostStatus().observe(viewLifecycleOwner, Observer { msg: String ->
@@ -150,7 +148,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
         adapterMovie = MovieRecyclerAdapter(allContent, 1, this as CallBackFromRecyclerToFragment)
         recycler.adapter = adapterMovie
 
-        animateClass.scale(progressBar, 1.0f)
+        CustomAnimate.scale(progressBar, 1.0f)
     }
 
     fun changeMovieTypeFromFragment(movieType: String) {
@@ -168,7 +166,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
         }
         adapterMovie.type = type
         recycler.adapter = adapterMovie
-        animateClass.recycler(recycler)
+        CustomAnimate.recycler(recycler)
         recycler.scrollToPosition(oldScrollPos)
     }
 
@@ -191,14 +189,14 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
             when(v.id){
                 R.id.buttonLinear ->
                 {
-                    animateClass.scale(buttonLinear,1.0f)
-                    animateClass.scale(buttonGrid,0.6f)
+                    CustomAnimate.scale(buttonLinear,1.0f)
+                    CustomAnimate.scale(buttonGrid,0.6f)
                     setLayoutManager(1)
                 }
                 R.id.buttonGrid ->
                 {
-                    animateClass.scale(buttonGrid,1.0f)
-                    animateClass.scale(buttonLinear,0.6f)
+                    CustomAnimate.scale(buttonGrid,1.0f)
+                    CustomAnimate.scale(buttonLinear,0.6f)
                     setLayoutManager(2)
                 }
             }

@@ -46,8 +46,8 @@ abstract class BaseActivity: AppCompatActivity() {
             R.anim.in_leaft_to_right, R.anim.out_leaft_to_right)
     }
 
-    override fun onDestroy() {
+    override fun onStop() {
         unregisterReceiver(networkChangeReceiver)
-        super.onDestroy()
+        super.onStop()
     }
 }

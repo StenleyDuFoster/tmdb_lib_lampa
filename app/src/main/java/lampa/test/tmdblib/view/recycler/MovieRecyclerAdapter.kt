@@ -20,7 +20,6 @@ class MovieRecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, var typ
 
     private val mExampleList: ArrayList<MovieResultsTmdbData> = exampleList
     private var mListener: CallBackFromRecyclerToFragment? = listener
-    val animClass = CustomAnimate()
 
     inner class ViewHolder(itemView: View, listener: CallBackFromRecyclerToFragment?) :
         RecyclerView.ViewHolder(itemView) {
@@ -40,7 +39,7 @@ class MovieRecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, var typ
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         listener.onFavoriteClick(position)
-                        animClass.alphaBlink(imageFavorite)
+                        CustomAnimate.alphaBlink(imageFavorite)
                     }
                 }
             }
@@ -87,9 +86,8 @@ class MovieRecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, var typ
         holder.textSlave.text = currentItem.release_date
 
         Glide.with(holder.imageView.context)
-            .asBitmap()
-            .load("https://image.tmdb.org/t/p/w500" + currentItem.poster_path)
-            .into(holder.imageView)
+             .load("https://image.tmdb.org/t/p/w500" + currentItem.poster_path)
+             .into(holder.imageView)
         
         when(holder.itemViewType){
             1 -> {

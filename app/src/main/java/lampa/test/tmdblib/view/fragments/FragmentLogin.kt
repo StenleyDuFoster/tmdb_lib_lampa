@@ -37,7 +37,6 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
     var alpha: Float = 1f
     lateinit var loginViewModel: LoginViewModel
     private lateinit var callbackToActivity: CallBackFromLoginFToActivity
-    private var animateClass = CustomAnimate()
     private lateinit var fragmentPhoneDialog: FragmentPhoneAndCodeDialog
 
     private lateinit var verification_Id: String
@@ -63,11 +62,11 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
             val signInClient = GoogleSignIn.getClient(activity!!, signInOptions)
             val signInIntent: Intent = signInClient.signInIntent
             startActivityForResult(signInIntent, 1)
-            animateClass.alphaFadeIn(layLoading)
+            CustomAnimate.alphaFadeIn(layLoading)
             google_button.isClickable = false
             phone_button.isClickable = false
-            animateClass.alphaFadeOut(google_button)
-            animateClass.alphaFadeOut(phone_button)
+            CustomAnimate.alphaFadeOut(google_button)
+            CustomAnimate.alphaFadeOut(phone_button)
         }
 
         val clickListenerButtonPhone = View.OnClickListener {
@@ -89,12 +88,12 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
         loginViewModel.getError().observe(viewLifecycleOwner, Observer { error ->
 
             google_button.isClickable = true
-            animateClass.alphaFadeIn(google_button)
+            CustomAnimate.alphaFadeIn(google_button)
             phone_button.isClickable = true
-            animateClass.alphaFadeIn(phone_button)
+            CustomAnimate.alphaFadeIn(phone_button)
             view!!.setBackgroundColor(Color.WHITE)
             makeToast(error.message!!)
-            animateClass.alphaFadeOut(layLoading)
+            CustomAnimate.alphaFadeOut(layLoading)
 
             if(error.message.toString().contains("network"))
             {
@@ -107,7 +106,7 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
         })
 
         loginViewModel.getIsLogIn().observe(viewLifecycleOwner, Observer {
-            animateClass.alphaFadeIn(layLoading)
+            CustomAnimate.alphaFadeIn(layLoading)
             alpha = 0f
             view!!.setBackgroundColor(Color.TRANSPARENT)
             initAlphaView()
@@ -116,10 +115,10 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
         loginViewModel.getStatus().observe(viewLifecycleOwner, Observer { msg ->
 
             if(msg != null) {
-                animateClass.alphaFadeIn(layLoading)
+                CustomAnimate.alphaFadeIn(layLoading)
                 textLoading.text = msg
             }else {
-                animateClass.alphaFadeOut(layLoading)
+                CustomAnimate.alphaFadeOut(layLoading)
             }
         })
     }
@@ -165,11 +164,11 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
 
     override fun authWithCode(code: String) {
 
-        animateClass.alphaFadeIn(layLoading)
+        CustomAnimate.alphaFadeIn(layLoading)
         google_button.isClickable = false
         phone_button.isClickable = false
-        animateClass.alphaFadeOut(google_button)
-        animateClass.alphaFadeOut(phone_button)
+        CustomAnimate.alphaFadeOut(google_button)
+        CustomAnimate.alphaFadeOut(phone_button)
         loginViewModel.firebaseSignInByPhone(verification_Id, code)
 
     }
