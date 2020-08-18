@@ -15,9 +15,12 @@ import lampa.test.tmdblib.repository.data.WrapperMovieData
 import lampa.test.tmdblib.repository.internet.InternetMovieLoader
 import lampa.test.tmdblib.repository.internet.InternetPostRateMovie
 import lampa.test.tmdblib.repository.local.database.LoggedDatabase
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 
 class MovieViewModel  : ViewModel(),
-    MainContract.MovieViewModel, CallBackFromInternetMovieToMovieViewModel, CallBackFromInternetPostMovieToMovieViewModel {
+    MainContract.MovieViewModel, CallBackFromInternetMovieToMovieViewModel,
+    CallBackFromInternetPostMovieToMovieViewModel, KoinComponent{
 
     private var internetLoadMovie: MainContract.InternetLoadMovie = InternetMovieLoader(this)
     private var internetPostLikeMovie: MainContract.InternetPostLikeMovie = InternetPostRateMovie(this)
@@ -29,7 +32,7 @@ class MovieViewModel  : ViewModel(),
 
     private val livePostStatus: MutableLiveData<String> = MutableLiveData()
 
-    var context: Context = App.contextComponent.getContext()
+    private val context: Context by inject()
 
     lateinit var session_id:String
 

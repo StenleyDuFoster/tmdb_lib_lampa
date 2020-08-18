@@ -5,15 +5,17 @@ import io.reactivex.schedulers.Schedulers
 
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetAuthToLoginViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.dagger.component.DaggerRetrofitComponent
+import lampa.test.tmdblib.repository.internet.api.JsonTmdbPlaceHolderApi
 import lampa.test.tmdblib.util.constant.ApiConstant
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 
 class InternetAuthenticationTmdb (val callBackFromInternetAuthToLoginViewModel: CallBackFromInternetAuthToLoginViewModel) :
-    MainContract.InternetAuth {
+    MainContract.InternetAuth, KoinComponent {
 
     override fun startAuth(){
 
-        val jsonPlaceHolderApi = DaggerRetrofitComponent.create().getTmdbPlaceHolderApiByRetrofit()
+        val jsonPlaceHolderApi: JsonTmdbPlaceHolderApi by inject()
         jsonPlaceHolderApi.getSession(ApiConstant().API_V3)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

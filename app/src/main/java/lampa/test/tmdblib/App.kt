@@ -2,24 +2,26 @@ package lampa.test.tmdblib
 
 import android.app.Application
 import android.content.Context
-import android.widget.Toast
-import lampa.test.tmdblib.dagger.component.ContextComponent
-import lampa.test.tmdblib.dagger.component.DaggerContextComponent
-import lampa.test.tmdblib.dagger.module.ContextModule
+import lampa.test.tmdblib.Koin.appComponent
+import org.koin.android.ext.android.startKoin
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 
 class App : Application() {
-    companion object {
-        lateinit var contextComponent: ContextComponent
+
+    companion object: KoinComponent {
+        val contextComponent: Context by inject()
     }
 
     override fun onCreate() {
         super.onCreate()
-        createContextWithDagger()
+        initCoin()
     }
 
-    private fun createContextWithDagger() {
-        contextComponent = DaggerContextComponent.builder()
-            .contextModule(ContextModule(this))
-            .build()
+    private fun initCoin() {
+        startKoin(
+            androidContext = this,
+            modules = appComponent
+        )
     }
 }

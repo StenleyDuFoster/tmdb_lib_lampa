@@ -3,6 +3,7 @@ package lampa.test.tmdblib.view.activity
 import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
+
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
 import lampa.test.tmdblib.view.activity.base.BaseActivity

@@ -82,6 +82,5 @@ dependencies {
     implementation "androidx.room:room-ktx:$roomVersion"
     androidTestImplementation "androidx.room:room-testing:$roomVersion"
 
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"//--------------------------------------dagger
-    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "org.koin:koin-android:$koin_version"//------------------------------------------Koin
 }

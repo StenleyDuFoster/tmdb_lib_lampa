@@ -4,13 +4,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.dagger.component.DaggerRetrofitComponent
 import lampa.test.tmdblib.repository.internet.api.JsonTmdbPlaceHolderApi
 import lampa.test.tmdblib.repository.data.WrapperMovieData
 import lampa.test.tmdblib.util.constant.ApiConstant
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 
 class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBackFromInternetMovieToMovieViewModel)
-    : MainContract.InternetLoadMovie {
+    : MainContract.InternetLoadMovie, KoinComponent {
 
     private var page: Int = 1
     private var totalPage: Int = 1
@@ -18,11 +19,7 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
     private var ADD_TO_FAVORITE = false
     private lateinit var session_id: String
 
-    private val jsonTmdbPlaceHolderApi:JsonTmdbPlaceHolderApi
-
-    init {
-        jsonTmdbPlaceHolderApi = DaggerRetrofitComponent.create().getTmdbPlaceHolderApiByRetrofit()
-    }
+    private val jsonTmdbPlaceHolderApi:JsonTmdbPlaceHolderApi by inject()
 
     override fun setMovieType(movieType: String){
 

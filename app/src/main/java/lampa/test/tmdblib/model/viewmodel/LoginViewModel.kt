@@ -21,10 +21,12 @@ import lampa.test.tmdblib.repository.data.UserData
 import lampa.test.tmdblib.repository.internet.InternetAuthenticationTmdb
 import lampa.test.tmdblib.repository.local.database.LoggedDatabase
 import lampa.test.tmdblib.util.constant.FirebaseAuthConstant
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 import java.lang.Exception
 
 class LoginViewModel: ViewModel(),
-    CallBackFromInternetAuthToLoginViewModel {
+    CallBackFromInternetAuthToLoginViewModel, KoinComponent {
 
     private var internetAuthentication: MainContract.InternetAuth
     private var firebaseAuth = FirebaseAuth.getInstance()
@@ -34,7 +36,7 @@ class LoginViewModel: ViewModel(),
     private lateinit var firebaseToken: String
 
     private var db: LoggedDatabase
-    private val context: Context = App.contextComponent.getContext()
+    private val context: Context by inject()
     private val firebaseAuthConstant = FirebaseAuthConstant()
 
     private val liveUserData: MutableLiveData<UserData> = MutableLiveData()
