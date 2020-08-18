@@ -1,8 +1,10 @@
 package lampa.test.tmdblib.model.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.*
 import com.google.firebase.database.DataSnapshot
@@ -59,8 +61,11 @@ class LoginViewModel: ViewModel(),
                     session = dbVal!!.session_id
 
                     liveIsUserLogIn.postValue(true)
+
                     firebaseToken = dbVal.token
-                    firebaseSignInByGoogle()
+
+                    if(firebaseAuth.currentUser != null)
+                        liveUserData.postValue(createUserData(dbVal.login,dbVal.signInMethod,dbVal.token))
                 }
             }, { error("Error db user init (loginViewModel)")})
     }
@@ -70,22 +75,25 @@ class LoginViewModel: ViewModel(),
     fun getError() = liveError
     fun getIsLogIn() = liveIsUserLogIn
 
-    fun signUpFirebase(userData: GoogleSignInAccount){
+    fun signUpFirebaseByGoogle(userData: GoogleSignInAccount){
         databaseSubscribe.dispose()
 
         firebaseToken = userData.idToken!!
-        firebaseSignInByGoogle()
+        Log.v("112233",firebaseToken)
+        firebaseSignInByGoogleCredential()
     }
 
     fun firebaseSignInByPhone(verificationId: String, smsCode: String){
+        databaseSubscribe.dispose()
         liveStatus.postValue("проверка кода")
 
-        firebaseToken = verificationId + smsCode
         val credential = PhoneAuthProvider.getCredential(verificationId, smsCode)
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-
+                    val signInUser = GoogleSignIn.getLastSignedInAccount(context)
+                    firebaseToken = signInUser?.idToken!!
+                    Log.v("112233",firebaseToken)
                     saveDataInBdAndDb()
                 } else {
 
@@ -97,7 +105,7 @@ class LoginViewModel: ViewModel(),
             }
     }
 
-    private fun firebaseSignInByGoogle(){
+    private fun firebaseSignInByGoogleCredential(){
         liveStatus.postValue("Аунтификация через гугл аккаунт")
 
         firebaseAuth.signInWithCredential(GoogleAuthProvider.getCredential(firebaseToken, null))
@@ -130,12 +138,12 @@ class LoginViewModel: ViewModel(),
                         if(userFirebase?.email!=null)
                         {
                             email = userFirebase?.email!!
-                            createLogInUser(email, firebaseToken,firebaseAuthConstant.AUTH_WITH_GOOGLE)
+                            createLogInUserInDb(email, firebaseToken,firebaseAuthConstant.AUTH_WITH_GOOGLE)
                         }
                         else {
                             email = userFirebase?.phoneNumber!!
 
-                            createLogInUser(email, firebaseToken,firebaseAuthConstant.AUTH_WITH_PHONE)
+                            createLogInUserInDb(email, firebaseToken,firebaseAuthConstant.AUTH_WITH_PHONE)
                         }
 
                     } else {
@@ -150,17 +158,10 @@ class LoginViewModel: ViewModel(),
         firebaseDatabase.getReference(user!!.uid).addValueEventListener(databaseListener)
     }
 
-    private fun createLogInUser(email: String, token: String, auth_with: Int){
+    private fun createLogInUserInDb(email: String, token: String, auth_with: Int){
 
         liveStatus.postValue("Сохранение пользователя")
-        val userData = UserData(
-
-            email,
-            "",
-            auth_with,
-            token,
-            session!!
-        )
+        val userData = createUserData(email,auth_with,token)
 
         db.loggedInUserDao().delete()
             .subscribeOn(Schedulers.io())
@@ -170,6 +171,15 @@ class LoginViewModel: ViewModel(),
 
         liveUserData.postValue(userData)
     }
+
+    private fun createUserData(email: String, auth_with: Int, token: String) : UserData = UserData(
+
+        email,
+        "",
+        auth_with,
+        token,
+        session!!
+    )
 
     override fun onAuthenticationTmdbSuccess(session_id: String) {
 
@@ -182,6 +192,6 @@ class LoginViewModel: ViewModel(),
         else
             email = userFirebase?.phoneNumber!!
 
-        createLogInUser(email, firebaseToken, firebaseAuthConstant.AUTH_WITH_GOOGLE)
+        createLogInUserInDb(email, firebaseToken, firebaseAuthConstant.AUTH_WITH_GOOGLE)
     }
 }

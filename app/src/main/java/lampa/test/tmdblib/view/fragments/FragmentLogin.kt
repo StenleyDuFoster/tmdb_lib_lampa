@@ -52,7 +52,7 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
         initViewModel()
     }
 
-    private fun initButtonsLogView(){
+    private fun initButtonsLogView() {
 
         val clickListenerButtonGoogle = View.OnClickListener {
 
@@ -135,58 +135,28 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
 
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
-            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                // This callback will be invoked in two situations:
-                // 1 - Instant verification. In some cases the phone number can be instantly
-                //     verified without needing to send or enter a verification code.
-                // 2 - Auto-retrieval. On some devices Google Play services can automatically
-                //     detect the incoming verification SMS and perform verification without
-                //     user action.
-                Log.d("TAG", "onVerificationCompleted:$credential")
-
-               // signInWithPhoneAuthCredential(credential)
-            }
+            override fun onVerificationCompleted(credential: PhoneAuthCredential) { }
 
             override fun onVerificationFailed(e: FirebaseException) {
-                // This callback is invoked in an invalid request for verification is made,
-                // for instance if the the phone number format is not valid.
-                Log.w("TAG", "onVerificationFailed", e)
 
-                if (e is FirebaseAuthInvalidCredentialsException) {
-                    // Invalid request
-                    // ...
-                } else if (e is FirebaseTooManyRequestsException) {
-                    // The SMS quota for the project has been exceeded
-                    // ...
-                }
-
-                // Show a message and update the UI
-                // ...
+                makeToast(e.localizedMessage)
+                if (e is FirebaseAuthInvalidCredentialsException) { }
+                else if (e is FirebaseTooManyRequestsException) { }
             }
 
             override fun onCodeSent(
                 verificationId: String,
                 token: PhoneAuthProvider.ForceResendingToken
             ) {
-                // The SMS verification code has been sent to the provided phone number, we
-                // now need to ask the user to enter the code and then construct a credential
-                // by combining the code with a verification ID.
-                Log.d("TAG", "onCodeSent:$verificationId")
                 verification_Id = verificationId
-
-                // Save verification ID and resending token so we can use them later
-//                storedVerificationId = verificationId
-//                resendToken = token
-
-                // ...
             }
         }
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-            "+"+number, // Phone number to verify
-            60, // Timeout duration
-            java.util.concurrent.TimeUnit.SECONDS, // Unit of timeout
-            activity!!, // Activity (for callback binding)
+            "+"+number,
+            60,
+            java.util.concurrent.TimeUnit.SECONDS,
+            activity!!,
             callbacks)
 
         fragmentPhoneDialog = FragmentPhoneAndCodeDialog(R.integer.CODE_DIALOG,this)

@@ -22,6 +22,4 @@ class App : Application() {
             .contextModule(ContextModule(this))
             .build()
     }
-
-
 }

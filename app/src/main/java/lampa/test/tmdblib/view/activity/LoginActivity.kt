@@ -2,7 +2,6 @@ package lampa.test.tmdblib.view.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 
@@ -37,7 +36,7 @@ class LoginActivity : BaseActivity(), CallBackFromLoginFToActivity {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
-                loginFragment.loginViewModel.signUpFirebase(account)
+                loginFragment.loginViewModel.signUpFirebaseByGoogle(account)
 
             } catch (e: ApiException) {
                 makeToast(e.message!!)
