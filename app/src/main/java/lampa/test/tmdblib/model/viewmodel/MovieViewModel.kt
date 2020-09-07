@@ -15,8 +15,8 @@ import lampa.test.tmdblib.repository.data.WrapperMovieData
 import lampa.test.tmdblib.repository.internet.InternetMovieLoader
 import lampa.test.tmdblib.repository.internet.InternetPostRateMovie
 import lampa.test.tmdblib.repository.local.database.LoggedDatabase
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class MovieViewModel  : ViewModel(),
     MainContract.MovieViewModel, CallBackFromInternetMovieToMovieViewModel,

@@ -14,15 +14,14 @@ import com.google.firebase.database.ValueEventListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import lampa.test.tmdblib.App
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetAuthToLoginViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.repository.data.UserData
 import lampa.test.tmdblib.repository.internet.InternetAuthenticationTmdb
 import lampa.test.tmdblib.repository.local.database.LoggedDatabase
 import lampa.test.tmdblib.util.constant.FirebaseAuthConstant
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.lang.Exception
 
 class LoginViewModel: ViewModel(),
@@ -81,7 +80,6 @@ class LoginViewModel: ViewModel(),
         databaseSubscribe.dispose()
 
         firebaseToken = userData.idToken!!
-        Log.v("112233",firebaseToken)
         firebaseSignInByGoogleCredential()
     }
 

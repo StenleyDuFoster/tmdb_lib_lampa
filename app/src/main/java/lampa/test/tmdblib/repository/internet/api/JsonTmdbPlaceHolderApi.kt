@@ -42,4 +42,9 @@ interface JsonTmdbPlaceHolderApi {
                         @Query("api_key") api_key: String,
                         @Query("guest_session_id") guest_session_id: String
     ): Single<PostResponseData>
+
+    @GET("")
+    fun getFilmUrl(
+        @Url url: String
+    ): Single<String>
 }

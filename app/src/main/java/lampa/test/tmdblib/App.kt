@@ -3,25 +3,26 @@ package lampa.test.tmdblib
 import android.app.Application
 import android.content.Context
 import lampa.test.tmdblib.Koin.appComponent
-import org.koin.android.ext.android.startKoin
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.KoinComponent
+import org.koin.core.context.startKoin
 
 class App : Application() {
 
     companion object: KoinComponent {
-        val contextComponent: Context by inject()
+        lateinit var contextComponent: Context
     }
 
     override fun onCreate() {
         super.onCreate()
+        contextComponent = applicationContext
         initCoin()
     }
 
     private fun initCoin() {
-        startKoin(
-            androidContext = this,
-            modules = appComponent
-        )
+        startKoin {
+            androidContext(applicationContext)
+            modules(appComponent)
+        }
     }
 }

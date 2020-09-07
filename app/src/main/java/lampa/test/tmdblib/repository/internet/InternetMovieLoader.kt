@@ -7,8 +7,8 @@ import lampa.test.tmdblib.contract_interface.MainContract
 import lampa.test.tmdblib.repository.internet.api.JsonTmdbPlaceHolderApi
 import lampa.test.tmdblib.repository.data.WrapperMovieData
 import lampa.test.tmdblib.util.constant.ApiConstant
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBackFromInternetMovieToMovieViewModel)
     : MainContract.InternetLoadMovie, KoinComponent {

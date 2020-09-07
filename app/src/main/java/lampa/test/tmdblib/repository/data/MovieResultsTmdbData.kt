@@ -1,15 +1,19 @@
 package lampa.test.tmdblib.repository.data
 
-    data class MovieResultsTmdbData (
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-        val original_name: String,
-        val name: String,
-        val id: Int,
-        val title: String,
-        val overview: String,
-        val genre_ids: Array<Int>,
-        val vote_average: Float,
-        val backdrop_path: String,
-        val poster_path: String,
-        val release_date: String
-    )
+@Parcelize
+data class MovieResultsTmdbData (
+
+        val original_name: String = "",
+        val name: String = "",
+        val id: Int = 0,
+        val title: String = "",
+        val overview: String = "",
+        val genre_ids: Array<Int> = arrayOf(),
+        val vote_average: Float = 0.0f,
+        val backdrop_path: String = "",
+        val poster_path: String = "",
+        val release_date: String = ""
+    ) : Parcelable
