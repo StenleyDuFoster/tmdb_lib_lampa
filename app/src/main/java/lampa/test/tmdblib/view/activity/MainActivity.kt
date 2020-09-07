@@ -5,7 +5,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
+import lampa.test.tmdblib.model.viewmodel.repository.data.MovieResultsTmdbData
 import lampa.test.tmdblib.view.activity.base.BaseActivity
 import lampa.test.tmdblib.view.fragments.FragmentDetails
 import lampa.test.tmdblib.view.fragments.FragmentMain

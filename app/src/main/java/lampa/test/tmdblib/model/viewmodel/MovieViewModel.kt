@@ -5,16 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.schedulers.Schedulers
-import lampa.test.tmdblib.App
 
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetPostMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.repository.data.WrapperMovieData
-import lampa.test.tmdblib.repository.internet.InternetMovieLoader
-import lampa.test.tmdblib.repository.internet.InternetPostRateMovie
-import lampa.test.tmdblib.repository.local.database.LoggedDatabase
+import lampa.test.tmdblib.model.viewmodel.repository.data.WrapperMovieData
+import lampa.test.tmdblib.model.viewmodel.repository.internet.InternetMovieLoader
+import lampa.test.tmdblib.model.viewmodel.repository.internet.InternetPostRateMovie
+import lampa.test.tmdblib.model.viewmodel.repository.local.database.LoggedDatabase
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

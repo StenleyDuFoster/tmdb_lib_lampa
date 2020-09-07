@@ -8,4 +8,7 @@
     <string name="search_upcoming">upcoming</string>
     <string name="search_now_playing">now_playing</string>
 
+    <string name="chanelId" translatable="false">tmdb_main</string>
+    <string name="chanelName" translatable="false">tmdb</string>
+
 </resources>

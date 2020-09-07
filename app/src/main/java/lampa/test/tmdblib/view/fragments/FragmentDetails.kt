@@ -8,7 +8,7 @@ import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_details.*
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
+import lampa.test.tmdblib.model.viewmodel.repository.data.MovieResultsTmdbData
 import lampa.test.tmdblib.view.activity.VideoActivity
 import lampa.test.tmdblib.view.fragments.base.BaseFragment
 import java.util.concurrent.TimeUnit

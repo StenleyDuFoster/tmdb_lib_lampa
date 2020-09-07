@@ -15,8 +15,8 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.view.fragments.callback.CallBackFromMainFToActivity
-import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
-import lampa.test.tmdblib.repository.data.WrapperMovieData
+import lampa.test.tmdblib.model.viewmodel.repository.data.MovieResultsTmdbData
+import lampa.test.tmdblib.model.viewmodel.repository.data.WrapperMovieData
 import lampa.test.tmdblib.model.viewmodel.MovieViewModel
 import lampa.test.tmdblib.util.anim.CustomAnimate
 import lampa.test.tmdblib.util.toast.makeToast

@@ -16,9 +16,9 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetAuthToLoginViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.repository.data.UserData
-import lampa.test.tmdblib.repository.internet.InternetAuthenticationTmdb
-import lampa.test.tmdblib.repository.local.database.LoggedDatabase
+import lampa.test.tmdblib.model.viewmodel.repository.data.UserData
+import lampa.test.tmdblib.model.viewmodel.repository.internet.InternetAuthenticationTmdb
+import lampa.test.tmdblib.model.viewmodel.repository.local.database.LoggedDatabase
 import lampa.test.tmdblib.util.constant.FirebaseAuthConstant
 import org.koin.core.KoinComponent
 import org.koin.core.inject

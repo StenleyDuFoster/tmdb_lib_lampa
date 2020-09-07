@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.repository.data.MovieResultsTmdbData
+import lampa.test.tmdblib.model.viewmodel.repository.data.MovieResultsTmdbData
 import lampa.test.tmdblib.util.anim.CustomAnimate
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 

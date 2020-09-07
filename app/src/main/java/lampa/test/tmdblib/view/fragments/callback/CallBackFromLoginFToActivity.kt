@@ -1,6 +1,6 @@
 package lampa.test.tmdblib.view.fragments.callback
 
-import lampa.test.tmdblib.repository.data.UserData
+import lampa.test.tmdblib.model.viewmodel.repository.data.UserData
 
 interface CallBackFromLoginFToActivity {
 

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "908013122312-bhvvia30h9o8utt5a41nud8aa570fpt7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lampa.test.tmdblib",
+            "certificate_hash": "472b962d99cda98a2ab4080eb497fbd1e9aec994"
+          }
+        },
+        {
           "client_id": "908013122312-4f69h114f4roc3gsjang3uug4uodv93c.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

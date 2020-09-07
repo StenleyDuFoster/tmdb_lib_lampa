@@ -2,6 +2,5 @@ package lampa.test.tmdblib.Koin
 
 val appComponent = listOf(
 
-    retrofitModule,
-    viewModel
+    retrofitModule
 )

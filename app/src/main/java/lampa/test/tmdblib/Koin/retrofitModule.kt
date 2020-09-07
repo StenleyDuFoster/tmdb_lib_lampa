@@ -1,7 +1,7 @@
 package lampa.test.tmdblib.Koin
 
 import io.reactivex.schedulers.Schedulers
-import lampa.test.tmdblib.repository.internet.api.JsonTmdbPlaceHolderApi
+import lampa.test.tmdblib.model.viewmodel.repository.internet.api.JsonTmdbPlaceHolderApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module

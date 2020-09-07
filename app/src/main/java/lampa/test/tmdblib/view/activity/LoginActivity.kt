@@ -6,7 +6,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.repository.data.UserData
+import lampa.test.tmdblib.model.viewmodel.repository.data.UserData
 import lampa.test.tmdblib.util.toast.makeToast
 import lampa.test.tmdblib.view.activity.base.BaseActivity
 import lampa.test.tmdblib.view.fragments.FragmentLogin
