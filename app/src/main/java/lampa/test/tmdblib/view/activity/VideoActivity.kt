@@ -62,6 +62,11 @@ class VideoActivity : BaseActivity(), CallBackVideoFromParser, CallBackPageFromP
             })
             webView.getSettings().setUserAgentString("Chrome/41.0.2228.0 Safari/537.36")
 
+            Log.v("112233", "https://filmix.co/search/" +
+                    content.title +
+                    "-" +
+                    content.release_date.substring(0, 4))
+
             webView.loadUrl(
                 "https://filmix.co/search/" +
                         content.title +
@@ -117,6 +122,7 @@ class VideoActivity : BaseActivity(), CallBackVideoFromParser, CallBackPageFromP
     override fun onVideoFind(link: String) {
 
         runOnUiThread {
+            webView.stopLoading()
             textLoading.text = "запуск видео"
             videoView.setVideoURI(Uri.parse(link))
             val mediaController = MediaController(this)
@@ -128,6 +134,7 @@ class VideoActivity : BaseActivity(), CallBackVideoFromParser, CallBackPageFromP
     }
 
     override fun onDestroy() {
+        webView.stopLoading()
         webView.clearHistory()
         webView.clearMatches()
         webView.clearSslPreferences()

@@ -3,7 +3,6 @@ package lampa.test.tmdblib.view.fragments
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -29,8 +28,6 @@ import lampa.test.tmdblib.view.fragments.dialog.callback.CallBackFromDialogToFra
 import lampa.test.tmdblib.view.fragments.callback.CallBackFromLoginFToActivity
 import lampa.test.tmdblib.view.fragments.dialog.FragmentPhoneAndCodeDialog
 
-
-@Suppress("PLUGIN_WARNING")
 class FragmentLogin : BaseFragment(R.layout.login_fragment),
     CallBackFromDialogToFragment {
 
@@ -39,7 +36,7 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
     private lateinit var callbackToActivity: CallBackFromLoginFToActivity
     private lateinit var fragmentPhoneDialog: FragmentPhoneAndCodeDialog
 
-    private lateinit var verification_Id: String
+    private lateinit var verificationId: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -71,15 +68,15 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
 
         val clickListenerButtonPhone = View.OnClickListener {
 
-            fragmentPhoneDialog = FragmentPhoneAndCodeDialog(R.integer.PHONE_DIALOG,this)
-            fragmentPhoneDialog.show(activity!!.supportFragmentManager,null)
+            fragmentPhoneDialog = FragmentPhoneAndCodeDialog(R.integer.PHONE_DIALOG, this)
+            fragmentPhoneDialog.show(activity!!.supportFragmentManager, null)
         }
 
         google_button.setOnClickListener(clickListenerButtonGoogle)
         phone_button.setOnClickListener(clickListenerButtonPhone)
     }
 
-    private fun initViewModel(){
+    private fun initViewModel() {
 
         loginViewModel.getUser().observe(viewLifecycleOwner, Observer { user ->
             callbackToActivity.userLogin(user)
@@ -95,8 +92,7 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
             makeToast(error.message!!)
             CustomAnimate.alphaFadeOut(layLoading)
 
-            if(error.message.toString().contains("network"))
-            {
+            if (error.message.toString().contains("network")) {
                 val loginDatabase = Runnable {
                     loginViewModel.initialize()
                 }
@@ -114,16 +110,16 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
 
         loginViewModel.getStatus().observe(viewLifecycleOwner, Observer { msg ->
 
-            if(msg != null) {
+            if (msg != null) {
                 CustomAnimate.alphaFadeIn(layLoading)
                 textLoading.text = msg
-            }else {
+            } else {
                 CustomAnimate.alphaFadeOut(layLoading)
             }
         })
     }
 
-    private fun initAlphaView(){
+    private fun initAlphaView() {
 
         phone_button.alpha = alpha
         google_button.alpha = alpha
@@ -134,32 +130,35 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
 
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
-            override fun onVerificationCompleted(credential: PhoneAuthCredential) { }
+            override fun onVerificationCompleted(credential: PhoneAuthCredential) {}
 
             override fun onVerificationFailed(e: FirebaseException) {
 
                 makeToast(e.localizedMessage)
-                if (e is FirebaseAuthInvalidCredentialsException) { }
-                else if (e is FirebaseTooManyRequestsException) { }
+                if (e is FirebaseAuthInvalidCredentialsException) {
+                } else if (e is FirebaseTooManyRequestsException) {
+                    makeToast(e.localizedMessage)
+                }
             }
 
             override fun onCodeSent(
                 verificationId: String,
                 token: PhoneAuthProvider.ForceResendingToken
             ) {
-                verification_Id = verificationId
+                this@FragmentLogin.verificationId = verificationId
             }
         }
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-            "+"+number,
+            "+$number",
             60,
             java.util.concurrent.TimeUnit.SECONDS,
             activity!!,
-            callbacks)
+            callbacks
+        )
 
-        fragmentPhoneDialog = FragmentPhoneAndCodeDialog(R.integer.CODE_DIALOG,this)
-        fragmentPhoneDialog.show(activity!!.supportFragmentManager,null)
+        fragmentPhoneDialog = FragmentPhoneAndCodeDialog(R.integer.CODE_DIALOG, this)
+        fragmentPhoneDialog.show(activity!!.supportFragmentManager, null)
     }
 
     override fun authWithCode(code: String) {
@@ -169,7 +168,6 @@ class FragmentLogin : BaseFragment(R.layout.login_fragment),
         phone_button.isClickable = false
         CustomAnimate.alphaFadeOut(google_button)
         CustomAnimate.alphaFadeOut(phone_button)
-        loginViewModel.firebaseSignInByPhone(verification_Id, code)
-
+        loginViewModel.firebaseSignInByPhone(verificationId, code)
     }
 }

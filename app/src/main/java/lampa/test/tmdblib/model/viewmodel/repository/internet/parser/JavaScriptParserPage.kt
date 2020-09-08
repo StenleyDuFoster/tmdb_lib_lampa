@@ -25,7 +25,7 @@ class JavaScriptParserPage(private val callBack: CallBackPageFromParser) {
                 .getElementsByClass("watch icon-play")
 
             if (parsePage.size > 4) {
-                Log.v("112233", "page " + parsePage)
+                Log.v("112233", "page $parsePage")
                 val parse = parsePage[0].toString().split("\"")
                 Log.v("112233", "page " + parse[5])
                 callBack.onPageFind(parse[5])
@@ -38,7 +38,6 @@ class JavaScriptParserPage(private val callBack: CallBackPageFromParser) {
                     callBack.onPageNotFound()
                 }
             }
-
         }
     }
 }

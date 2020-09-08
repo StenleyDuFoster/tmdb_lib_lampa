@@ -8,7 +8,7 @@ import org.jsoup.nodes.Document
 
 class JavaScriptParserVideo(private val callBack: CallBackVideoFromParser) {
 
-    lateinit var doc: Document
+    private lateinit var doc: Document
 
     @JavascriptInterface
     fun processHTML(html: String?) {
@@ -27,7 +27,7 @@ class JavaScriptParserVideo(private val callBack: CallBackVideoFromParser) {
                 .toString()
                 .split(" \" ")
 
-            Log.v("112233", "video" + parseArray.toString())
+            Log.v("112233", "video $parseArray")
 
             if(parseArray.size < 4) {
                 Log.v("112233", "call back")

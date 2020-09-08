@@ -61,33 +61,37 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
         movieViewModel.setSessionId(session)
     }
 
-    private fun initViewModelObservers(){
+    private fun initViewModelObservers() {
 
-        movieViewModel.getMovie().observe(viewLifecycleOwner, Observer { wrapperMovieData: WrapperMovieData ->
+        movieViewModel.getMovie()
+            .observe(viewLifecycleOwner, Observer { wrapperMovieData: WrapperMovieData ->
 
-            val resultArray = ArrayList(wrapperMovieData.movieTmdbData.results)
+                val resultArray = ArrayList(wrapperMovieData.movieTmdbData.results)
 
-            if(wrapperMovieData.showAllOrAddToShow == R.integer.ALL_PAGE) {
+                if (wrapperMovieData.showAllOrAddToShow == R.integer.ALL_PAGE) {
 
-                allContent = resultArray
-                adapterMovie = MovieRecyclerAdapter(allContent,
-                                                   defineType(recycler.layoutManager),
-                                                   this as CallBackFromRecyclerToFragment)
-                recycler.adapter = adapterMovie
-                CustomAnimate.recycler(recycler)
-                CustomAnimate.scale(progressBar, 0.0f)
-            }
-            else {
+                    allContent = resultArray
+                    adapterMovie = MovieRecyclerAdapter(
+                        allContent,
+                        defineType(recycler.layoutManager),
+                        this as CallBackFromRecyclerToFragment
+                    )
+                    recycler.adapter = adapterMovie
+                    CustomAnimate.recycler(recycler)
+                    CustomAnimate.scale(progressBar, 0.0f)
+                } else {
 
-                allContent.addAll(resultArray)
-                recycler.adapter?.notifyItemRangeInserted(recycler.adapter!!.itemCount,
-                    recycler.adapter!!.itemCount + 20)
-                isDownload = false
-                CustomAnimate.scale(progressBar, 0.0f)
-            }
+                    allContent.addAll(resultArray)
+                    recycler.adapter?.notifyItemRangeInserted(
+                        recycler.adapter!!.itemCount,
+                        recycler.adapter!!.itemCount + 20
+                    )
+                    isDownload = false
+                    CustomAnimate.scale(progressBar, 0.0f)
+                }
 
-            isLikeListOpen = wrapperMovieData.toLikeList
-        })
+                isLikeListOpen = wrapperMovieData.toLikeList
+            })
 
         movieViewModel.getProgress().observe(viewLifecycleOwner, Observer { failure: String ->
 
@@ -100,30 +104,32 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
         })
     }
 
-    private fun initRecycler(v: View){
+    private fun initRecycler(v: View) {
 
-        linearLayoutManager = LinearLayoutManager(v.context,LinearLayoutManager.VERTICAL,false)
+        linearLayoutManager = LinearLayoutManager(v.context, LinearLayoutManager.VERTICAL, false)
         var orientation = 3
 
-        if(resources.configuration.orientation == 2)
+        if (resources.configuration.orientation == 2)
             orientation = 5
 
-        gridLayoutManager = GridLayoutManager(v.context,orientation,GridLayoutManager.VERTICAL,false)
+        gridLayoutManager =
+            GridLayoutManager(v.context, orientation, GridLayoutManager.VERTICAL, false)
         gridLayoutManager.spanSizeLookup
 
         recycler = v.findViewById(R.id.recycler)
         recycler.layoutManager = linearLayoutManager
 
-        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
                 if (((recycler.layoutManager as LinearLayoutManager)
-                        .findLastVisibleItemPosition() > recycler.adapter?.itemCount!!/2)
-                        && !isDownload) {
+                        .findLastVisibleItemPosition() > recycler.adapter?.itemCount!! / 2)
+                    && !isDownload
+                ) {
 
                     isDownload = true
-                   movieViewModel.addPage()
+                    movieViewModel.addPage()
                 }
             }
         })
@@ -132,14 +138,14 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
     private fun initConnectionManager() {
 
         val getPage = Runnable {
-            if(allContent.size < 10)
+            if (allContent.size < 10)
                 getPage()
         }
 
         (activity!! as BaseActivity).networkChangeReceiver.setRunnableCode(getPage)
     }
 
-    fun getPage() {
+    private fun getPage() {
 
         movieViewModel.getPage()
         allContent = ArrayList()
@@ -157,10 +163,11 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
         getPage()
     }
 
-    fun setLayoutManager(type: Int){
+    private fun setLayoutManager(type: Int) {
 
-        val oldScrollPos = (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-        when (type){
+        val oldScrollPos =
+            (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+        when (type) {
             1 -> recycler.layoutManager = linearLayoutManager
             2 -> recycler.layoutManager = gridLayoutManager
         }
@@ -170,7 +177,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
         recycler.scrollToPosition(oldScrollPos)
     }
 
-    private fun defineType(layoutManager: RecyclerView.LayoutManager?): Int{
+    private fun defineType(layoutManager: RecyclerView.LayoutManager?): Int {
 
         return when (layoutManager) {
             linearLayoutManager -> 1
@@ -178,25 +185,23 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
         }
     }
 
-    fun getMyLikeList(){
+    private fun getMyLikeList() {
 
         movieViewModel.getLikeMovie()
     }
 
     private fun initButtonLayoutManager() {
 
-        val clickListenerLayoutManager = View.OnClickListener{v ->
-            when(v.id){
-                R.id.buttonLinear ->
-                {
-                    CustomAnimate.scale(buttonLinear,1.0f)
-                    CustomAnimate.scale(buttonGrid,0.6f)
+        val clickListenerLayoutManager = View.OnClickListener { v ->
+            when (v.id) {
+                R.id.buttonLinear -> {
+                    CustomAnimate.scale(buttonLinear, 1.0f)
+                    CustomAnimate.scale(buttonGrid, 0.6f)
                     setLayoutManager(1)
                 }
-                R.id.buttonGrid ->
-                {
-                    CustomAnimate.scale(buttonGrid,1.0f)
-                    CustomAnimate.scale(buttonLinear,0.6f)
+                R.id.buttonGrid -> {
+                    CustomAnimate.scale(buttonGrid, 1.0f)
+                    CustomAnimate.scale(buttonLinear, 0.6f)
                     setLayoutManager(2)
                 }
             }
@@ -205,7 +210,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
         buttonGrid.setOnClickListener(clickListenerLayoutManager)
     }
 
-    private fun initButtonMyLikeList(){
+    private fun initButtonMyLikeList() {
 
         buttonMyLikeList.setOnClickListener {
 
@@ -213,22 +218,26 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
         }
     }
 
-    private fun initSpinner(){
+    private fun initSpinner() {
 
-        val spinnerItems:Array<String> = arrayOf(
+        val spinnerItems: Array<String> = arrayOf(
             getString(R.string.search_now_playing),
             getString(R.string.search_popular),
             getString(R.string.search_top_rated),
             getString(R.string.search_upcoming)
         )
-        val spinnerUserVisible:Array<String> = arrayOf(
+        val spinnerUserVisible: Array<String> = arrayOf(
             "сейчас в прокате",
             "популярные",
             "лучшие оценки",
             "скоро выйдут"
         )
         val arraySpinnerAdapter: ArrayAdapter<String> =
-            ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, spinnerUserVisible)
+            ArrayAdapter(
+                context!!,
+                android.R.layout.simple_spinner_dropdown_item,
+                spinnerUserVisible
+            )
         arraySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = arraySpinnerAdapter
 
@@ -243,6 +252,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
                 searchTypeMovie = spinnerItems[position]
                 changeMovieTypeFromFragment(spinnerItems[position])
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         spinner.onItemSelectedListener = spinnerItemSelectedListener
@@ -259,7 +269,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
 
     override fun onFavoriteClick(position: Int) {
 
-        if(!isLikeListOpen)
+        if (!isLikeListOpen)
             movieViewModel.postLikeMovie(allContent[position].id)
         else {
             movieViewModel.postDeleteLikeMovie(allContent[position].id)
