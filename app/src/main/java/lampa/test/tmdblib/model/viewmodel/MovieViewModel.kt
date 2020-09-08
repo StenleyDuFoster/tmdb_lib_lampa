@@ -99,4 +99,10 @@ class MovieViewModel  : ViewModel(),
     override fun onPostSuccess(session_id: String) {
         livePostStatus.postValue(session_id)
     }
+
+    override fun onCleared() {
+        internetPostLikeMovie.dispose()
+        internetLoadMovie.dispose()
+        super.onCleared()
+    }
 }

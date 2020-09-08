@@ -194,4 +194,9 @@ class LoginViewModel: ViewModel(),
 
         createLogInUserInDb(email, firebaseToken, firebaseAuthConstant.AUTH_WITH_GOOGLE)
     }
+
+    override fun onCleared() {
+        internetAuthentication.dispose()
+        super.onCleared()
+    }
 }

@@ -27,7 +27,7 @@
         <activity android:name=".view.activity.MainActivity" />
 
         <receiver
-            android:name=".util.connection_manager.NetworkChangeReceiver"
+            android:name=".receiver.NetworkChangeReceiver"
             android:label="NetworkChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

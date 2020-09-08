@@ -11,6 +11,7 @@ import androidx.lifecycle.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
 import lampa.test.tmdblib.R
@@ -29,16 +30,13 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
 
     lateinit var movieViewModel: MovieViewModel
 
-    lateinit var recycler: RecyclerView
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var gridLayoutManager: GridLayoutManager
-    private lateinit var adapterMovie: MovieRecyclerAdapter
+    private var adapterMovie = MovieRecyclerAdapter()
 
     private lateinit var callBackFromMainFToActivity: CallBackFromMainFToActivity
 
     private var allContent: ArrayList<MovieResultsTmdbData> = ArrayList()
-
-    private lateinit var progressBar: ProgressBar
 
     private var isDownload = false
     private var isLikeListOpen = false
@@ -49,8 +47,6 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         movieViewModel = ViewModelProvider(this).get(MovieViewModel::class.java)
-
-        progressBar = activity?.findViewById(R.id.progress_bar)!!
 
         initRecycler(view)
         initViewModelObservers()
@@ -66,58 +62,62 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
         movieViewModel.getMovie()
             .observe(viewLifecycleOwner, Observer { wrapperMovieData: WrapperMovieData ->
 
-                val resultArray = ArrayList(wrapperMovieData.movieTmdbData.results)
+                if (wrapperMovieData != null) {
+                    val resultArray = ArrayList(wrapperMovieData.movieTmdbData.results)
 
-                if (wrapperMovieData.showAllOrAddToShow == R.integer.ALL_PAGE) {
+                    if (wrapperMovieData.showAllOrAddToShow == R.integer.ALL_PAGE) {
+                        allContent = resultArray
+                        (recycler.adapter as MovieRecyclerAdapter).mExampleList.clear()
+                        (recycler.adapter as MovieRecyclerAdapter).mExampleList.addAll(allContent)
+                        (recycler.adapter as MovieRecyclerAdapter).notifyDataSetChanged()
+                        isDownload = false
+                        CustomAnimate.recycler(recycler)
+                        CustomAnimate.scale(activity?.progress_bar!!, 0.0f)
+                    } else {
+                        allContent.addAll(resultArray)
+                        (recycler.adapter as MovieRecyclerAdapter).mExampleList.addAll(resultArray)
+                        (recycler.adapter as MovieRecyclerAdapter).notifyDataSetChanged()
+                        isDownload = false
+                        CustomAnimate.scale(activity?.progress_bar!!, 0.0f)
+                    }
 
-                    allContent = resultArray
-                    adapterMovie = MovieRecyclerAdapter(
-                        allContent,
-                        defineType(recycler.layoutManager),
-                        this as CallBackFromRecyclerToFragment
-                    )
-                    recycler.adapter = adapterMovie
-                    CustomAnimate.recycler(recycler)
-                    CustomAnimate.scale(progressBar, 0.0f)
-                } else {
-
-                    allContent.addAll(resultArray)
-                    recycler.adapter?.notifyItemRangeInserted(
-                        recycler.adapter!!.itemCount,
-                        recycler.adapter!!.itemCount + 20
-                    )
-                    isDownload = false
-                    CustomAnimate.scale(progressBar, 0.0f)
+                    isLikeListOpen = wrapperMovieData.toLikeList
                 }
-
-                isLikeListOpen = wrapperMovieData.toLikeList
             })
 
-        movieViewModel.getProgress().observe(viewLifecycleOwner, Observer { failure: String ->
-
-            makeToast(failure)
-            CustomAnimate.scale(progressBar, 0.0f)
-        })
+        movieViewModel.getProgress()
+            .observe(viewLifecycleOwner, Observer { failure: String ->
+                if (failure != null) {
+                    makeToast(failure)
+                    CustomAnimate.scale(activity?.progress_bar!!, 0.0f)
+                }
+            })
 
         movieViewModel.getPostStatus().observe(viewLifecycleOwner, Observer { msg: String ->
-            makeToast(msg)
+            if (msg != null) {
+                makeToast(msg)
+            }
         })
     }
+
 
     private fun initRecycler(v: View) {
 
         linearLayoutManager = LinearLayoutManager(v.context, LinearLayoutManager.VERTICAL, false)
         var orientation = 3
 
-        if (resources.configuration.orientation == 2)
+        if (resources.configuration.orientation == 2) {
             orientation = 5
+        }
+
+        adapterMovie.mListener = this
 
         gridLayoutManager =
             GridLayoutManager(v.context, orientation, GridLayoutManager.VERTICAL, false)
         gridLayoutManager.spanSizeLookup
 
-        recycler = v.findViewById(R.id.recycler)
         recycler.layoutManager = linearLayoutManager
+        recycler.adapter = adapterMovie
 
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -148,41 +148,13 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
     private fun getPage() {
 
         movieViewModel.getPage()
-        allContent = ArrayList()
-        allContent.clear()
-
-        adapterMovie = MovieRecyclerAdapter(allContent, 1, this as CallBackFromRecyclerToFragment)
-        recycler.adapter = adapterMovie
-
-        CustomAnimate.scale(progressBar, 1.0f)
+        CustomAnimate.scale(activity?.progress_bar!!, 1.0f)
     }
 
     fun changeMovieTypeFromFragment(movieType: String) {
 
         movieViewModel.changeMovieType(movieType)
         getPage()
-    }
-
-    private fun setLayoutManager(type: Int) {
-
-        val oldScrollPos =
-            (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-        when (type) {
-            1 -> recycler.layoutManager = linearLayoutManager
-            2 -> recycler.layoutManager = gridLayoutManager
-        }
-        adapterMovie.type = type
-        recycler.adapter = adapterMovie
-        CustomAnimate.recycler(recycler)
-        recycler.scrollToPosition(oldScrollPos)
-    }
-
-    private fun defineType(layoutManager: RecyclerView.LayoutManager?): Int {
-
-        return when (layoutManager) {
-            linearLayoutManager -> 1
-            else -> 2
-        }
     }
 
     private fun getMyLikeList() {
@@ -197,12 +169,14 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
                 R.id.buttonLinear -> {
                     CustomAnimate.scale(buttonLinear, 1.0f)
                     CustomAnimate.scale(buttonGrid, 0.6f)
-                    setLayoutManager(1)
+                    (recycler.adapter as MovieRecyclerAdapter).itemType = MovieRecyclerAdapter.LINEAR
+                    (recycler.adapter as MovieRecyclerAdapter).notifyDataSetChanged()
                 }
                 R.id.buttonGrid -> {
                     CustomAnimate.scale(buttonGrid, 1.0f)
                     CustomAnimate.scale(buttonLinear, 0.6f)
-                    setLayoutManager(2)
+                    (recycler.adapter as MovieRecyclerAdapter).itemType = MovieRecyclerAdapter.GRID
+                    (recycler.adapter as MovieRecyclerAdapter).notifyDataSetChanged()
                 }
             }
         }

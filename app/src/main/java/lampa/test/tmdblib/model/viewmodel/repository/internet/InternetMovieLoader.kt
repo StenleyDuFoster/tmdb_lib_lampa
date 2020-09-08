@@ -1,6 +1,7 @@
 package lampa.test.tmdblib.model.viewmodel.repository.internet
 
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
@@ -18,6 +19,7 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
     private var searchTypeMovie: String = "popular"
     private var ADD_TO_FAVORITE = false
     private lateinit var session_id: String
+    private val compositeDisposable = CompositeDisposable()
 
     private val jsonTmdbPlaceHolderApi:JsonTmdbPlaceHolderApi by inject()
 
@@ -29,6 +31,7 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
 
     fun loadListMovie() {
 
+        compositeDisposable.add(
         jsonTmdbPlaceHolderApi.getListMovie(
                 searchTypeMovie,
                 ApiConstant().API_V3,
@@ -46,10 +49,12 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
                 { t ->
                     callBackFromInternetMovieToMovieViewModel.onFailure(t.toString())
                 })
+        )
     }
 
     fun loadLikeMovie(){
 
+        compositeDisposable.add(
         jsonTmdbPlaceHolderApi.getLikeMovie(
                 session_id,
                 ApiConstant().API_V3,
@@ -67,6 +72,7 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
                 {t ->
                     callBackFromInternetMovieToMovieViewModel.onFailure(t.toString())
                 })
+        )
     }
 
     override fun loadPageMovie() {
@@ -95,5 +101,11 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
         ADD_TO_FAVORITE = true
         this.session_id = session_id
         loadLikeMovie()
+    }
+
+    override fun dispose() {
+        if(!compositeDisposable.isDisposed) {
+            compositeDisposable.dispose()
+        }
     }
 }

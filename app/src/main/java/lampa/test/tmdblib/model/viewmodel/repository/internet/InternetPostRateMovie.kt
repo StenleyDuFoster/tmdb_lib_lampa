@@ -1,6 +1,7 @@
 package lampa.test.tmdblib.model.viewmodel.repository.internet
 
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetPostMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
@@ -13,10 +14,12 @@ import org.koin.core.inject
 class InternetPostRateMovie(val callBackFromInternetPostMovieToMovieViewModel: CallBackFromInternetPostMovieToMovieViewModel)
     : MainContract.InternetPostLikeMovie, KoinComponent {
 
+    private val compositeDisposable = CompositeDisposable()
     val jsonTmdbPlaceHolderApi:JsonTmdbPlaceHolderApi by inject()
 
     override fun postAddToLike(session_id:String, movie_id: Int) {
 
+        compositeDisposable.add(
         jsonTmdbPlaceHolderApi.postLikeMovie(
                 movie_id,
                 ApiConstant().API_V3,
@@ -31,10 +34,12 @@ class InternetPostRateMovie(val callBackFromInternetPostMovieToMovieViewModel: C
                 { t ->
                     callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(t.toString())
                 })
+        )
     }
 
     override fun postDeleteLike(session_id:String, movie_id: Int) {
 
+        compositeDisposable.add(
         jsonTmdbPlaceHolderApi.deleteLikeMovie(
                 movie_id,
                 ApiConstant().API_V3,
@@ -48,5 +53,12 @@ class InternetPostRateMovie(val callBackFromInternetPostMovieToMovieViewModel: C
                 { t ->
                     callBackFromInternetPostMovieToMovieViewModel.onPostSuccess(t.toString())
                 })
+        )
+    }
+
+    override fun dispose() {
+        if(!compositeDisposable.isDisposed) {
+            compositeDisposable.dispose()
+        }
     }
 }
