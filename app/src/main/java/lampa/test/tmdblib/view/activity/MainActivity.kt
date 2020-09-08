@@ -1,6 +1,7 @@
 package lampa.test.tmdblib.view.activity
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -21,6 +22,7 @@ class MainActivity : BaseActivity(), CallBackFromMainFToActivity {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         setContentView(R.layout.activity_main)
         initMain()
     }

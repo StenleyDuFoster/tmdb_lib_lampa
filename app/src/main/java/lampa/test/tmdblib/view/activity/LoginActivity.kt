@@ -1,6 +1,7 @@
 package lampa.test.tmdblib.view.activity
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
@@ -18,6 +19,7 @@ class LoginActivity : BaseActivity(), CallBackFromLoginFToActivity {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         setContentView(R.layout.activity_login)
 
         addFragmentToFragmentManager(loginFragment)
