@@ -26,8 +26,8 @@ import lampa.test.tmdblib.view.activity.base.BaseActivity
 
 class VideoActivity : BaseActivity(), CallBackVideoFromParser, CallBackPageFromParser {
 
-    private val refreshHandler = Handler(Looper.getMainLooper())//нужны для перезапуска кода
-    private val delayHandler = Handler(Looper.getMainLooper())//так как иногда страницу не удаётся спарсить
+    private val refreshHandler = Handler(Looper.getMainLooper())
+    private val delayHandler = Handler(Looper.getMainLooper())
     private var runnableRefresh: Runnable? = null
     private var runnableDelay: Runnable? = null
 

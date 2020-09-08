@@ -1,4 +1,4 @@
-package lampa.test.tmdblib.Koin
+package lampa.test.tmdblib.di
 
 val appComponent = listOf(
 

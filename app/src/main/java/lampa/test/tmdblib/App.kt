@@ -2,7 +2,7 @@ package lampa.test.tmdblib
 
 import android.app.Application
 import android.content.Context
-import lampa.test.tmdblib.Koin.appComponent
+import lampa.test.tmdblib.di.appComponent
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinComponent
 import org.koin.core.context.startKoin

@@ -81,10 +81,11 @@ class InternetMovieLoader(val callBackFromInternetMovieToMovieViewModel: CallBac
         page += 1
         if(totalPage <= page) {
 
-            if (!ADD_TO_FAVORITE)
+            if (!ADD_TO_FAVORITE) {
                 loadListMovie()
-            else
+            } else {
                 loadLikeMovie()
+            }
         }
     }
 

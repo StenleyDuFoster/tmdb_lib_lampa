@@ -1,4 +1,4 @@
-package lampa.test.tmdblib.util.connection_manager
+package lampa.test.tmdblib.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
