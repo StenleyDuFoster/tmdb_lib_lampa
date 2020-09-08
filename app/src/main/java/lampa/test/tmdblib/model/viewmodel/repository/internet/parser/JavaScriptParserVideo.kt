@@ -30,6 +30,7 @@ class JavaScriptParserVideo(private val callBack: CallBackVideoFromParser) {
             Log.v("112233", "video" + parseArray.toString())
 
             if(parseArray.size < 4) {
+                Log.v("112233", "call back")
                 val parse = parseArray[0].split("\"")
                 callBack.onVideoFind(parse[1])
             }
