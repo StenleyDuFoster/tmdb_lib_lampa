@@ -1,28 +1,25 @@
 package lampa.test.tmdblib.view.fragments
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ProgressBar
-
-import androidx.lifecycle.*
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
-
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.view.fragments.callback.CallBackFromMainFToActivity
+import lampa.test.tmdblib.model.viewmodel.MovieViewModel
 import lampa.test.tmdblib.model.viewmodel.repository.data.MovieResultsTmdbData
 import lampa.test.tmdblib.model.viewmodel.repository.data.WrapperMovieData
-import lampa.test.tmdblib.model.viewmodel.MovieViewModel
 import lampa.test.tmdblib.util.anim.CustomAnimate
 import lampa.test.tmdblib.util.toast.makeToast
 import lampa.test.tmdblib.view.activity.base.BaseActivity
 import lampa.test.tmdblib.view.fragments.base.BaseFragment
+import lampa.test.tmdblib.view.fragments.callback.CallBackFromMainFToActivity
 import lampa.test.tmdblib.view.recycler.MovieRecyclerAdapter
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
@@ -47,6 +44,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         movieViewModel = ViewModelProvider(this).get(MovieViewModel::class.java)
+        callBackFromMainFToActivity = activity as CallBackFromMainFToActivity
 
         initRecycler(view)
         initViewModelObservers()
@@ -62,41 +60,35 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
         movieViewModel.getMovie()
             .observe(viewLifecycleOwner, Observer { wrapperMovieData: WrapperMovieData ->
 
-                if (wrapperMovieData != null) {
-                    val resultArray = ArrayList(wrapperMovieData.movieTmdbData.results)
+                val resultArray = ArrayList(wrapperMovieData.movieTmdbData.results)
 
-                    if (wrapperMovieData.showAllOrAddToShow == R.integer.ALL_PAGE) {
-                        allContent = resultArray
-                        (recycler.adapter as MovieRecyclerAdapter).mExampleList.clear()
-                        (recycler.adapter as MovieRecyclerAdapter).mExampleList.addAll(allContent)
-                        (recycler.adapter as MovieRecyclerAdapter).notifyDataSetChanged()
-                        isDownload = false
-                        CustomAnimate.recycler(recycler)
-                        CustomAnimate.scale(activity?.progress_bar!!, 0.0f)
-                    } else {
-                        allContent.addAll(resultArray)
-                        (recycler.adapter as MovieRecyclerAdapter).mExampleList.addAll(resultArray)
-                        (recycler.adapter as MovieRecyclerAdapter).notifyDataSetChanged()
-                        isDownload = false
-                        CustomAnimate.scale(activity?.progress_bar!!, 0.0f)
-                    }
-
-                    isLikeListOpen = wrapperMovieData.toLikeList
+                if (wrapperMovieData.showAllOrAddToShow == R.integer.ALL_PAGE) {
+                    allContent = resultArray
+                    (recycler.adapter as MovieRecyclerAdapter).mExampleList.clear()
+                    (recycler.adapter as MovieRecyclerAdapter).mExampleList.addAll(allContent)
+                    (recycler.adapter as MovieRecyclerAdapter).notifyDataSetChanged()
+                    isDownload = false
+                    CustomAnimate.recycler(recycler)
+                    CustomAnimate.scale(activity?.progress_bar!!, 0.0f)
+                } else {
+                    allContent.addAll(resultArray)
+                    (recycler.adapter as MovieRecyclerAdapter).mExampleList.addAll(resultArray)
+                    (recycler.adapter as MovieRecyclerAdapter).notifyDataSetChanged()
+                    isDownload = false
+                    CustomAnimate.scale(activity?.progress_bar!!, 0.0f)
                 }
+
+                isLikeListOpen = wrapperMovieData.toLikeList
             })
 
         movieViewModel.getProgress()
             .observe(viewLifecycleOwner, Observer { failure: String ->
-                if (failure != null) {
-                    makeToast(failure)
-                    CustomAnimate.scale(activity?.progress_bar!!, 0.0f)
-                }
+                makeToast(failure)
+                CustomAnimate.scale(activity?.progress_bar!!, 0.0f)
             })
 
         movieViewModel.getPostStatus().observe(viewLifecycleOwner, Observer { msg: String ->
-            if (msg != null) {
-                makeToast(msg)
-            }
+            makeToast(msg)
         })
     }
 
@@ -111,6 +103,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
         }
 
         adapterMovie.mListener = this
+        adapterMovie.itemType = MovieRecyclerAdapter.LINEAR
 
         gridLayoutManager =
             GridLayoutManager(v.context, orientation, GridLayoutManager.VERTICAL, false)
@@ -169,14 +162,23 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
                 R.id.buttonLinear -> {
                     CustomAnimate.scale(buttonLinear, 1.0f)
                     CustomAnimate.scale(buttonGrid, 0.6f)
-                    (recycler.adapter as MovieRecyclerAdapter).itemType = MovieRecyclerAdapter.LINEAR
+                    val position =
+                        (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                    (recycler.adapter as MovieRecyclerAdapter).itemType =
+                        MovieRecyclerAdapter.LINEAR
+                    recycler.layoutManager = linearLayoutManager
                     (recycler.adapter as MovieRecyclerAdapter).notifyDataSetChanged()
+                    (recycler.layoutManager as LinearLayoutManager).scrollToPosition(position)
                 }
                 R.id.buttonGrid -> {
                     CustomAnimate.scale(buttonGrid, 1.0f)
                     CustomAnimate.scale(buttonLinear, 0.6f)
+                    val position =
+                        (recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
                     (recycler.adapter as MovieRecyclerAdapter).itemType = MovieRecyclerAdapter.GRID
+                    recycler.layoutManager = gridLayoutManager
                     (recycler.adapter as MovieRecyclerAdapter).notifyDataSetChanged()
+                    (recycler.layoutManager as LinearLayoutManager).scrollToPosition(position)
                 }
             }
         }
@@ -230,11 +232,6 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), CallBackFromRecyclerT
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         spinner.onItemSelectedListener = spinnerItemSelectedListener
-    }
-
-    override fun onAttach(activity: Activity) {
-        callBackFromMainFToActivity = activity as CallBackFromMainFToActivity
-        super.onAttach(activity)
     }
 
     override fun onMovieClick(position: Int) {
