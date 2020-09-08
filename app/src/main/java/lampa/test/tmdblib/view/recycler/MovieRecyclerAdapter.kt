@@ -5,14 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-
 import androidx.recyclerview.widget.RecyclerView
-
-import com.bumptech.glide.Glide
-
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.model.viewmodel.repository.data.MovieResultsTmdbData
 import lampa.test.tmdblib.util.anim.CustomAnimate
+import lampa.test.tmdblib.util.glide.GlideApp
 import lampa.test.tmdblib.view.recycler.callback.CallBackFromRecyclerToFragment
 
 class MovieRecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, var type: Int, listener: CallBackFromRecyclerToFragment?) :
@@ -31,7 +28,7 @@ class MovieRecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, var typ
 
         init {
 
-            if(getItemViewType(position) == 1)
+            if(getItemViewType(adapterPosition) == 1)
                 textContent = itemView.findViewById(R.id.card_content_text)
 
             imageFavorite.setOnClickListener {
@@ -78,24 +75,26 @@ class MovieRecyclerAdapter(exampleList: ArrayList<MovieResultsTmdbData>, var typ
     ) {
         val currentItem: MovieResultsTmdbData = mExampleList[position]
 
-        if (currentItem.title.length > 20)
-            holder.textMain.setText(currentItem.title.substring(0,20) + " ...")
-        else
+        if (currentItem.title.length > 20) {
+            holder.textMain.text = (currentItem.title.substring(0, 20) + " ...")
+        } else {
             holder.textMain.text = currentItem.title
+        }
 
         holder.textSlave.text = currentItem.release_date
 
-        Glide.with(holder.imageView.context)
+        GlideApp.with(holder.imageView.context)
              .load("https://image.tmdb.org/t/p/w500" + currentItem.poster_path)
              .into(holder.imageView)
         
         when(holder.itemViewType){
             1 -> {
                 val overview = currentItem.overview
-                if(overview.length > 100)
-                    holder.textContent.setText(overview.substring(0,100) + " ...")
-                else
+                if(overview.length > 100) {
+                    holder.textContent.text = (overview.substring(0, 100) + " ...")
+                } else {
                     holder.textContent.text = overview
+                }
             }
         }
     }

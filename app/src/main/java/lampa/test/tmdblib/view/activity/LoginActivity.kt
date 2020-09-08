@@ -15,11 +15,11 @@ import lampa.test.tmdblib.view.fragments.callback.CallBackFromLoginFToActivity
 
 class LoginActivity : BaseActivity(), CallBackFromLoginFToActivity {
 
-    val loginFragment = FragmentLogin()
+    private val loginFragment = FragmentLogin()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_login)
 
         addFragmentToFragmentManager(loginFragment)

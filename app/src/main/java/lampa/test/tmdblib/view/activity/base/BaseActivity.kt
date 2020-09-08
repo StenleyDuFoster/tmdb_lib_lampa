@@ -10,7 +10,7 @@ import lampa.test.tmdblib.util.connection_manager.NetworkChangeReceiver
 
 abstract class BaseActivity: AppCompatActivity() {
 
-    lateinit var fragmentTransition:FragmentTransaction
+    private lateinit var fragmentTransition:FragmentTransaction
     lateinit var networkChangeReceiver:NetworkChangeReceiver
 
     override fun onStart() {
@@ -38,7 +38,7 @@ abstract class BaseActivity: AppCompatActivity() {
         fragmentTransition.commit()
     }
 
-    fun initFragmentTransition(){
+    private fun initFragmentTransition(){
 
         fragmentTransition = supportFragmentManager.beginTransaction()
         fragmentTransition.setCustomAnimations(

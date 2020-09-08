@@ -12,17 +12,16 @@ import lampa.test.tmdblib.view.fragments.FragmentDetails
 import lampa.test.tmdblib.view.fragments.FragmentMain
 import lampa.test.tmdblib.view.fragments.callback.CallBackFromMainFToActivity
 
-
 class MainActivity : BaseActivity(), CallBackFromMainFToActivity {
 
     private var mainFragment: FragmentMain? = null
     private var detailsFragment: FragmentDetails? = null
 
-    lateinit var intentToLoginActivity: Intent
+    private lateinit var intentToLoginActivity: Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_main)
         initMain()
     }

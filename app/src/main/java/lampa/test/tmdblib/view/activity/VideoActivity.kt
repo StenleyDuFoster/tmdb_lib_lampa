@@ -1,9 +1,11 @@
 package lampa.test.tmdblib.view.activity
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.WindowManager
 import android.webkit.JavascriptInterface
@@ -20,37 +22,41 @@ import lampa.test.tmdblib.model.viewmodel.repository.internet.parser.JavaScriptP
 import lampa.test.tmdblib.model.viewmodel.repository.internet.parser.JavaScriptParserVideo
 import lampa.test.tmdblib.model.viewmodel.repository.internet.parser.callBack.CallBackPageFromParser
 import lampa.test.tmdblib.model.viewmodel.repository.internet.parser.callBack.CallBackVideoFromParser
-import lampa.test.tmdblib.util.toast.toast
 import lampa.test.tmdblib.view.activity.base.BaseActivity
 
 class VideoActivity : BaseActivity(), CallBackVideoFromParser, CallBackPageFromParser {
 
-    val refreshHandler = Handler()
-    var runnableRefresh: Runnable? = null
-    val delayHandler = Handler()
-    var runnableDelay: Runnable? = null
+    private val refreshHandler = Handler(Looper.getMainLooper())//нужны для перезапуска кода
+    private val delayHandler = Handler(Looper.getMainLooper())//так как иногда страницу не удаётся спарсить
+    private var runnableRefresh: Runnable? = null
+    private var runnableDelay: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-        getWindow().setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+
+        setupWindow()
         setContentView(R.layout.activity_video)
         findPageUrlWithVideoView((intent.extras?.get("content") as MovieResultsTmdbData))
     }
 
+    private fun setupWindow() {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
     @JavascriptInterface
     fun findPageUrlWithVideoView(content: MovieResultsTmdbData) {
 
-        textLoading.text = "ищем страницу " + content.title
+        textLoading.text = ("ищем страницу " + content.title)
         runOnUiThread {
             webView.settings.javaScriptEnabled = true
             webView.addJavascriptInterface(JavaScriptParserPage(this), "PAGE")
-            webView.setWebViewClient(object : WebViewClient() {
+            webView.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
-
                     runnableDelay = Runnable {
                         webView.loadUrl("javascript:window.PAGE.processHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');")
                         textLoading.text = "парсинг страницы"
@@ -59,8 +65,8 @@ class VideoActivity : BaseActivity(), CallBackVideoFromParser, CallBackPageFromP
                         runnableDelay!!, 5000
                     )
                 }
-            })
-            webView.getSettings().setUserAgentString("Chrome/41.0.2228.0 Safari/537.36")
+            }
+            webView.settings.userAgentString = "Chrome/41.0.2228.0 Safari/537.36"
 
             Log.v("112233", "https://filmix.co/search/" +
                     content.title +
@@ -76,26 +82,7 @@ class VideoActivity : BaseActivity(), CallBackVideoFromParser, CallBackPageFromP
         }
     }
 
-    override fun onPageFind(link: String) {
-        findVideoUrlWithVideoView(link)
-    }
-
-    override fun onPageNotFound() {
-        runnableRefresh = Runnable {
-
-            runOnUiThread {
-                textLoading.text = "ошибка 101, ожидайте"
-                findPageUrlWithVideoView((intent.extras?.get("content") as MovieResultsTmdbData))
-                textLoading.text = "перезагрузка страницы"
-            }
-
-        }
-
-        refreshHandler.postDelayed(
-            runnableRefresh!!, 2000
-        )
-    }
-
+    @SuppressLint("SetJavaScriptEnabled")
     @JavascriptInterface
     fun findVideoUrlWithVideoView(pageUrl: String) {
         if(runnableDelay != null) {
@@ -117,6 +104,26 @@ class VideoActivity : BaseActivity(), CallBackVideoFromParser, CallBackPageFromP
 
             webView.loadUrl(pageUrl)
         }
+    }
+
+    override fun onPageFind(link: String) {
+        findVideoUrlWithVideoView(link)
+    }
+
+    override fun onPageNotFound() {
+        runnableRefresh = Runnable {
+
+            runOnUiThread {
+                textLoading.text = ("ошибка 101, ожидайте")
+                findPageUrlWithVideoView(intent.extras?.get("content") as MovieResultsTmdbData)
+                textLoading.text = "перезагрузка страницы"
+            }
+
+        }
+
+        refreshHandler.postDelayed(
+            runnableRefresh!!, 2000
+        )
     }
 
     override fun onVideoFind(link: String) {

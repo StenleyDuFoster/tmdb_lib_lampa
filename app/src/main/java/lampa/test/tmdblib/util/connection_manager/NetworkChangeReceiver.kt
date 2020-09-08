@@ -10,8 +10,10 @@ class NetworkChangeReceiver: BroadcastReceiver() {
 
     var doAfterConnectionWillResume:Runnable? = null
 
+    companion object {
+        var networkState = true
+    }
     var oldNetworkState = true
-    var newNetworkState = true
 
     override fun onReceive(context: Context?, intent: Intent) {
 
@@ -19,21 +21,21 @@ class NetworkChangeReceiver: BroadcastReceiver() {
 
         if(cm.activeNetworkInfo == null)
         {
-            newNetworkState = false
+            networkState = false
 
-            if(newNetworkState != oldNetworkState)
+            if(networkState != oldNetworkState)
                 makeToast("соединение потеряно")
 
-            oldNetworkState = newNetworkState
+            oldNetworkState = networkState
         }
         else
         {
-            newNetworkState = true
+            networkState = true
 
-            if(newNetworkState != oldNetworkState)
+            if(networkState != oldNetworkState)
                 makeToast("соединение востановлено")
 
-            oldNetworkState = newNetworkState
+            oldNetworkState = networkState
             doAfterConnectionWillResume?.run()
         }
     }
