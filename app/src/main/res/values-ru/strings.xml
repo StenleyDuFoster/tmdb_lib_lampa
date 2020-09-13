@@ -3,9 +3,6 @@
     <string name="app_name">TMDB lib</string>
     <string name="font_main">sans-serif-condensed</string>
 
-    <string name="api_v3">9bb79091064ef827e213e1b974a3b718</string>
-    <string name="api_v4">eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YmI3OTA5MTA2NGVmODI3ZTIxM2UxYjk3NGEzYjcxOCIsInN1YiI6IjVlMmM3Y2VjMTY4NWRhMDAxN2U3MWZhNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.B1HWD__R0q8bQMvQl3azauCZ6IpE4Ec4wDKRf2d10ZE</string>
-
     <string name="search_popular">popular</string>
     <string name="search_top_rated">top_rated</string>
     <string name="search_upcoming">upcoming</string>

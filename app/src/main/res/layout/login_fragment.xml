@@ -13,102 +13,61 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/load_drawable"
-        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+        app:layout_constraintBottom_toTopOf="@+id/google_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.261" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/google_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1" />
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView"
-        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/phone_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/google_button"
+        tools:layout_editor_absoluteX="20dp">
 
         <LinearLayout
-            android:id="@+id/registerCard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_margin="10dp"
+                android:background="@android:drawable/stat_sys_vp_phone_call"
+                android:layout_width="25dp"
+                android:layout_height="25dp"/>
 
             <TextView
-                android:fontFamily="@string/font_main"
-                android:layout_marginTop="10dp"
+                android:text="Войти"
+                android:gravity="center"
                 android:layout_gravity="center"
-                android:text="Регистрация"
-                android:layout_width="wrap_content"
+                android:fontFamily="@string/font_main"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:inputType="textEmailAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColorHint="#858585">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/nameEdit"
-                        android:layout_width="200dp"
-                        android:layout_height="50dp"
-                        android:fontFamily="@string/font_main"
-                        android:gravity="center"
-                        android:hint="Почта"
-                        android:inputType="textEmailAddress"
-                        android:textColorHint="#858585" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:inputType="textPassword"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColorHint="#858585">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/passEdit"
-                        android:layout_width="200dp"
-                        android:layout_height="50dp"
-                        android:fontFamily="@string/font_main"
-                        android:gravity="center"
-                        android:hint="Пароль"
-                        android:inputType="textPassword"
-                        android:textColorHint="#858585" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-
     </com.google.android.material.card.MaterialCardView>
-
-    <Button
-        android:id="@+id/buttonLog"
-        android:text="Ввойти или зарегистроватся"
-        android:background="@drawable/shape_button"
-        android:fontFamily="@string/font_main"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
 
     <LinearLayout
         android:id="@+id/layLoading"
@@ -119,10 +78,10 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainLogoImage"
-        app:layout_constraintVertical_bias="0.964">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.734">
 
         <ProgressBar
             android:layout_width="wrap_content"

@@ -6,12 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import lampa.test.tmdblib.R
-import lampa.test.tmdblib.utils.connection_manager.NetworkChangeReceiver
+import lampa.test.tmdblib.receiver.NetworkChangeReceiver
 
 abstract class BaseActivity: AppCompatActivity() {
 
-    lateinit var fragmentTransition:FragmentTransaction
-    lateinit var networkChangeReceiver:NetworkChangeReceiver
+    private lateinit var fragmentTransition:FragmentTransaction
+    lateinit var networkChangeReceiver: NetworkChangeReceiver
 
     override fun onStart() {
 
@@ -22,22 +22,23 @@ abstract class BaseActivity: AppCompatActivity() {
         super.onStart()
     }
 
-    fun addWithBackStackFragmentToFragmentManager(container_id:Int, fragment:Fragment){
+    fun addWithBackStackFragmentToFragmentManager(fragment:Fragment, hideFragment:Fragment){
 
         initFragmentTransition()
-        fragmentTransition.add(container_id, fragment)
+        fragmentTransition.add(R.id.fragment_cont, fragment)
         fragmentTransition.addToBackStack(null)
+        fragmentTransition.hide(hideFragment)
         fragmentTransition.commit()
     }
 
-    fun addFragmentToFragmentManager(container_id:Int, fragment:Fragment){
+    fun addFragmentToFragmentManager(fragment:Fragment){
 
         initFragmentTransition()
-        fragmentTransition.add(container_id, fragment)
+        fragmentTransition.add(R.id.fragment_cont, fragment)
         fragmentTransition.commit()
     }
 
-    fun initFragmentTransition(){
+    private fun initFragmentTransition(){
 
         fragmentTransition = supportFragmentManager.beginTransaction()
         fragmentTransition.setCustomAnimations(
@@ -45,8 +46,8 @@ abstract class BaseActivity: AppCompatActivity() {
             R.anim.in_leaft_to_right, R.anim.out_leaft_to_right)
     }
 
-    override fun onDestroy() {
+    override fun onStop() {
         unregisterReceiver(networkChangeReceiver)
-        super.onDestroy()
+        super.onStop()
     }
 }

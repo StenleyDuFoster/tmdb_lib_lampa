@@ -1,21 +1,25 @@
 package lampa.test.tmdblib.model.viewmodel
 
-import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
+import io.reactivex.schedulers.Schedulers
 
 import lampa.test.tmdblib.R
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.CallBackFromInternetPostMovieToMovieViewModel
 import lampa.test.tmdblib.contract_interface.MainContract
-import lampa.test.tmdblib.repository.data.WrapperMovieData
-import lampa.test.tmdblib.repository.internet.InternetMovieLoader
-import lampa.test.tmdblib.repository.internet.InternetPostRateMovie
-import lampa.test.tmdblib.repository.local.database.LoggedDatabase
+import lampa.test.tmdblib.model.viewmodel.repository.data.WrapperMovieData
+import lampa.test.tmdblib.model.viewmodel.repository.internet.InternetMovieLoader
+import lampa.test.tmdblib.model.viewmodel.repository.internet.InternetPostRateMovie
+import lampa.test.tmdblib.model.viewmodel.repository.local.database.LoggedDatabase
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class MovieViewModel(application: Application) : AndroidViewModel(application),
-    MainContract.MovieViewModel, CallBackFromInternetMovieToMovieViewModel, CallBackFromInternetPostMovieToMovieViewModel {
+class MovieViewModel  : ViewModel(),
+    MainContract.MovieViewModel, CallBackFromInternetMovieToMovieViewModel,
+    CallBackFromInternetPostMovieToMovieViewModel, KoinComponent{
 
     private var internetLoadMovie: MainContract.InternetLoadMovie = InternetMovieLoader(this)
     private var internetPostLikeMovie: MainContract.InternetPostLikeMovie = InternetPostRateMovie(this)
@@ -27,7 +31,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application),
 
     private val livePostStatus: MutableLiveData<String> = MutableLiveData()
 
-    var context: Context = application.applicationContext
+    private val context: Context by inject()
 
     lateinit var session_id:String
 
@@ -85,14 +89,20 @@ class MovieViewModel(application: Application) : AndroidViewModel(application),
     override fun logOut() {
 
         val db = LoggedDatabase.getInstance(context)
-        Thread(
-            Runnable {
-                db.loggedInUserDao().delete()
-            }
-        ).start()
+        val firebaseAuth = FirebaseAuth.getInstance()
+        firebaseAuth.signOut()
+        db.loggedInUserDao().delete()
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
-    override fun onPostSuccess(session_msg: String) {
-        livePostStatus.postValue(session_msg)
+    override fun onPostSuccess(session_id: String) {
+        livePostStatus.postValue(session_id)
+    }
+
+    override fun onCleared() {
+        internetPostLikeMovie.dispose()
+        internetLoadMovie.dispose()
+        super.onCleared()
     }
 }

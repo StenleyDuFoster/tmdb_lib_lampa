@@ -1,6 +1,6 @@
 package lampa.test.tmdblib.contract_interface
 
-import lampa.test.tmdblib.repository.data.WrapperMovieData
+import lampa.test.tmdblib.model.viewmodel.repository.data.WrapperMovieData
 
 interface CallBackFromInternetMovieToMovieViewModel {
 
