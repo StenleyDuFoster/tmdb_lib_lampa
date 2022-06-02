@@ -36,7 +36,9 @@ class VideoActivity : BaseActivity(), CallBackVideoFromParser, CallBackPageFromP
 
         setupWindow()
         setContentView(R.layout.activity_video)
-        findPageUrlWithVideoView((intent.extras?.get("content") as MovieResultsTmdbData))
+        (intent.extras?.get("content") as? MovieResultsTmdbData?)?.let {
+            findPageUrlWithVideoView(it)
+        }
     }
 
     private fun setupWindow() {
@@ -68,13 +70,13 @@ class VideoActivity : BaseActivity(), CallBackVideoFromParser, CallBackPageFromP
             }
             webView.settings.userAgentString = "Chrome/41.0.2228.0 Safari/537.36"
 
-            Log.v("112233", "https://filmix.co/search/" +
+            Log.v("112233", "https://filmix.ac/search/" +
                     content.title +
                     "-" +
                     content.release_date.substring(0, 4))
 
             webView.loadUrl(
-                "https://filmix.co/search/" +
+                "https://filmix.ac/search/" +
                         content.title +
                         "-" +
                         content.release_date.substring(0, 4)
@@ -97,7 +99,9 @@ class VideoActivity : BaseActivity(), CallBackVideoFromParser, CallBackPageFromP
             webView.addJavascriptInterface(JavaScriptParserVideo(this), "VIDEO")
             webView.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
-                    webView.loadUrl("javascript:window.VIDEO.processHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');")
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        webView.loadUrl("javascript:window.VIDEO.processHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');")
+                    }, 3000)
                 }
             }
             webView.settings.userAgentString = "Chrome/41.0.2228.0 Safari/537.36"

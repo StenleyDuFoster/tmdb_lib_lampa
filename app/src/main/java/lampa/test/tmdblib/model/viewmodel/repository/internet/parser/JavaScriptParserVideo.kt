@@ -22,17 +22,14 @@ class JavaScriptParserVideo(private val callBack: CallBackVideoFromParser) {
 
             val parseArray = doc
                 .body()
-                .getElementById("oframeplayer")
-                .getElementsByAttribute("src")
-                .toString()
-                .split(" \" ")
+                .getElementById("oframeplayer").child(2).child(0).getElementsByAttribute("src").toString().split(" \" ")
 
             Log.v("112233", "video $parseArray")
 
             if(parseArray.size < 4) {
                 Log.v("112233", "call back")
                 val parse = parseArray[0].split("\"")
-                callBack.onVideoFind(parse[1])
+                callBack.onVideoFind(parse[3])
             }
 
         }
